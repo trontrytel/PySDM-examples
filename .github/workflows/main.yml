@@ -28,5 +28,14 @@ jobs:
           pip install pytest nbconvert
       - run: |
           pip install -e .
-      - run: |
-          pytest -p no:unraisableexception -We
+
+      # TODO #184 (https://github.com/numba/numba/issues/6350#issuecomment-728174860)
+      - if: matrix.platform == 'ubuntu-latest'
+        env: 
+          NUMBA_THREADING_LAYER: omp
+        run: pytest -p no:unraisableexception -We
+
+      - if: matrix.platform != 'ubuntu-latest'
+        run: pytest -p no:unraisableexception -We
+        
+        
