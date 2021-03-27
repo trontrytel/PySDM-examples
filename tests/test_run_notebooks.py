@@ -1,3 +1,9 @@
+# https://bugs.python.org/issue37373
+import sys
+if sys.platform == 'win32':
+    import asyncio
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 import nbformat
 import pytest
 import pathlib
