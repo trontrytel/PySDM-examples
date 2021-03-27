@@ -30,5 +30,5 @@ def notebook_filename(request):
 def test_run_notebooks(notebook_filename):
     with open(notebook_filename, encoding="utf8") as f:
         nb = nbformat.read(f, as_version=4)
-        ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
+        ep = ExecutePreprocessor(timeout=15*60, kernel_name='python3')
         ep.preprocess(nb, {'metadata': {'path': os.path.dirname(notebook_filename)}})
