@@ -21,6 +21,11 @@
   [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Kreidenweis_et_al_2003/demo.ipynb)
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Kreidenweis_et_al_2003/demo.ipynb)    
   (Adiabatic parcel, polydisperse size spectrum, aqueous‐phase SO2 oxidation test case)
+- [Jaruga and Pawlowska 2018](https://doi.org/10.5194/gmd-11-3623-2018):
+  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Jaruga_and_Pawlowska_2018/demo.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Jaruga_and_Pawlowska_2018/demo.ipynb)    
+  (same test case as above, different numerical settings)
+
 #### 1D kinematic (prescribed-flow, single-column)  
 - [Shipway & Hill 2012](https://doi.org/10.1002/qj.1913)
   [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Shipway_and_Hill_2012/demo.ipynb)
