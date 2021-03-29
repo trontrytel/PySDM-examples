@@ -9,7 +9,7 @@ setup(
                       'pystrict>=1.1',
                       'matplotlib>=3.2.2',
                       'ipywidgets>=7.5.1',
-                      'ghapi'],  # TODO
+                      'ghapi'],  # TODO #457
     author='https://github.com/orgs/atmos-cloud-sim-uj/people',
     license="GPL-3.0",
     packages=find_packages(include=['PySDM_examples', 'PySDM_examples.*'])
