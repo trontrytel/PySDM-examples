@@ -2,9 +2,9 @@
 Created at 20.08.2020
 """
 
-from PySDM_examples.Shima_et_al_2009_Fig_2.settings import Settings
-from PySDM_examples.Shima_et_al_2009_Fig_2.example import run
-from PySDM_examples.Shima_et_al_2009_Fig_2.spectrum_plotter import SpectrumPlotter
+from PySDM_examples.Shima_et_al_2009.settings import Settings
+from PySDM_examples.Shima_et_al_2009.example import run
+from PySDM_examples.Shima_et_al_2009.spectrum_plotter import SpectrumPlotter
 from matplotlib import pyplot as plt
 
 

@@ -6,7 +6,7 @@ from PySDM.builder import Builder
 from PySDM.dynamics import Coalescence
 from PySDM.environments import Box
 from PySDM.initialisation.spectral_sampling import ConstantMultiplicity
-from PySDM_examples.Shima_et_al_2009_Fig_2.settings import Settings
+from PySDM_examples.Shima_et_al_2009.settings import Settings
 from PySDM.products.stats.timers import WallTime
 import os
 

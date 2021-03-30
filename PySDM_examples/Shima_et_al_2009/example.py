@@ -10,8 +10,8 @@ from PySDM.environments import Box
 from PySDM.dynamics import Coalescence
 from PySDM.initialisation.spectral_sampling import ConstantMultiplicity
 
-from PySDM_examples.Shima_et_al_2009_Fig_2.settings import Settings
-from PySDM_examples.Shima_et_al_2009_Fig_2.spectrum_plotter import SpectrumPlotter
+from PySDM_examples.Shima_et_al_2009.settings import Settings
+from PySDM_examples.Shima_et_al_2009.spectrum_plotter import SpectrumPlotter
 from PySDM.products.state import ParticlesVolumeSpectrum
 from PySDM.products.stats.timers import WallTime
 
