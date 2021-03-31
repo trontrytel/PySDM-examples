@@ -74,7 +74,7 @@ class DemoSettings():
         self.kernel = settings.kernel
         self.spectrum_per_mass_of_dry_air = settings.spectrum_per_mass_of_dry_air
         self.n_spin_up = settings.n_spin_up
-        self.coalescence_dt_coal_range = settings.default_dt_coal_range
+        self.coalescence_dt_coal_range = settings.coalescence_dt_coal_range
 
     @property
     def th_std0(self):
