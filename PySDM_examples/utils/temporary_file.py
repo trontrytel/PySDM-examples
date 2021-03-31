@@ -3,10 +3,10 @@ import tempfile
 from .widgets import FileLink, HTML, Button
 if 'google.colab' in sys.modules:
     from google import colab
-    ABSOLUTE_PATH = '/content/temporary_files'
-
-ABSOLUTE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'temporary_files')
-RELATIVE_PATH = '../utils/temporary_files'
+    ABSOLUTE_PATH = '/content'
+else:
+    ABSOLUTE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'temporary_files')
+    RELATIVE_PATH = '../utils/temporary_files'
 
 
 class TemporaryFile:
