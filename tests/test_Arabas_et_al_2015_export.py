@@ -10,10 +10,11 @@ from PySDM.backends import CPU
 def test_Arabas_et_al_2015_export():
     # Arrange
     settings = DemoSettings()
-    settings.ui_simulation_time = IntSlider(value=20)
+    settings.ui_simulation_time = IntSlider(value=10)
     settings.ui_dt = IntSlider(value=10)
-    assert settings.n_steps == 2
-    assert len(settings.output_steps) == 1
+    settings.output_interval = settings.ui_dt.value
+    assert settings.n_steps == 1
+    assert len(settings.output_steps) == 2 and settings.output_steps[-1] == 1
 
     storage = Storage()
     simulator = Simulation(settings=settings, storage=storage, backend=CPU)

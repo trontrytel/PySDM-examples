@@ -83,7 +83,7 @@ class DemoSettings:
 
     @property
     def steps_per_output_interval(self) -> int:
-        return int(self.output_interval / self.dt)
+        return int(self.output_interval / self.ui_dt.value)
 
     @property
     def output_steps(self) -> np.ndarray:
