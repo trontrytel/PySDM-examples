@@ -26,7 +26,3 @@ from IPython.display import (
     display,
     FileLink
 )
-
-# https://github.com/googlecolab/colabtools/issues/1302
-if 'google.colab' in sys.modules:
-    display(HTML('''<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> '''))
