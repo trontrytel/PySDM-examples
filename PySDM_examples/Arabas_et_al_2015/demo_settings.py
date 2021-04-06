@@ -9,7 +9,9 @@ import numba
 import os
 
 
-class DemoSettings():
+class DemoSettings:
+    __dir__ = Settings.__dir__
+
     def __init__(self):
         settings = Settings()
         self.ui_th_std0 = FloatSlider(description="$\\theta_0$ [K]", value=settings.th_std0, min=280, max=300)
@@ -60,7 +62,6 @@ class DemoSettings():
 
         # TODO #37
         self.v_bins = settings.v_bins
-        self.output_steps = settings.output_steps
         self.n_sd = settings.n_sd
         self.size = settings.size
         self.rhod = settings.rhod
@@ -77,6 +78,16 @@ class DemoSettings():
         self.coalescence_dt_coal_range = settings.coalescence_dt_coal_range
         self.coalescence_optimized_random = settings.coalescence_optimized_random
         self.coalescence_substeps = settings.coalescence_substeps
+        self.output_interval = settings.output_interval
+        self.versions = settings.versions
+
+    @property
+    def steps_per_output_interval(self) -> int:
+        return int(self.output_interval / self.dt)
+
+    @property
+    def output_steps(self) -> np.ndarray:
+        return np.arange(0, self.n_steps + 1, self.steps_per_output_interval)
 
     @property
     def th_std0(self):
