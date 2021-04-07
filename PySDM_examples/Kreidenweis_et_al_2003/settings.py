@@ -1,5 +1,6 @@
 from PySDM.physics import si
-from PySDM.initialisation import spectral_sampling, spectra
+from PySDM.initialisation import spectra
+from PySDM.initialisation import spectral_sampling as spec_sampling
 from PySDM.physics import formulae as phys
 from PySDM.physics import constants as const
 from chempy import Substance
@@ -10,7 +11,8 @@ from pystrict import strict
 
 @strict
 class Settings:
-    def __init__(self, dt: float, n_sd: int, n_substep: int):
+    def __init__(self, dt: float, n_sd: int, n_substep: int,
+                 spectral_sampling: spec_sampling.SpectralSampling = spec_sampling.Logarithmic):
         self.DRY_RHO = 1800 * si.kg / (si.m ** 3)
         self.system_type = 'closed'
 
@@ -40,7 +42,7 @@ class Settings:
         # note: .83 found to match best the initial condition (see test Table_3)
         # rho0 = .83 * phys.MoistAir.rho_of_p_qv_T(self.p0, self.q0, self.T0)
         rho0 = 1
-        self.r_dry, self.n_in_dv = spectral_sampling.ConstantMultiplicity(
+        self.r_dry, self.n_in_dv = spectral_sampling(
             spectrum=spectra.Lognormal(
                 norm_factor=566 / si.cm**3 / rho0 * self.mass_of_dry_air,
                 m_mode=.08 * si.um / 2,
