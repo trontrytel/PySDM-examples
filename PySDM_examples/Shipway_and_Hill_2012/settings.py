@@ -5,7 +5,7 @@ import PySDM.physics.constants as const
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 from PySDM.initialisation.spectra import Lognormal
-from PySDM.backends.numba.numba_helpers import temperature_pressure_RH
+from PySDM.physics.formulae import temperature_pressure_RH
 from PySDM.dynamics import condensation
 from pystrict import strict
 
