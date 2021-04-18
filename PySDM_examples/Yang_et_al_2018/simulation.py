@@ -9,6 +9,7 @@ from PySDM.dynamics import AmbientThermodynamics
 from PySDM.dynamics import Condensation
 from PySDM.environments import Parcel
 from PySDM.physics import formulae as phys
+from PySDM.physics.formulae import Formulae
 import PySDM.products as PySDM_products
 
 
@@ -20,7 +21,8 @@ class Simulation:
         while (dt_output / self.n_substeps >= settings.dt_max):
             self.n_substeps += 1
         self.bins_edges = phys.volume(settings.r_bins_edges)
-        builder = Builder(backend=backend, n_sd=settings.n_sd)
+        formulae = Formulae(condensation_coord=settings.coord)
+        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=formulae)
         builder.set_environment(Parcel(
             dt=dt_output / self.n_substeps,
             mass_of_dry_air=settings.mass_of_dry_air,
@@ -35,7 +37,6 @@ class Simulation:
         builder.add_dynamic(AmbientThermodynamics())
         condensation = Condensation(
             kappa=settings.kappa,
-            coord=settings.coord,
             adaptive=settings.adaptive,
             rtol_x=settings.rtol_x,
             rtol_thd=settings.rtol_thd
