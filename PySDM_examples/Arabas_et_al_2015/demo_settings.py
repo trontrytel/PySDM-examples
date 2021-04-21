@@ -57,6 +57,7 @@ class DemoSettings:
         ]
 
         # TODO #37
+        self.formulae = settings.formulae
         self.v_bins = settings.v_bins
         self.n_sd = settings.n_sd
         self.size = settings.size
@@ -178,7 +179,7 @@ class DemoSettings:
             VBox([*self.ui_processes]),
             VBox([self.ui_nx, self.ui_nz, self.ui_sdpg, self.ui_dt, self.ui_simulation_time,
                   self.ui_condensation_rtol_x, self.ui_condensation_rtol_thd,
-                  self.ui_condensation_adaptive, self.ui_coalescence_adaptive
+                  self.ui_condensation_adaptive, self.ui_coalescence_adaptive,
                   *self.ui_mpdata_options]),
         ])
         layout.set_title(0, 'environment parameters')

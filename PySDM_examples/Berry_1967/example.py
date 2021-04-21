@@ -7,7 +7,7 @@ import numpy as np
 from PySDM.physics.coalescence_kernels import Geometric, Hydrodynamic, Electric
 from PySDM_examples.Berry_1967.settings import Settings
 from PySDM_examples.Berry_1967.spectrum_plotter import SpectrumPlotter
-from PySDM.attributes.physics.terminal_velocity import gunn_and_kinzer
+from PySDM.physics.terminal_velocity import gunn_and_kinzer
 from PySDM_examples.Shima_et_al_2009.example import run
 
 
