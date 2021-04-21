@@ -5,8 +5,9 @@ import PySDM.physics.constants as const
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 from PySDM.initialisation.spectra import Lognormal
-from PySDM.physics.formulae import temperature_pressure_RH
+from PySDM.physics.formulae import temperature_pressure_pv
 from PySDM.dynamics import condensation
+from PySDM.physics.formulae import Formulae
 from pystrict import strict
 
 
@@ -14,6 +15,7 @@ from pystrict import strict
 class Settings:
     def __init__(self, n_sd_per_gridbox: int, w_1: float = 2*si.m/si.s, dt: float = 1*si.s,
                  dz: float = 25*si.m, precip: bool = True):
+        self.formulae = Formulae()
         self.n_sd_per_gridbox = n_sd_per_gridbox
         self.kappa = .9  # TODO #414: not in the paper
         self.wet_radius_spectrum_per_mass_of_dry_air = Lognormal(
@@ -41,8 +43,9 @@ class Settings:
         self.rhod0 = phys.ThStd.rho_d(p0, self.qv(0), self._th(0))
 
         def drhod_dz(z, rhod):
-            T, p, _ = temperature_pressure_RH(rhod[0], self.thd(z), self.qv(z))
-            return phys.Hydrostatic.drho_dz(g, p, T, self.qv(z))
+            T, p, _ = temperature_pressure_pv(rhod[0], self.thd(z), self.qv(z))
+            lv = self.formulae.latent_heat.lv(T)
+            return phys.Hydrostatic.drho_dz(g, p, T, self.qv(z), lv)
 
         z_points = np.arange(0, self.z_max, self.dz / 2)
         rhod_solution = solve_ivp(

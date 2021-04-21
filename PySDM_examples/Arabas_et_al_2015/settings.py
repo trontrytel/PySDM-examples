@@ -12,12 +12,13 @@ from pystrict import strict
 
 import PySDM
 from PySDM.dynamics import condensation
-from PySDM.dynamics.coalescence import coalescence
-from PySDM.dynamics.coalescence.kernels import Geometric
+from PySDM.dynamics import coalescence
+from PySDM.physics.coalescence_kernels import Geometric
 from PySDM.initialisation.spectra import Lognormal
 from PySDM.initialisation.spectra import Sum
 from PySDM.physics import constants as const
 from PySDM.physics import formulae as phys
+from PySDM.physics.formulae import Formulae
 from PySDM.physics.constants import si
 
 
@@ -26,13 +27,13 @@ from PySDM.physics.constants import si
 @strict
 class Settings:
     def __dir__(self) -> Iterable[str]:
-        return 'dt', 'grid', 'size', 'n_spin_up', 'versions', 'steps_per_output_interval'
+        return 'dt', 'grid', 'size', 'n_spin_up', 'versions', 'steps_per_output_interval', 'formulae'
 
     def __init__(self):
         key_packages = (PySDM, numba, numpy, scipy)
         self.versions = str({pkg.__name__: pkg.__version__ for pkg in key_packages})
 
-        self.condensation_coord = 'volume logarithm'
+        self.formulae = Formulae(condensation_coordinate='VolumeLogarithm')
 
         self.condensation_rtol_x = condensation.default_rtol_x
         self.condensation_rtol_thd = condensation.default_rtol_thd

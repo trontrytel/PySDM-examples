@@ -5,14 +5,17 @@ from PySDM.physics import formulae as phys
 from PySDM.physics import constants as const
 from chempy import Substance
 import numpy as np
-from PySDM.dynamics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS
+from PySDM.physics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS
 from pystrict import strict
+from PySDM.physics.formulae import Formulae
 
 
 @strict
 class Settings:
     def __init__(self, dt: float, n_sd: int, n_substep: int,
                  spectral_sampling: spec_sampling.SpectralSampling = spec_sampling.Logarithmic):
+        self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus')
+
         self.DRY_RHO = 1800 * si.kg / (si.m ** 3)
         self.system_type = 'closed'
 
@@ -28,7 +31,7 @@ class Settings:
 
         self.p0 = 950 * si.mbar
         self.T0 = 285.2 * si.K
-        pv0 = .95 * phys.pvs(self.T0)
+        pv0 = .95 * self.formulae.saturation_vapour_pressure.pvs_Celsius(self.T0 - const.T0)
         self.q0 = const.eps * pv0 / (self.p0 - pv0)
         self.kappa = .61  # TODO #442
 

@@ -24,7 +24,7 @@ class Simulation:
         while dt_output / self.n_substeps >= settings.dt_max:  # TODO #334 dt_max
             self.n_substeps += 1
 
-        builder = Builder(backend=backend, n_sd=1)
+        builder = Builder(backend=backend, n_sd=1, formulae=settings.formulae)
         builder.set_environment(Parcel(
             dt=dt_output / self.n_substeps,
             mass_of_dry_air=settings.mass_of_dry_air,

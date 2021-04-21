@@ -5,7 +5,7 @@ from PySDM.dynamics import EulerianAdvection, Condensation, AmbientThermodynamic
 import PySDM.products as PySDM_products
 from PySDM.state.mesh import Mesh
 from PySDM.initialisation import spectral_sampling, spatial_sampling
-from PySDM.dynamics.coalescence.kernels import Geometric
+from PySDM.physics.coalescence_kernels import Geometric
 from .mpdata_1d import MPDATA_1D
 import numpy as np
 
@@ -15,7 +15,7 @@ class Simulation:
     def __init__(self, settings, backend=CPU):
         self.nt = settings.nt
 
-        builder = Builder(backend=backend, n_sd=settings.n_sd)
+        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=settings.formulae)
         mesh = Mesh(grid=(settings.nz,), size=(settings.z_max,))
         env = Kinematic1D(dt=settings.dt, mesh=mesh, thd_of_z=settings.thd, rhod_of_z=settings.rhod)
 

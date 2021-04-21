@@ -43,10 +43,6 @@ class DemoSettings:
         self.ui_coalescence_adaptive = Checkbox(
             value=settings.condensation_adaptive,
             description='coalescence adaptive time-step')
-        self.ui_condensation_coord = Dropdown(
-            options=['volume', 'volume logarithm'],
-            value=settings.condensation_coord,
-            description='condensational variable coordinate')
         self.ui_processes = [Checkbox(value=settings.processes[key], description=key) for key in settings.processes.keys()]
         self.ui_sdpg = IntSlider(value=settings.n_sd_per_gridbox, description="n_sd/gridbox", min=1, max=1000)
         self.fct_description = "MPDATA: flux-corrected transport option"
@@ -138,10 +134,6 @@ class DemoSettings:
         return self.ui_coalescence_adaptive.value
 
     @property
-    def condensation_coord(self):
-        return self.ui_condensation_coord.value
-
-    @property
     def processes(self):
         result = {}
         for checkbox in self.ui_processes:
@@ -186,7 +178,7 @@ class DemoSettings:
             VBox([*self.ui_processes]),
             VBox([self.ui_nx, self.ui_nz, self.ui_sdpg, self.ui_dt, self.ui_simulation_time,
                   self.ui_condensation_rtol_x, self.ui_condensation_rtol_thd,
-                  self.ui_condensation_adaptive, self.ui_coalescence_adaptive, self.ui_condensation_coord,
+                  self.ui_condensation_adaptive, self.ui_coalescence_adaptive
                   *self.ui_mpdata_options]),
         ])
         layout.set_title(0, 'environment parameters')

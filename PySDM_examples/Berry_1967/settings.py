@@ -4,7 +4,7 @@ Created at 08.08.2019
 
 import numpy as np
 from PySDM.initialisation.spectra import Exponential
-from PySDM.dynamics.coalescence.kernels import Geometric
+from PySDM.physics.coalescence_kernels import Geometric
 from PySDM.physics.constants import si
 from PySDM.physics import formulae as phys
 from pystrict import strict

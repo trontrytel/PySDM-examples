@@ -13,7 +13,6 @@ from PySDM.environments import Kinematic2D
 from PySDM.initialisation import spectral_sampling, spatial_sampling
 from PySDM import products as PySDM_products
 from PySDM.state.arakawa_c import Fields
-from PySDM.physics.formulae import Formulae
 from .mpdata import MPDATA
 from .dummy_controller import DummyController
 from .spin_up import SpinUp
@@ -33,8 +32,7 @@ class Simulation:
         return self.core.products
 
     def reinit(self, products=None):
-        formulae = Formulae(condensation_coord=self.settings.condensation_coord)
-        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend, formulae=formulae)
+        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend, formulae=self.settings.formulae)
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,

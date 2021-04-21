@@ -14,7 +14,7 @@ from pystrict import strict
 @strict
 class Settings:
 
-    def __init__(self, n_sd: int=100, dt_output: float=1 * si.second, dt_max: float=1 * si.second):
+    def __init__(self, n_sd: int = 100, dt_output: float = 1 * si.second, dt_max: float = 1 * si.second):
         self.total_time = 3 * si.hours
         self.mass_of_dry_air = 1000 * si.kilogram  # TODO #335 doubled with jupyter si unit
 
@@ -34,7 +34,7 @@ class Settings:
         self.r_bins_edges = np.linspace(0 * si.micrometre, 20 * si.micrometre, 101, endpoint=True)
 
         self.backend = CPU
-        self.coord = 'volume logarithm'
+        self.coord = 'VolumeLogarithm'
         self.adaptive = True
         self.rtol_x = condensation.default_rtol_x
         self.rtol_thd = condensation.default_rtol_thd
