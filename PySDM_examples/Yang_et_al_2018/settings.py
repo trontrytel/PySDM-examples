@@ -38,7 +38,7 @@ class Settings:
         self.adaptive = True
         self.rtol_x = condensation.default_rtol_x
         self.rtol_thd = condensation.default_rtol_thd
-        self.enable_particle_temperatures = False
+        self.dt_cond_range = condensation.default_cond_range
 
         self.T0 = 284.3 * si.kelvin
         self.q0 = 7.6 * si.grams / si.kilogram

@@ -39,7 +39,8 @@ class Simulation:
             kappa=settings.kappa,
             adaptive=settings.adaptive,
             rtol_x=settings.rtol_x,
-            rtol_thd=settings.rtol_thd
+            rtol_thd=settings.rtol_thd,
+            dt_cond_range=settings.dt_cond_range
         )
         builder.add_dynamic(condensation)
 

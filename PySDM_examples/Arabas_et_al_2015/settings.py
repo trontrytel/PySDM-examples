@@ -81,8 +81,6 @@ class Settings:
             # "relaxation": False  # TODO #338
         }
 
-        self.enable_particle_temperatures = False
-
         self.mpdata_iters = 2
         self.mpdata_iga = True
         self.mpdata_fct = True
