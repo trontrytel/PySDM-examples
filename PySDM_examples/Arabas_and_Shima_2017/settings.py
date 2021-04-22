@@ -12,8 +12,8 @@ from pystrict import strict
 
 @strict
 class Settings:
-    def __init__(self, w_avg: float, N_STP: float, r_dry: float, mass_of_dry_air: float):
-        self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus')
+    def __init__(self, w_avg: float, N_STP: float, r_dry: float, mass_of_dry_air: float, coord: str = 'VolumeLogarithm'):
+        self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus', condensation_coordinate=coord)
 
         self.p0 = 1000 * si.hectopascals
         self.RH0 = .98
