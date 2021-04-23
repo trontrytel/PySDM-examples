@@ -20,6 +20,7 @@ from PySDM.physics import constants as const
 from PySDM.physics import formulae as phys
 from PySDM.physics.formulae import Formulae
 from PySDM.physics.constants import si
+from PySDM.backends.numba.conf import JIT_FLAGS
 
 
 # from PyMPDATA import __version__ as TODO #339
@@ -29,11 +30,11 @@ class Settings:
     def __dir__(self) -> Iterable[str]:
         return 'dt', 'grid', 'size', 'n_spin_up', 'versions', 'steps_per_output_interval', 'formulae'
 
-    def __init__(self):
+    def __init__(self, fastmath: bool = JIT_FLAGS['fastmath']):
         key_packages = (PySDM, numba, numpy, scipy)
         self.versions = str({pkg.__name__: pkg.__version__ for pkg in key_packages})
 
-        self.formulae = Formulae(condensation_coordinate='VolumeLogarithm')
+        self.formulae = Formulae(condensation_coordinate='VolumeLogarithm', fastmath=fastmath)
 
         self.condensation_rtol_x = condensation.default_rtol_x
         self.condensation_rtol_thd = condensation.default_rtol_thd
