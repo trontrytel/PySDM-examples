@@ -33,7 +33,7 @@ class Settings:
         self.rtol_x = condensation.default_rtol_x
         self.rtol_thd = condensation.default_rtol_thd
         self.coord = 'volume logarithm'
-        self.dt_cond_range = (1e-10 * si.s, 1 * si.s)
+        self.dt_cond_range = condensation.default_cond_range
 
     @property
     def dt_max(self):
