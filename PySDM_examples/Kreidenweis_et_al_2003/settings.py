@@ -64,7 +64,7 @@ class Settings:
 
         self.starting_amounts = {
             "moles_"+k:
-                phys.volume(self.r_dry) * self.DRY_RHO / (Substance.from_formula("NH4HSO4").mass * si.gram / si.mole)
+                self.formulae.trivia.volume(self.r_dry) * self.DRY_RHO / (Substance.from_formula("NH4HSO4").mass * si.gram / si.mole)
                 if k in ("N_mIII", "S_VI")
                 else np.zeros(self.n_sd)
             for k in AQUEOUS_COMPOUNDS.keys()
