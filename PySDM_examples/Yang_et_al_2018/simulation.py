@@ -21,8 +21,8 @@ class Simulation:
         while (dt_output / self.n_substeps >= settings.dt_max):
             self.n_substeps += 1
         self.bins_edges = phys.volume(settings.r_bins_edges)
-        formulae = Formulae(condensation_coordinate=settings.coord, saturation_vapour_pressure='AugustRocheMagnus')
-        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=formulae)
+        self.formulae = Formulae(condensation_coordinate=settings.coord, saturation_vapour_pressure='AugustRocheMagnus')
+        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=self.formulae)
         builder.set_environment(Parcel(
             dt=dt_output / self.n_substeps,
             mass_of_dry_air=settings.mass_of_dry_air,
