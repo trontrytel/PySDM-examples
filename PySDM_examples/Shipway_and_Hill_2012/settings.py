@@ -5,7 +5,6 @@ import PySDM.physics.constants as const
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 from PySDM.initialisation.spectra import Lognormal
-from PySDM.physics.formulae import temperature_pressure_pv
 from PySDM.dynamics import condensation
 from PySDM.physics.formulae import Formulae
 from pystrict import strict
@@ -43,7 +42,7 @@ class Settings:
         self.rhod0 = phys.ThStd.rho_d(p0, self.qv(0), self._th(0))
 
         def drhod_dz(z, rhod):
-            T, p, _ = temperature_pressure_pv(rhod[0], self.thd(z), self.qv(z))
+            T, p, _ = self.formulae.state_variable_triplet.temperature_pressure_pv(rhod[0], self.thd(z), self.qv(z))
             lv = self.formulae.latent_heat.lv(T)
             return phys.Hydrostatic.drho_dz(g, p, T, self.qv(z), lv)
 
