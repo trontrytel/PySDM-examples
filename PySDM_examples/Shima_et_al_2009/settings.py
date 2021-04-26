@@ -6,16 +6,18 @@ import numpy as np
 from PySDM.initialisation.spectra import Exponential
 from PySDM.physics.coalescence_kernels import Golovin
 from PySDM.physics.constants import si
-from PySDM.physics.formulae import volume
+from PySDM.physics.formulae import Formulae
 from pystrict import strict
 
 
+@strict
 class Settings:
 
     def __init__(self):
+        self.formulae = Formulae()
         self.n_sd = 2 ** 13
         self.n_part = 2 ** 23 / si.metre**3
-        self.X0 = volume(radius=30.531 * si.micrometres)
+        self.X0 = self.formulae.trivia.volume(radius=30.531 * si.micrometres)
         self.dv = 1e6 * si.metres**3
         self.norm_factor = self.n_part * self.dv
         self.rho = 1000 * si.kilogram / si.metre**3
