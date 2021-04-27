@@ -42,7 +42,8 @@ class Settings:
         self.rhod0 = phys.ThStd.rho_d(p0, self.qv(0), self._th(0))
 
         def drhod_dz(z, rhod):
-            T, p, _ = self.formulae.state_variable_triplet.temperature_pressure_pv(rhod[0], self.thd(z), self.qv(z))
+            T = self.formulae.state_variable_triplet.T(rhod[0], self.thd(z))
+            p = self.formulae.state_variable_triplet.p(rhod[0], T, self.qv(z))
             lv = self.formulae.latent_heat.lv(T)
             return phys.Hydrostatic.drho_dz(g, p, T, self.qv(z), lv)
 
