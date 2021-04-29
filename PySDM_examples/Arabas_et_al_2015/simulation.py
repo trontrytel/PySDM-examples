@@ -97,7 +97,6 @@ class Simulation:
         if self.settings.processes["particle advection"]:
             displacement = Displacement(
                 courant_field=fields.courant_field,
-                scheme='FTBS',
                 enable_sedimentation=self.settings.processes["sedimentation"])
             builder.add_dynamic(displacement)
             products.append(PySDM_products.SurfacePrecipitation())  # TODO #37 ditto
