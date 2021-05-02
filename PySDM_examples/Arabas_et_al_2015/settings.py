@@ -117,7 +117,7 @@ class Settings:
     @property
     def field_values(self):
         return {
-            'th': phys.th_dry(self.th_std0, self.qv0),
+            'th': self.formulae.state_variable_triplet.th_dry(self.th_std0, self.qv0),
             'qv': self.qv0
         }
 

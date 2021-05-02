@@ -35,7 +35,7 @@ class Settings:
 
         self._th = interp1d((0, 740, 3260), (297.9, 297.9, 312.66))
         self.qv = interp1d((0, 740, 3260), (.015, .0138, .0024))  # TODO #414: is initial particle water included in initial qv? (q1 logic)
-        self.thd = lambda z: phys.th_dry(self._th(z), self.qv(z))
+        self.thd = lambda z: self.formulae.state_variable_triplet.th_dry(self._th(z), self.qv(z))
 
         p0 = 975 * si.hPa  # TODO #414: not in the paper?
         g = const.g_std
