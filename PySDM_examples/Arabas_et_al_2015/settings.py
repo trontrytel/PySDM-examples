@@ -130,6 +130,6 @@ class Settings:
         return - self.rho_w_max * X / np.pi * np.sin(np.pi * zZ) * np.cos(2 * np.pi * xX)
 
     def rhod(self, zZ):
-        p = phys.Hydrostatic.p_of_z_assuming_const_th_and_qv(self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
-        rhod = phys.ThStd.rho_d(p, self.qv0, self.th_std0)
+        p = self.formulae.hydrostatics.p_of_z_assuming_const_th_and_qv(self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
+        rhod = self.formulae.state_variable_triplet.rho_d(p, self.qv0, self.th_std0)
         return rhod

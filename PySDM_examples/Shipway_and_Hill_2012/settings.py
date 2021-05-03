@@ -39,13 +39,13 @@ class Settings:
 
         p0 = 975 * si.hPa  # TODO #414: not in the paper?
         g = const.g_std
-        self.rhod0 = phys.ThStd.rho_d(p0, self.qv(0), self._th(0))
+        self.rhod0 = self.formulae.state_variable_triplet.rho_d(p0, self.qv(0), self._th(0))
 
         def drhod_dz(z, rhod):
             T = self.formulae.state_variable_triplet.T(rhod[0], self.thd(z))
             p = self.formulae.state_variable_triplet.p(rhod[0], T, self.qv(z))
             lv = self.formulae.latent_heat.lv(T)
-            return phys.Hydrostatic.drho_dz(g, p, T, self.qv(z), lv)
+            return self.formulae.hydrostatics.drho_dz(g, p, T, self.qv(z), lv)
 
         z_points = np.arange(0, self.z_max, self.dz / 2)
         rhod_solution = solve_ivp(

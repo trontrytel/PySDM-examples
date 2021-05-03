@@ -5,7 +5,6 @@ Created at 12.08.2019
 import numpy as np
 from matplotlib import pyplot
 from PySDM.physics.constants import si
-from PySDM.physics import formulae as phys
 from .error_measure import error_measure
 from ..utils.show_plot import show_plot
 from distutils.version import StrictVersion
@@ -91,7 +90,7 @@ class SpectrumPlotter:
                 x=x, t=t, x_0=settings.X0, N_0=settings.n_part
             )
 
-        volume_bins_edges = phys.volume(settings.radius_bins_edges)
+        volume_bins_edges = self.settings.formulae.trivia.volume(settings.radius_bins_edges)
         dm = np.diff(volume_bins_edges)
         dr = np.diff(settings.radius_bins_edges)
 
@@ -102,7 +101,7 @@ class SpectrumPlotter:
         pdf_r_y = pdf_m_y * dm / dr * pdf_r_x
 
         x = pdf_r_x * si.metres / si.micrometres
-        y_true = pdf_r_y * phys.volume(radius=pdf_r_x) * settings.rho / settings.dv * si.kilograms / si.grams
+        y_true = pdf_r_y * self.settings.formulae.trivia.volume(radius=pdf_r_x) * settings.rho / settings.dv * si.kilograms / si.grams
 
         self.ax.plot(x, y_true, color='black')
 
