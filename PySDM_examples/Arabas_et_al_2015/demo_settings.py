@@ -16,6 +16,7 @@ class DemoSettings:
 
     def __init__(self):
         settings = Settings()
+
         self.ui_th_std0 = FloatSlider(description="$\\theta_0$ [K]", value=settings.th_std0, min=280, max=300)
         self.ui_qv0 = FloatSlider(description="q$_{v0}$ [g/kg]", value=settings.qv0 * 1000, min=5, max=10)
         self.ui_p0 = FloatSlider(description="p$_0$ [hPa]", value=settings.p0 / 100, min=900, max=1100)
@@ -72,27 +73,44 @@ class DemoSettings:
                 description='fastmath'
             )
         )
+        self.ui_output_options = {
+            'interval': IntSlider(description='interval [s]', value=settings.output_interval, min=30, max=60*15),
+            'aerosol_radius_threshold': FloatSlider(
+                description='aerosol/cloud threshold [um]',
+                value=settings.aerosol_radius_threshold / physics.si.um,
+                min=.1, max=1, step=.1),
+            'drizzle_radius_threshold': IntSlider(
+                description='cloud/drizzle threshold [um]',
+                value=settings.drizzle_radius_threshold / physics.si.um,
+                min=10, max=100, step=5)
+        }
 
         # TODO #37
         self.v_bins = settings.v_bins
-        self.n_sd = settings.n_sd
         self.size = settings.size
-        self.rhod = settings.rhod
-        self.field_values = settings.field_values
-        self.aerosol_radius_threshold = settings.aerosol_radius_threshold
-        self.drizzle_radius_threshold = settings.drizzle_radius_threshold
-        self.stream_function = settings.stream_function
         self.condensation_substeps = settings.condensation_substeps
         self.condensation_dt_cond_range = settings.condensation_dt_cond_range
         self.condensation_schedule = settings.condensation_schedule
         self.kernel = settings.kernel
         self.spectrum_per_mass_of_dry_air = settings.spectrum_per_mass_of_dry_air
-        self.n_spin_up = settings.n_spin_up
         self.coalescence_dt_coal_range = settings.coalescence_dt_coal_range
         self.coalescence_optimized_random = settings.coalescence_optimized_random
         self.coalescence_substeps = settings.coalescence_substeps
-        self.output_interval = settings.output_interval
-        self.versions = settings.versions
+
+        for attr in ('n_sd', 'rhod', 'field_values', 'versions', 'n_spin_up', 'stream_function'):
+            setattr(self, attr, getattr(settings, attr))
+
+    @property
+    def aerosol_radius_threshold(self):
+        return self.ui_output_options['aerosol_radius_threshold'].value * physics.si.um
+
+    @property
+    def drizzle_radius_threshold(self):
+        return self.ui_output_options['drizzle_radius_threshold'].value * physics.si.um
+
+    @property
+    def output_interval(self):
+        return self.ui_output_options['interval'].value
 
     @property
     def formulae(self) -> physics.Formulae:
@@ -203,12 +221,12 @@ class DemoSettings:
                   self.ui_condensation_rtol_x, self.ui_condensation_rtol_thd,
                   self.ui_condensation_adaptive, self.ui_coalescence_adaptive,
                   *self.ui_mpdata_options]),
-            VBox([
-                *self.ui_formulae_options
-            ])
+            VBox([*self.ui_formulae_options]),
+            VBox([*self.ui_output_options.values()])
         ])
-        layout.set_title(0, 'environment parameters')
+        layout.set_title(0, 'environment')
         layout.set_title(1, 'processes')
         layout.set_title(2, 'discretisation')
         layout.set_title(3, 'physics')
+        layout.set_title(4, 'output')
         return layout

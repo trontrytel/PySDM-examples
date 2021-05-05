@@ -3,23 +3,15 @@ Created at 25.09.2019
 """
 
 from typing import Iterable
-
 import numba
-import numpy
-import numpy as np
+import numpy, numpy as np
 import scipy
 from pystrict import strict
-
 import PySDM
-from PySDM.dynamics import condensation
-from PySDM.dynamics import coalescence
+from PySDM.dynamics import condensation, coalescence
 from PySDM.physics.coalescence_kernels import Geometric
-from PySDM.initialisation.spectra import Lognormal
-from PySDM.initialisation.spectra import Sum
-from PySDM.physics import constants as const
-from PySDM.physics import formulae as phys
-from PySDM.physics.formulae import Formulae
-from PySDM.physics.constants import si
+from PySDM.initialisation.spectra import Lognormal, Sum
+from PySDM.physics import si, Formulae, constants as const
 from PySDM.backends.numba.conf import JIT_FLAGS
 
 
