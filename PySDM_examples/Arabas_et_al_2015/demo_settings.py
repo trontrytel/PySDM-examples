@@ -4,9 +4,11 @@ Created at 02.10.2019
 
 from ..utils.widgets import IntSlider, FloatSlider, VBox, Checkbox, Accordion, Dropdown
 from PySDM_examples.Arabas_et_al_2015.settings import Settings
+from PySDM import physics
 import numpy as np
 import numba
 import os
+import inspect
 
 
 class DemoSettings:
@@ -55,9 +57,23 @@ class DemoSettings:
             Checkbox(value=settings.mpdata_iga, description=self.iga_description),
             IntSlider(value=settings.mpdata_iters, description=self.nit_description, min=1, max=5)
         ]
+        self.ui_formulae_options = [
+            Dropdown(
+                description=k,
+                options=physics.formulae._choices(getattr(physics, k)).keys(),
+                value=v.default
+            )
+            for k, v in inspect.signature(physics.Formulae.__init__).parameters.items()
+            if k not in ('self', 'fastmath')
+        ]
+        self.ui_formulae_options.append(
+            Checkbox(
+                value=inspect.signature(physics.Formulae.__init__).parameters['fastmath'].default,
+                description='fastmath'
+            )
+        )
 
         # TODO #37
-        self.formulae = settings.formulae
         self.v_bins = settings.v_bins
         self.n_sd = settings.n_sd
         self.size = settings.size
@@ -77,6 +93,12 @@ class DemoSettings:
         self.coalescence_substeps = settings.coalescence_substeps
         self.output_interval = settings.output_interval
         self.versions = settings.versions
+
+    @property
+    def formulae(self) -> physics.Formulae:
+        return physics.Formulae(
+            **{widget.description: widget.value for widget in self.ui_formulae_options}
+        )
 
     @property
     def steps_per_output_interval(self) -> int:
@@ -181,8 +203,12 @@ class DemoSettings:
                   self.ui_condensation_rtol_x, self.ui_condensation_rtol_thd,
                   self.ui_condensation_adaptive, self.ui_coalescence_adaptive,
                   *self.ui_mpdata_options]),
+            VBox([
+                *self.ui_formulae_options
+            ])
         ])
         layout.set_title(0, 'environment parameters')
         layout.set_title(1, 'processes')
         layout.set_title(2, 'discretisation')
+        layout.set_title(3, 'physics')
         return layout
