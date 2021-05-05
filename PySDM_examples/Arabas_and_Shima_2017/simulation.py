@@ -46,7 +46,7 @@ class Simulation:
         attributes['dry volume'] = settings.formulae.trivia.volume(radius=r_dry)
         attributes['n'] = np.array([settings.n_in_dv], dtype=np.int64)
         environment = builder.core.environment
-        r_wet = r_wet_init(r_dry, environment, np.zeros_like(attributes['n']), settings.kappa)
+        r_wet = r_wet_init(r_dry, environment, kappa=settings.kappa)
         attributes['volume'] = settings.formulae.trivia.volume(radius=r_wet)
         products = [
             PySDM_products.ParticleMeanRadius(),
