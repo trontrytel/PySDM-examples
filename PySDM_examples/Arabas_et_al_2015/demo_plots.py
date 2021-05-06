@@ -37,15 +37,12 @@ class _ImagePlot(_Plot):
             self.lines['X'][1] = plt.plot([-1] * 2, zlim, **self.line_args)[0]
             self.lines['Z'][1] = plt.plot(xlim, [-1] * 2, **self.line_args)[0]
 
-        data = np.full_like(self.nans, product_range[0])
-        label = f"{product.description} [{product.unit}]"
         product_range, product_scale = {
             products.WaterMixingRatio: ((0, 1), 'linear'),
             products.TotalParticleSpecificConcentration: ((20, 50), 'linear'),
             products.TotalParticleConcentration: ((20, 50), 'linear'),
             products.SuperDropletCount: ((0, 10), 'linear'),
             products.ParticlesVolumeSpectrum: ((20, 50), 'linear'),
-            products.ParticlesSizeSpectrum: ((20, 50), 'linear'),
             products.AerosolConcentration: ((1e0, 1e2), 'linear'),
             products.CloudDropletConcentration: ((1e0, 1e2), 'linear'),
             products.DrizzleConcentration: ((1e-3, 1e1), 'log'),
@@ -64,7 +61,12 @@ class _ImagePlot(_Plot):
             products.DeactivatingRate: ((1e-1, 1e1), 'log'),
             products.CollisionRateDeficit: ((0, 1e10), 'linear'),
             products.CollisionRate: ((0, 1e10), 'linear'),
+            products.CondensationTimestepMin: ((.01, 10), 'log'),
+            products.CondensationTimestepMax: ((.01, 10), 'log'),
+            products.CoalescenceTimestepMin: ((.01, 10), 'log'),
         }[product.__class__]
+        data = np.full_like(self.nans, product_range[0])
+        label = f"{product.description} [{product.unit}]"
 
         self.ax.set_xlabel('X [m]')
         self.ax.set_ylabel('Z [m]')
