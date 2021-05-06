@@ -65,7 +65,7 @@ class DemoSettings:
                 value=v.default
             )
             for k, v in inspect.signature(physics.Formulae.__init__).parameters.items()
-            if k not in ('self', 'fastmath')
+            if k not in ('self', 'fastmath', 'seed')
         ]
         self.ui_formulae_options.append(
             Checkbox(
