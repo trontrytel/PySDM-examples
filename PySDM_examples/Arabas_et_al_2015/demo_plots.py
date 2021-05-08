@@ -5,7 +5,7 @@ Created at 2019
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-
+from PySDM import products
 
 class _Plot:
 
@@ -37,9 +37,36 @@ class _ImagePlot(_Plot):
             self.lines['X'][1] = plt.plot([-1] * 2, zlim, **self.line_args)[0]
             self.lines['Z'][1] = plt.plot(xlim, [-1] * 2, **self.line_args)[0]
 
-        data = np.full_like(self.nans, product.range[0])
+        product_range, product_scale = {
+            products.WaterMixingRatio: ((0, 1), 'linear'),
+            products.TotalParticleSpecificConcentration: ((20, 50), 'linear'),
+            products.TotalParticleConcentration: ((20, 50), 'linear'),
+            products.SuperDropletCount: ((0, 10), 'linear'),
+            products.ParticlesVolumeSpectrum: ((20, 50), 'linear'),
+            products.AerosolConcentration: ((1e0, 1e2), 'linear'),
+            products.CloudDropletConcentration: ((1e0, 1e2), 'linear'),
+            products.DrizzleConcentration: ((1e-3, 1e1), 'log'),
+            products.ParticleMeanRadius: ((1, 25), 'linear'),
+            products.CloudDropletEffectiveRadius: ((0, 25), 'linear'),
+            products.AerosolSpecificConcentration: ((0, 3e2), 'linear'),
+            products.WaterVapourMixingRatio: ((5, 7.5), 'linear'),
+            products.Temperature: ((275, 305), 'linear'),
+            products.RelativeHumidity: ((75, 105), 'linear'),
+            products.Pressure: ((90000, 100000), 'linear'),
+            products.DryAirPotentialTemperature: ((275, 300), 'linear'),
+            products.DryAirDensity: ((0.95, 1.3), 'linear'),
+            products.PeakSupersaturation: ((-1, 1), 'linear'),
+            products.RipeningRate: ((1e-1, 1e1), 'log'),
+            products.ActivatingRate: ((1e-1, 1e1), 'log'),
+            products.DeactivatingRate: ((1e-1, 1e1), 'log'),
+            products.CollisionRateDeficit: ((0, 1e10), 'linear'),
+            products.CollisionRate: ((0, 1e10), 'linear'),
+            products.CondensationTimestepMin: ((.01, 10), 'log'),
+            products.CondensationTimestepMax: ((.01, 10), 'log'),
+            products.CoalescenceTimestepMin: ((.01, 10), 'log'),
+        }[product.__class__]
+        data = np.full_like(self.nans, product_range[0])
         label = f"{product.description} [{product.unit}]"
-        scale = product.scale
 
         self.ax.set_xlabel('X [m]')
         self.ax.set_ylabel('Z [m]')
@@ -48,11 +75,11 @@ class _ImagePlot(_Plot):
                                  origin='lower',
                                  extent=(*xlim, *zlim),
                                  cmap=cmap,
-                                 norm=matplotlib.colors.LogNorm() if scale == 'log' and np.isfinite(
+                                 norm=matplotlib.colors.LogNorm() if product_scale == 'log' and np.isfinite(
                                      data).all() else None  # TODO #37 this is always None!!!
                                  )
         plt.colorbar(self.im, ax=self.ax).set_label(label)
-        self.im.set_clim(vmin=product.range[0], vmax=product.range[1])
+        self.im.set_clim(vmin=product_range[0], vmax=product_range[1])
         if show:
             plt.show()
 

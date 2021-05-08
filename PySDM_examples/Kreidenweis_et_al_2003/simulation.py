@@ -3,7 +3,7 @@ from PySDM import Builder
 from PySDM.backends import CPU
 from PySDM.physics import si
 from PySDM.dynamics import AmbientThermodynamics, Condensation, AqueousChemistry
-from PySDM.dynamics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS, GASEOUS_COMPOUNDS
+from PySDM.physics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS, GASEOUS_COMPOUNDS
 import PySDM.products as PySDM_products
 import numpy as np
 
@@ -13,7 +13,7 @@ class Simulation:
         env = Parcel(dt=settings.dt, mass_of_dry_air=settings.mass_of_dry_air, p0=settings.p0, q0=settings.q0,
                      T0=settings.T0, w=settings.w, g=settings.g)
 
-        builder = Builder(n_sd=settings.n_sd, backend=CPU)
+        builder = Builder(n_sd=settings.n_sd, backend=CPU, formulae=settings.formulae)
         builder.set_environment(env)
 
         attributes = env.init_attributes(

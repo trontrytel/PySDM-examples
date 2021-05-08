@@ -24,7 +24,7 @@ class Simulation:
         while dt_output / self.n_substeps >= settings.dt_max:  # TODO #334 dt_max
             self.n_substeps += 1
 
-        builder = Builder(backend=backend, n_sd=1)
+        builder = Builder(backend=backend, n_sd=1, formulae=settings.formulae)
         builder.set_environment(Parcel(
             dt=dt_output / self.n_substeps,
             mass_of_dry_air=settings.mass_of_dry_air,
@@ -43,11 +43,11 @@ class Simulation:
         ))
         attributes = {}
         r_dry = np.array([settings.r_dry])
-        attributes['dry volume'] = phys.volume(radius=r_dry)
+        attributes['dry volume'] = settings.formulae.trivia.volume(radius=r_dry)
         attributes['n'] = np.array([settings.n_in_dv], dtype=np.int64)
         environment = builder.core.environment
-        r_wet = r_wet_init(r_dry, environment, np.zeros_like(attributes['n']), settings.kappa)
-        attributes['volume'] = phys.volume(radius=r_wet)
+        r_wet = r_wet_init(r_dry, environment, kappa=settings.kappa)
+        attributes['volume'] = settings.formulae.trivia.volume(radius=r_wet)
         products = [
             PySDM_products.ParticleMeanRadius(),
             PySDM_products.CondensationTimestepMin(),

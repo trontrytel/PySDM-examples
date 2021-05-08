@@ -3,22 +3,16 @@ Created at 25.09.2019
 """
 
 from typing import Iterable
-
 import numba
-import numpy
-import numpy as np
+import numpy, numpy as np
 import scipy
 from pystrict import strict
-
 import PySDM
-from PySDM.dynamics import condensation
-from PySDM.dynamics.coalescence import coalescence
-from PySDM.dynamics.coalescence.kernels import Geometric
-from PySDM.initialisation.spectra import Lognormal
-from PySDM.initialisation.spectra import Sum
-from PySDM.physics import constants as const
-from PySDM.physics import formulae as phys
-from PySDM.physics.constants import si
+from PySDM.dynamics import condensation, coalescence
+from PySDM.physics.coalescence_kernels import Geometric
+from PySDM.initialisation.spectra import Lognormal, Sum
+from PySDM.physics import si, Formulae, constants as const
+from PySDM.backends.numba.conf import JIT_FLAGS
 
 
 # from PyMPDATA import __version__ as TODO #339
@@ -26,13 +20,13 @@ from PySDM.physics.constants import si
 @strict
 class Settings:
     def __dir__(self) -> Iterable[str]:
-        return 'dt', 'grid', 'size', 'n_spin_up', 'versions', 'steps_per_output_interval'
+        return 'dt', 'grid', 'size', 'n_spin_up', 'versions', 'steps_per_output_interval', 'formulae'
 
-    def __init__(self):
+    def __init__(self, fastmath: bool = JIT_FLAGS['fastmath']):
         key_packages = (PySDM, numba, numpy, scipy)
         self.versions = str({pkg.__name__: pkg.__version__ for pkg in key_packages})
 
-        self.condensation_coord = 'volume logarithm'
+        self.formulae = Formulae(condensation_coordinate='VolumeLogarithm', fastmath=fastmath)
 
         self.condensation_rtol_x = condensation.default_rtol_x
         self.condensation_rtol_thd = condensation.default_rtol_thd
@@ -57,7 +51,9 @@ class Settings:
         self.dt = 5 * si.second
         self.spin_up_time = 1 * si.hour
 
-        self.v_bins = phys.volume(np.logspace(np.log10(0.001 * si.micrometre), np.log10(100 * si.micrometre), 101, endpoint=True))
+        self.v_bins = self.formulae.trivia.volume(
+            np.logspace(np.log10(0.001 * si.micrometre), np.log10(100 * si.micrometre), 101, endpoint=True)
+        )
 
         self.mode_1 = Lognormal(
             norm_factor=60 / si.centimetre ** 3 / const.rho_STP,
@@ -79,8 +75,6 @@ class Settings:
             "sedimentation": True,
             # "relaxation": False  # TODO #338
         }
-
-        self.enable_particle_temperatures = False
 
         self.mpdata_iters = 2
         self.mpdata_iga = True
@@ -115,7 +109,7 @@ class Settings:
     @property
     def field_values(self):
         return {
-            'th': phys.th_dry(self.th_std0, self.qv0),
+            'th': self.formulae.state_variable_triplet.th_dry(self.th_std0, self.qv0),
             'qv': self.qv0
         }
 
@@ -128,6 +122,6 @@ class Settings:
         return - self.rho_w_max * X / np.pi * np.sin(np.pi * zZ) * np.cos(2 * np.pi * xX)
 
     def rhod(self, zZ):
-        p = phys.Hydrostatic.p_of_z_assuming_const_th_and_qv(self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
-        rhod = phys.ThStd.rho_d(p, self.qv0, self.th_std0)
+        p = self.formulae.hydrostatics.p_of_z_assuming_const_th_and_qv(self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
+        rhod = self.formulae.state_variable_triplet.rho_d(p, self.qv0, self.th_std0)
         return rhod

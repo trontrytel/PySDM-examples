@@ -5,8 +5,8 @@ import PySDM.physics.constants as const
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 from PySDM.initialisation.spectra import Lognormal
-from PySDM.physics.formulae import temperature_pressure_RH
 from PySDM.dynamics import condensation
+from PySDM.physics.formulae import Formulae
 from pystrict import strict
 
 
@@ -14,6 +14,7 @@ from pystrict import strict
 class Settings:
     def __init__(self, n_sd_per_gridbox: int, w_1: float = 2*si.m/si.s, dt: float = 1*si.s,
                  dz: float = 25*si.m, precip: bool = True):
+        self.formulae = Formulae()
         self.n_sd_per_gridbox = n_sd_per_gridbox
         self.kappa = .9  # TODO #414: not in the paper
         self.wet_radius_spectrum_per_mass_of_dry_air = Lognormal(
@@ -34,15 +35,17 @@ class Settings:
 
         self._th = interp1d((0, 740, 3260), (297.9, 297.9, 312.66))
         self.qv = interp1d((0, 740, 3260), (.015, .0138, .0024))  # TODO #414: is initial particle water included in initial qv? (q1 logic)
-        self.thd = lambda z: phys.th_dry(self._th(z), self.qv(z))
+        self.thd = lambda z: self.formulae.state_variable_triplet.th_dry(self._th(z), self.qv(z))
 
         p0 = 975 * si.hPa  # TODO #414: not in the paper?
         g = const.g_std
-        self.rhod0 = phys.ThStd.rho_d(p0, self.qv(0), self._th(0))
+        self.rhod0 = self.formulae.state_variable_triplet.rho_d(p0, self.qv(0), self._th(0))
 
         def drhod_dz(z, rhod):
-            T, p, _ = temperature_pressure_RH(rhod[0], self.thd(z), self.qv(z))
-            return phys.Hydrostatic.drho_dz(g, p, T, self.qv(z))
+            T = self.formulae.state_variable_triplet.T(rhod[0], self.thd(z))
+            p = self.formulae.state_variable_triplet.p(rhod[0], T, self.qv(z))
+            lv = self.formulae.latent_heat.lv(T)
+            return self.formulae.hydrostatics.drho_dz(g, p, T, self.qv(z), lv)
 
         z_points = np.arange(0, self.z_max, self.dz / 2)
         rhod_solution = solve_ivp(
@@ -60,7 +63,7 @@ class Settings:
         self.condensation_adaptive = True
         self.coalescence_adaptive = True
 
-        self.v_bin_edges = phys.volume(np.logspace(np.log10(0.001 * si.um), np.log10(100 * si.um), 101, endpoint=True))
+        self.v_bin_edges = self.formulae.trivia.volume(np.logspace(np.log10(0.001 * si.um), np.log10(100 * si.um), 101, endpoint=True))
         self.cloud_water_radius_range = [1 * si.um, 50 * si.um]
         self.rain_water_radius_range = [50 * si.um, np.inf * si.um]
 

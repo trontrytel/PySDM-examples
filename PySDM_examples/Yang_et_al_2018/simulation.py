@@ -20,9 +20,9 @@ class Simulation:
         self.n_substeps = 1  # TODO #334 use condensation substeps
         while (dt_output / self.n_substeps >= settings.dt_max):
             self.n_substeps += 1
-        self.bins_edges = phys.volume(settings.r_bins_edges)
-        formulae = Formulae(condensation_coord=settings.coord)
-        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=formulae)
+        self.formulae = Formulae(condensation_coordinate=settings.coord, saturation_vapour_pressure='AugustRocheMagnus')
+        self.bins_edges = self.formulae.trivia.volume(settings.r_bins_edges)
+        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=self.formulae)
         builder.set_environment(Parcel(
             dt=dt_output / self.n_substeps,
             mass_of_dry_air=settings.mass_of_dry_air,
@@ -39,12 +39,13 @@ class Simulation:
             kappa=settings.kappa,
             adaptive=settings.adaptive,
             rtol_x=settings.rtol_x,
-            rtol_thd=settings.rtol_thd
+            rtol_thd=settings.rtol_thd,
+            dt_cond_range=settings.dt_cond_range
         )
         builder.add_dynamic(condensation)
 
         products = [
-            PySDM_products.ParticlesWetSizeSpectrum(v_bins=phys.volume(settings.r_bins_edges)),
+            PySDM_products.ParticlesWetSizeSpectrum(v_bins=self.formulae.trivia.volume(settings.r_bins_edges)),
             PySDM_products.CondensationTimestepMin(),
             PySDM_products.CondensationTimestepMax(),
             PySDM_products.RipeningRate()
@@ -64,7 +65,7 @@ class Simulation:
         cell_id = 0
         output["r_bins_values"].append(self.core.products["Particles Wet Size Spectrum"].get())
         volume = self.core.particles['volume'].to_ndarray()
-        output["r"].append(phys.radius(volume=volume))
+        output["r"].append(self.formulae.trivia.radius(volume=volume))
         output["S"].append(self.core.environment["RH"][cell_id] - 1)
         output["qv"].append(self.core.environment["qv"][cell_id])
         output["T"].append(self.core.environment["T"][cell_id])
