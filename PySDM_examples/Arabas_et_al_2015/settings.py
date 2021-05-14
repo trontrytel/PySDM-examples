@@ -7,7 +7,7 @@ import numba
 import numpy, numpy as np
 import scipy
 from pystrict import strict
-import PySDM
+import PySDM, PyMPDATA
 from PySDM.dynamics import condensation, coalescence
 from PySDM.physics.coalescence_kernels import Geometric
 from PySDM.initialisation.spectra import Lognormal, Sum
@@ -15,15 +15,13 @@ from PySDM.physics import si, Formulae, constants as const
 from PySDM.backends.numba.conf import JIT_FLAGS
 
 
-# from PyMPDATA import __version__ as TODO #339
-
 @strict
 class Settings:
     def __dir__(self) -> Iterable[str]:
         return 'dt', 'grid', 'size', 'n_spin_up', 'versions', 'steps_per_output_interval', 'formulae'
 
     def __init__(self, fastmath: bool = JIT_FLAGS['fastmath']):
-        key_packages = (PySDM, numba, numpy, scipy)
+        key_packages = (PySDM, PyMPDATA, numba, numpy, scipy)
         self.versions = str({pkg.__name__: pkg.__version__ for pkg in key_packages})
 
         self.formulae = Formulae(condensation_coordinate='VolumeLogarithm', fastmath=fastmath)
