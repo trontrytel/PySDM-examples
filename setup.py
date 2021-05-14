@@ -4,7 +4,7 @@ setup(
     name='PySDM-examples',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
-    install_requires=['PySDM @ git+https://github.com/atmos-cloud-sim-uj/PySDM@c3b2637#egg=PySDM',
+    install_requires=['PySDM @ git+https://github.com/atmos-cloud-sim-uj/PySDM@d418157#egg=PySDM',
                       'PyMPDATA @ git+https://github.com/atmos-cloud-sim-uj/PyMPDATA@46f6d46#egg=PyMPDATA',
                       'pystrict>=1.1',
                       'matplotlib>=3.2.2',
