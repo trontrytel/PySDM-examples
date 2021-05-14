@@ -5,6 +5,8 @@ from PySDM_examples.Arabas_et_al_2015.simulation import Simulation
 from PySDM_examples.utils.temporary_file import TemporaryFile
 from PySDM_examples.utils.widgets import IntSlider
 from PySDM.backends import CPU
+from scipy.io import netcdf
+import ast
 
 
 def test_Arabas_et_al_2015_export():
@@ -28,4 +30,5 @@ def test_Arabas_et_al_2015_export():
     exporter.run()
 
     # Assert
-
+    versions = netcdf.netcdf_file(file.absolute_path).versions
+    assert 'PyMPDATA' in str(versions)
