@@ -27,7 +27,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - run: |
-          pip install pytest nbconvert
+          # https://github.com/jupyter/nbconvert/issues/1568
+          pip install pytest nbconvert Jinja2<3.0.0 
       - run: |
           pip install -e .
 
