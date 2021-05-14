@@ -27,7 +27,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - run: |
-          pip install pytest nbconvert
+          pip install -r test-time-requirements.txt
       - run: |
           pip install -e .
 
