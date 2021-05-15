@@ -5,7 +5,7 @@ setup(
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     install_requires=['PySDM @ git+https://github.com/atmos-cloud-sim-uj/PySDM@d418157#egg=PySDM',
-                      'PyMPDATA @ git+https://github.com/atmos-cloud-sim-uj/PyMPDATA@46f6d46#egg=PyMPDATA',
+                      'PyMPDATA @ git+https://github.com/slayoo/PyMPDATA@83aeba7#egg=PyMPDATA',
                       'pystrict>=1.1',
                       'matplotlib>=3.2.2',
                       'ipywidgets>=7.5.1',
