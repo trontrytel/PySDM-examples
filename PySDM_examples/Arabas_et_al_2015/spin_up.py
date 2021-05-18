@@ -25,6 +25,5 @@ class SpinUp:
         key = dynamic.__name__
         if key in self.particles.dynamics:
             setattr(self.particles.dynamics[key], attr, value)
-            # TODO #292 log it
         else:
             warnings.warn(f"{key} not found!")

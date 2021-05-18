@@ -1,0 +1,3 @@
+pytest
+nbconvert
+Jinja2<3.0.0  # https://github.com/jupyter/nbconvert/issues/1568 
