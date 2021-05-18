@@ -144,5 +144,5 @@ class _TimeseriesPlot(_Plot):
         if data is not None:
             self.ydata[0:len(data)] = data[:]
         else:
-            self.ydata[0:len(data)] = np.nan
+            self.ydata[:] = np.nan
         self.timeseries.set_ydata(self.ydata)
