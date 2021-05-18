@@ -22,7 +22,13 @@ class Settings:
 
     def __init__(self, fastmath: bool = JIT_FLAGS['fastmath']):
         key_packages = (PySDM, PyMPDATA, numba, numpy, scipy)
-        self.versions = str({pkg.__name__: pkg.__version__ for pkg in key_packages})
+        self.versions = {}
+        for pkg in key_packages:
+            try:
+                self.versions[pkg.__name__] = pkg.__version__
+            except AttributeError:
+                pass
+        self.versions = str(self.versions)
 
         self.formulae = Formulae(condensation_coordinate='VolumeLogarithm', fastmath=fastmath)
 
