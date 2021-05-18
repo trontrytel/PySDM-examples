@@ -17,6 +17,8 @@ class Settings:
         self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus')
 
         self.DRY_RHO = 1800 * si.kg / (si.m ** 3)
+        self.dry_molar_mass = Substance.from_formula("NH4HSO4").mass * si.gram / si.mole
+
         self.system_type = 'closed'
 
         self.t_max = (2400 + 196) * si.s
@@ -64,7 +66,7 @@ class Settings:
 
         self.starting_amounts = {
             "moles_"+k:
-                self.formulae.trivia.volume(self.r_dry) * self.DRY_RHO / (Substance.from_formula("NH4HSO4").mass * si.gram / si.mole)
+                self.formulae.trivia.volume(self.r_dry) * self.DRY_RHO / self.dry_molar_mass
                 if k in ("N_mIII", "S_VI")
                 else np.zeros(self.n_sd)
             for k in AQUEOUS_COMPOUNDS.keys()

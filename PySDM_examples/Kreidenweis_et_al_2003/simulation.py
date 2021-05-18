@@ -9,7 +9,7 @@ import numpy as np
 
 
 class Simulation:
-    def __init__(self, settings):
+    def __init__(self, settings, products=None):
         env = Parcel(dt=settings.dt, mass_of_dry_air=settings.mass_of_dry_air, p0=settings.p0, q0=settings.q0,
                      T0=settings.T0, w=settings.w, g=settings.g)
 
@@ -28,10 +28,12 @@ class Simulation:
         builder.add_dynamic(AqueousChemistry(
             settings.ENVIRONMENT_MOLE_FRACTIONS,
             system_type=settings.system_type,
-            n_substep=settings.n_substep
+            n_substep=settings.n_substep,
+            dry_rho=settings.DRY_RHO,
+            dry_molar_mass=settings.dry_molar_mass
         ))
 
-        products = [
+        products = products or (
             PySDM_products.RelativeHumidity(),
             PySDM_products.WaterMixingRatio(name='ql', description_prefix='liquid', radius_range=[1*si.um, np.inf]),
             PySDM_products.ParcelDisplacement(),
@@ -47,7 +49,7 @@ class Simulation:
             PySDM_products.PeakSupersaturation(),
             PySDM_products.CloudDropletConcentration(radius_range=settings.cloud_radius_range),
             PySDM_products.AqueousMassSpectrum("S_VI", settings.dry_radius_bins_edges)
-        ]
+        )
 
         self.core = builder.build(attributes=attributes, products=products)
         self.settings = settings
