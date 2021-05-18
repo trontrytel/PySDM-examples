@@ -28,7 +28,9 @@ class Simulation:
         builder.add_dynamic(AqueousChemistry(
             settings.ENVIRONMENT_MOLE_FRACTIONS,
             system_type=settings.system_type,
-            n_substep=settings.n_substep
+            n_substep=settings.n_substep,
+            dry_rho=settings.DRY_RHO,
+            dry_molar_mass=settings.dry_molar_mass
         ))
 
         products = products or (
