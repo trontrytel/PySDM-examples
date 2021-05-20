@@ -72,7 +72,7 @@ class Settings:
             for k in AQUEOUS_COMPOUNDS.keys()
         }
         
-        self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(1 * si.um), 101, endpoint=True) / 2
+        self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(1 * si.um), 51, endpoint=True) / 2
 
     @property
     def nt(self):
