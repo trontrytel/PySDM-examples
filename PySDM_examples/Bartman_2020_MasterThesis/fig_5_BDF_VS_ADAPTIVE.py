@@ -5,7 +5,7 @@ Created at 20.08.2020
 from PySDM_examples.Arabas_and_Shima_2017.simulation import Simulation
 from PySDM_examples.Arabas_and_Shima_2017.settings import setups
 from PySDM.backends.numba.test_helpers import bdf
-    
+from PySDM.backends import CPU, GPU
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -35,7 +35,7 @@ def data(n_output, rtols, schemes, setups_num):
                     settings.rtol_x = rtol
                     settings.rtol_thd = rtol
                     settings.n_output = n_output
-                    simulation = Simulation(settings)
+                    simulation = Simulation(settings, backend=CPU if scheme=='CPU' else GPU)
                     results = simulation.run()
                     resultant_data[scheme][rtol].append(results)
     return resultant_data
@@ -98,7 +98,7 @@ def plot(data, rtols, schemes, setups_num, path=None):
 
 def main(save=None):
     rtols = [1e-7, 1e-11]
-    schemes = ['default', 'BDF']
+    schemes = ['CPU', 'BDF']
     setups_num = len(setups)
     input_data = data(80, rtols, schemes, setups_num)
     plot(input_data, rtols, schemes, setups_num, save)
