@@ -56,7 +56,8 @@ class Simulation:
             PySDM_products.Time(),
             PySDM_products.ActivatingRate(),
             PySDM_products.DeactivatingRate(),
-            PySDM_products.RipeningRate()
+            PySDM_products.RipeningRate(),
+            PySDM_products.PeakSupersaturation()
         ]
 
         self.core = builder.build(attributes, products)
