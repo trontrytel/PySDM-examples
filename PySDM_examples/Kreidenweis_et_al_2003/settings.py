@@ -35,18 +35,18 @@ class Settings:
         self.T0 = 285.2 * si.K
         pv0 = .95 * self.formulae.saturation_vapour_pressure.pvs_Celsius(self.T0 - const.T0)
         self.q0 = const.eps * pv0 / (self.p0 - pv0)
-        self.kappa = .61  # TODO #442
+        self.kappa = .61
 
         self.cloud_radius_range = (
                 .5 * si.micrometre,
                 25 * si.micrometre
         )
 
-        # TODO #442
         self.mass_of_dry_air = 44
-        # note: .83 found to match best the initial condition (see test Table_3)
-        # rho0 = .83 * phys.MoistAir.rho_of_p_qv_T(self.p0, self.q0, self.T0)
+
+        # note: rho is not specified in the paper
         rho0 = 1
+
         self.r_dry, self.n_in_dv = spectral_sampling(
             spectrum=spectra.Lognormal(
                 norm_factor=566 / si.cm**3 / rho0 * self.mass_of_dry_air,
