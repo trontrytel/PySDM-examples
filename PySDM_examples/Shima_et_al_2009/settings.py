@@ -3,10 +3,8 @@ Created at 08.08.2019
 """
 
 import numpy as np
-from PySDM.initialisation.spectra import Exponential
 from PySDM.physics.coalescence_kernels import Golovin
-from PySDM.physics.constants import si
-from PySDM.physics.formulae import Formulae
+from PySDM.physics import si, spectra, Formulae
 from pystrict import strict
 
 
@@ -26,7 +24,7 @@ class Settings:
         self.seed = 44
         self._steps = [0, 1200, 2400, 3600]
         self.kernel = Golovin(b=1.5e3 / si.second)
-        self.spectrum = Exponential(norm_factor=self.norm_factor, scale=self.X0)
+        self.spectrum = spectra.Exponential(norm_factor=self.norm_factor, scale=self.X0)
         self.radius_bins_edges = np.logspace(np.log10(10 * si.um), np.log10(5e3 * si.um), num=128, endpoint=True)
 
     @property

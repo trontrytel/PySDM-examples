@@ -1,11 +1,5 @@
-"""
-Created at 08.08.2019
-"""
-
 import numpy as np
-from PySDM.initialisation.spectra import Exponential
-from PySDM.physics.coalescence_kernels import Geometric
-from PySDM.physics import si, Formulae
+from PySDM.physics import si, Formulae, coalescence_kernels, spectra
 from pystrict import strict
 
 
@@ -26,10 +20,10 @@ class Settings:
         self.adaptive = False
         self.seed = 44
         self._steps = [200 * i for i in range(10)]
-        self.kernel = Geometric(collection_efficiency=1)
-        self.spectrum = Exponential(norm_factor=self.norm_factor, scale=self.X0)
+        self.kernel = coalescence_kernels.Geometric(collection_efficiency=1)
+        self.spectrum = spectra.Exponential(norm_factor=self.norm_factor, scale=self.X0)
 
-        # Note 220 instead of 200 to smoothing
+        # Note 220 instead of 200 for smoothing
         self.radius_bins_edges = np.logspace(np.log10(3.94 * si.um), np.log10(220 * si.um), num=100, endpoint=True)
 
     @property

@@ -1,7 +1,3 @@
-"""
-Created at 25.09.2019
-"""
-
 from typing import Iterable
 import numba
 import numpy, numpy as np
@@ -10,8 +6,7 @@ from pystrict import strict
 import PySDM, PyMPDATA
 from PySDM.dynamics import condensation, coalescence
 from PySDM.physics.coalescence_kernels import Geometric
-from PySDM.initialisation.spectra import Lognormal, Sum
-from PySDM.physics import si, Formulae, constants as const
+from PySDM.physics import spectra, si, Formulae, constants as const
 from PySDM.backends.numba.conf import JIT_FLAGS
 
 
@@ -59,17 +54,17 @@ class Settings:
             np.logspace(np.log10(0.001 * si.micrometre), np.log10(100 * si.micrometre), 101, endpoint=True)
         )
 
-        self.mode_1 = Lognormal(
+        self.mode_1 = spectra.Lognormal(
             norm_factor=60 / si.centimetre ** 3 / const.rho_STP,
             m_mode=0.04 * si.micrometre,
             s_geom=1.4
         )
-        self.mode_2 = Lognormal(
+        self.mode_2 = spectra.Lognormal(
           norm_factor=40 / si.centimetre**3 / const.rho_STP,
           m_mode=0.15 * si.micrometre,
           s_geom=1.6
         )
-        self.spectrum_per_mass_of_dry_air = Sum((self.mode_1, self.mode_2))
+        self.spectrum_per_mass_of_dry_air = spectra.Sum((self.mode_1, self.mode_2))
 
         self.processes = {
             "particle advection": True,
