@@ -1,10 +1,5 @@
-"""
-Created at 25.11.2019
-"""
-
-from PySDM.initialisation.spectra import Lognormal
 from PySDM.backends import CPU
-from PySDM.physics.constants import si
+from PySDM.physics import si, spectra
 from PySDM.initialisation import spectral_sampling
 from PySDM.dynamics import condensation
 import numpy as np
@@ -21,7 +16,7 @@ class Settings:
         self.n_steps = int(self.total_time / (5 * si.second))  # TODO #334 rename to n_output
         self.n_sd = n_sd
         self.r_dry, self.n = spectral_sampling.Logarithmic(
-            spectrum=Lognormal(
+            spectrum=spectra.Lognormal(
                 norm_factor=1000 / si.milligram * self.mass_of_dry_air,
                 m_mode=50 * si.nanometre,
                 s_geom=1.4

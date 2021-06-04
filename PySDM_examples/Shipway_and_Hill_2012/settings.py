@@ -1,12 +1,10 @@
 import numpy as np
 from PySDM.physics import si
-import PySDM.physics.formulae as phys
 import PySDM.physics.constants as const
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
-from PySDM.initialisation.spectra import Lognormal
 from PySDM.dynamics import condensation
-from PySDM.physics.formulae import Formulae
+from PySDM.physics import Formulae, spectra
 from pystrict import strict
 
 
@@ -17,7 +15,7 @@ class Settings:
         self.formulae = Formulae()
         self.n_sd_per_gridbox = n_sd_per_gridbox
         self.kappa = .9  # TODO #414: not in the paper
-        self.wet_radius_spectrum_per_mass_of_dry_air = Lognormal(
+        self.wet_radius_spectrum_per_mass_of_dry_air = spectra.Lognormal(
             norm_factor=50/si.cm**3,  # TODO #414: / self.rho,
             m_mode=.08/2 * si.um,
             s_geom=1.4

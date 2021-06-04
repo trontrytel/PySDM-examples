@@ -1,13 +1,9 @@
-from PySDM.physics import si
-from PySDM.initialisation import spectra
-from PySDM.initialisation import spectral_sampling as spec_sampling
-from PySDM.physics import formulae as phys
-from PySDM.physics import constants as const
 from chempy import Substance
 import numpy as np
-from PySDM.physics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS
 from pystrict import strict
-from PySDM.physics.formulae import Formulae
+from PySDM.physics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS
+from PySDM.initialisation import spectral_sampling as spec_sampling
+from PySDM.physics import si, Formulae, spectra, constants as const
 
 
 @strict
