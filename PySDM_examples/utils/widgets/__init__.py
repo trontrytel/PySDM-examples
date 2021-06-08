@@ -26,3 +26,5 @@ from IPython.display import (
     display,
     FileLink
 )
+from PySDM_examples.utils.widgets.freezer import Freezer
+from PySDM_examples.utils.widgets.progbar_updater import ProgbarUpdater
