@@ -124,7 +124,7 @@ class Simulation:
         if self.storage is not None:
             self.storage.init(self.settings)
 
-    def run(self, controller=DummyController()):
+    def run(self, controller=DummyController(), vtk_exporter=None):
         with controller:
             for step in self.settings.output_steps:
                 if controller.panic:
@@ -133,6 +133,9 @@ class Simulation:
                 self.core.run(step - self.core.n_steps)
 
                 self.store(step)
+                
+                if vtk_exporter is not None:
+                    vtk_exporter.export_particles(self.core)
 
                 controller.set_percent(step / self.settings.output_steps[-1])
 
