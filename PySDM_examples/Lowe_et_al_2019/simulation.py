@@ -2,7 +2,7 @@ from PySDM.environments import Parcel
 from PySDM import Builder
 from PySDM.backends import CPU
 from PySDM.physics import si
-from PySDM.dynamics import AmbientThermodynamics, Condensation
+from PySDM.dynamics import AmbientThermodynamics, Condensation, SurfaceOrganics
 import PySDM.products as PySDM_products
 import numpy as np
 
@@ -23,19 +23,23 @@ class Simulation:
 
         builder.add_dynamic(AmbientThermodynamics())
         builder.add_dynamic(Condensation(kappa=settings.kappa))
+        builder.add_dynamic(SurfaceOrganics())
 
         products = products or (
-            PySDM_products.RelativeHumidity(),
+            # PySDM_products.RelativeHumidity(),
             PySDM_products.WaterMixingRatio(name='ql', description_prefix='liquid', radius_range=[1*si.um, np.inf]),
             PySDM_products.ParcelDisplacement(),
-            PySDM_products.Pressure(),
-            PySDM_products.Temperature(),
-            PySDM_products.DryAirDensity(),
-            PySDM_products.WaterVapourMixingRatio(),
+            # PySDM_products.Pressure(),
+            # PySDM_products.Temperature(),
+            # PySDM_products.DryAirDensity(),
+            # PySDM_products.WaterVapourMixingRatio(),
             PySDM_products.Time(),
-            PySDM_products.TotalDryMassMixingRatio(settings.DRY_RHO),
+            # PySDM_products.TotalDryMassMixingRatio(settings.DRY_RHO),
             PySDM_products.PeakSupersaturation(),
             PySDM_products.CloudDropletConcentration(radius_range=settings.cloud_radius_range),
+            PySDM_products.AerosolConcentration(radius_threshold=settings.cloud_radius_range[0]),
+            PySDM_products.ParticlesWetSizeSpectrum(v_bins=settings.formulae.trivia.volume(settings.wet_radius_bins_edges)),
+            PySDM_products.ParticlesDrySizeSpectrum(v_bins=settings.formulae.trivia.volume(settings.dry_radius_bins_edges)),
         )
 
         self.core = builder.build(attributes=attributes, products=products)

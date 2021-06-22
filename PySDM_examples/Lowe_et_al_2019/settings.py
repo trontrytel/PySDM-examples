@@ -7,12 +7,12 @@ from PySDM.physics import si, Formulae, spectra, constants as const
 @strict
 class Settings:
     def __init__(self, dt: float, n_sd: int, n_substep: int,
+                 kappa: float,
+                 surface_tension: str = 'CompressedFilm',
                  spectral_sampling: spec_sampling.SpectralSampling = spec_sampling.Logarithmic):
-        self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus')
+        self.formulae = Formulae(surface_tension=surface_tension)
 
-        self.system_type = 'closed'
-
-        self.t_max = (2400 + 196) * si.s
+        self.t_max = (400 + 196) * si.s
         self.output_interval = 10 * si.s
         self.dt = dt
 
@@ -26,7 +26,7 @@ class Settings:
         self.T0 = 285.2 * si.K
         pv0 = .95 * self.formulae.saturation_vapour_pressure.pvs_Celsius(self.T0 - const.T0)
         self.q0 = const.eps * pv0 / (self.p0 - pv0)
-        self.kappa = .61
+        self.kappa = kappa
 
         self.cloud_radius_range = (
                 .5 * si.micrometre,
@@ -47,6 +47,8 @@ class Settings:
         ).sample(n_sd)
         
         self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(1 * si.um), 51, endpoint=True) / 2
+        self.wet_radius_bins_edges = np.logspace(np.log10(.1 * si.um), np.log10(10 * si.um), 51, endpoint=True) / 2
+
 
     @property
     def nt(self):
