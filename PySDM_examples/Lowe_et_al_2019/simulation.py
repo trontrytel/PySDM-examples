@@ -38,8 +38,8 @@ class Simulation:
             PySDM_products.PeakSupersaturation(),
             PySDM_products.CloudDropletConcentration(radius_range=settings.cloud_radius_range),
             PySDM_products.AerosolConcentration(radius_threshold=settings.cloud_radius_range[0]),
-            PySDM_products.ParticlesWetSizeSpectrum(v_bins=settings.formulae.trivia.volume(settings.wet_radius_bins_edges)),
-            PySDM_products.ParticlesDrySizeSpectrum(v_bins=settings.formulae.trivia.volume(settings.dry_radius_bins_edges)),
+            PySDM_products.ParticlesWetSizeSpectrum(radius_bins_edges=settings.wet_radius_bins_edges),
+            PySDM_products.ParticlesDrySizeSpectrum(radius_bins_edges=settings.dry_radius_bins_edges),
         )
 
         self.core = builder.build(attributes=attributes, products=products)
