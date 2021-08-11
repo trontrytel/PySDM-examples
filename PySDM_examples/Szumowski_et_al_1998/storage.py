@@ -1,7 +1,3 @@
-"""
-Created at 02.10.2019
-"""
-
 import os
 import tempfile
 import numpy as np

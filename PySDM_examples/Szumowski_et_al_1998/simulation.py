@@ -1,7 +1,3 @@
-"""
-Created at 25.09.2019
-"""
-
 from PySDM.backends import CPU
 from PySDM.builder import Builder
 from PySDM.dynamics import AmbientThermodynamics
@@ -12,20 +8,20 @@ from PySDM.dynamics import EulerianAdvection
 from PySDM.environments import Kinematic2D
 from PySDM.initialisation import spectral_sampling, spatial_sampling
 from PySDM import products as PySDM_products
-from PySDM.state.arakawa_c import Fields
-from .mpdata import MPDATA
-from .dummy_controller import DummyController
-from .spin_up import SpinUp
+from .mpdata_2d import MPDATA_2D
+from .fields import Fields
+from PySDM_examples.utils import DummyController
 import numpy as np
 
 
 class Simulation:
 
-    def __init__(self, settings, storage, backend=CPU):
+    def __init__(self, settings, storage, SpinUp, backend=CPU):
         self.settings = settings
         self.storage = storage
         self.core = None
         self.backend = backend
+        self.SpinUp = SpinUp
 
     @property
     def products(self):
@@ -36,8 +32,7 @@ class Simulation:
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,
-                                  rhod_of=self.settings.rhod,
-                                  field_values=self.settings.field_values)
+                                  rhod_of=self.settings.rhod)
         builder.set_environment(environment)
 
         cloud_range = (self.settings.aerosol_radius_threshold, self.settings.drizzle_radius_threshold)
@@ -70,7 +65,11 @@ class Simulation:
             PySDM_products.RipeningRate()
         ]
 
-        fields = Fields(environment, self.settings.stream_function)
+        fields = Fields(environment, self.settings.stream_function,
+            {
+                'th': self.settings.initial_dry_potential_temperature_profile,
+                'qv': self.settings.initial_vapour_mixing_ratio_profile
+            })
         if self.settings.processes['fluid advection']:  # TODO #37 ambient thermodynamics checkbox
             builder.add_dynamic(AmbientThermodynamics())
         if self.settings.processes["condensation"]:
@@ -87,7 +86,7 @@ class Simulation:
             products.append(PySDM_products.CondensationTimestepMin())  # TODO #37 and what if a user doesn't want it?
             products.append(PySDM_products.CondensationTimestepMax())
         if self.settings.processes['fluid advection']:
-            solver = MPDATA(
+            solver = MPDATA_2D(
                 fields=fields,
                 n_iters=self.settings.mpdata_iters,
                 infinite_gauge=self.settings.mpdata_iga,
@@ -121,7 +120,8 @@ class Simulation:
                                                  kappa=self.settings.kappa)
 
         self.core = builder.build(attributes, products)
-        SpinUp(self.core, self.settings.n_spin_up)
+        if self.SpinUp is not None:
+            self.SpinUp(self.core, self.settings.n_spin_up)
         if self.storage is not None:
             self.storage.init(self.settings)
 
