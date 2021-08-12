@@ -1,7 +1,3 @@
-"""
-Created at 2019
-"""
-
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np

@@ -1,7 +1,3 @@
-"""
-Created at 04.09.2020
-"""
-
 import numpy as np
 from threading import Thread
 from PyMPDATA import Options, Stepper, VectorField, ScalarField, Solver
@@ -10,7 +6,7 @@ from PySDM.backends.numba import conf
 from numba.core.errors import NumbaExperimentalFeatureWarning
 
 
-class MPDATA:
+class MPDATA_2D:
     def __init__(self, *, fields,
                  n_iters=2, infinite_gauge=True,
                  flux_corrected_transport=True, third_order_terms=False):
@@ -34,7 +30,6 @@ class MPDATA:
         for d in range(len(fields.advector)):
             np.testing.assert_array_less(np.abs(fields.advector[d]), 1)
 
-        self.advector = fields.advector
         advector_impl = VectorField(fields.advector, halo=options.n_halo,
                                     boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition()))
 

@@ -2,12 +2,12 @@
 Created at 02.10.2019
 """
 
-from ..utils.widgets import FloatProgress, Button, HBox
+from PySDM_examples.utils.widgets import FloatProgress, Button, HBox
 from time import sleep
 from threading import Thread
 
 
-class DemoController:
+class GUIController:
     def __init__(self, simulator, viewer, exporter, ncdf_file):
         self.progress = FloatProgress(value=0.0, min=0.0, max=1.0)
         self.button = Button()
