@@ -29,17 +29,18 @@ def x_vec_coord(grid):
     assert zZ.shape == (nx, nz)
     return xX, zZ
 
-def nondivergent_vector_field_2d(grid, size, dt, stream_function: callable):
+
+def nondivergent_vector_field_2d(grid: tuple, size: tuple, dt: float, stream_function: callable, t=0):
     dx = size[0] / grid[0]
     dz = size[1] / grid[1]
     dxX = 1 / grid[0]
     dzZ = 1 / grid[1]
 
     xX, zZ = x_vec_coord(grid)
-    rho_velocity_x = -(stream_function(xX, zZ + dzZ/2) - stream_function(xX, zZ - dzZ/2)) / dz
+    rho_velocity_x = -(stream_function(xX, zZ + dzZ/2, t) - stream_function(xX, zZ - dzZ/2, t)) / dz
 
     xX, zZ = z_vec_coord(grid)
-    rho_velocity_z = (stream_function(xX + dxX/2, zZ) - stream_function(xX - dxX/2, zZ)) / dx
+    rho_velocity_z = (stream_function(xX + dxX/2, zZ, t) - stream_function(xX - dxX/2, zZ, t)) / dx
 
     rho_times_courant = [rho_velocity_x * dt / dx, rho_velocity_z * dt / dz]
     return rho_times_courant
@@ -55,7 +56,7 @@ class Fields:
 
         self.advectees = dict(
             (key, np.repeat(
-                profile.reshape(1,-1),
+                profile.reshape(1, -1),
                 environment.mesh.grid[0],
                 axis=0)
              ) for key, profile in initial_profiles.items()

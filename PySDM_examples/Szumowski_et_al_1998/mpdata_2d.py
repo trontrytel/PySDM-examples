@@ -38,7 +38,7 @@ class MPDATA_2D:
                                boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition()))
         self.mpdatas = {}
         for k, v in fields.advectees.items():
-            advectee = ScalarField(np.full(self.grid, v, dtype=options.dtype), halo=options.n_halo,
+            advectee = ScalarField(np.asarray(v, dtype=options.dtype), halo=options.n_halo,
                                    boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition()))
             self.mpdatas[k] = Solver(stepper=stepper, advectee=advectee, advector=advector_impl, g_factor=g_factor_impl)
 

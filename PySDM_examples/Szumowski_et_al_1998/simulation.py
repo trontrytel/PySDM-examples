@@ -112,6 +112,10 @@ class Simulation:
             products.append(PySDM_products.CoalescenceTimestepMin())
             products.append(PySDM_products.CollisionRate())
             products.append(PySDM_products.CollisionRateDeficit())
+        if self.settings.processes["freezing"]:
+            products.append(PySDM_products.IceWaterContent())
+        if self.settings.processes["PartMC piggy-backer"]:
+            products.append(PySDM_products.PartMC.VolumeFractalDimension())
 
         attributes = environment.init_attributes(spatial_discretisation=spatial_sampling.Pseudorandom(),
                                                  spectral_discretisation=spectral_sampling.ConstantMultiplicity(

@@ -97,11 +97,14 @@ class GUISettings:
 
     @property
     def initial_vapour_mixing_ratio_profile(self):
-        return self.__settings.initial_vapour_mixing_ratio_profile + self.ui_dqv0.value / 1000
+        return np.full(self.grid[-1], self.__settings.qv0 + self.ui_dqv0.value / 1000)
 
     @property
     def initial_dry_potential_temperature_profile(self):
-        return self.__settings.initial_dry_potential_temperature_profile + self.ui_dth0.value
+        return np.full(self.grid[-1], self.formulae.state_variable_triplet.th_dry(
+            self.__settings.th_std0 + self.ui_dth0.value,
+            self.__settings.qv0 + self.ui_dqv0.value / 1000
+        ))
 
     @property
     def aerosol_radius_threshold(self):

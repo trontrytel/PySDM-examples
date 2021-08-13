@@ -3,7 +3,7 @@ from PySDM_examples.Morrison_and_Grabowski_2007.common import Common
 
 
 class StratoCumulus(Common):
-    def stream_function(self, xX, zZ):
+    def stream_function(self, xX, zZ, _):
         X = self.size[0]
         return - self.rho_w_max * X / np.pi * np.sin(np.pi * zZ) * np.cos(2 * np.pi * xX)
 
