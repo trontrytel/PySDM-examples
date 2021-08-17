@@ -32,7 +32,7 @@ class Simulation:
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,
-                                  rhod_of=self.settings.rhod)
+                                  rhod_of=self.settings.rhod_of_zZ)
         builder.set_environment(environment)
 
         cloud_range = (self.settings.aerosol_radius_threshold, self.settings.drizzle_radius_threshold)
@@ -112,6 +112,10 @@ class Simulation:
             products.append(PySDM_products.CoalescenceTimestepMin())
             products.append(PySDM_products.CollisionRate())
             products.append(PySDM_products.CollisionRateDeficit())
+        if self.settings.processes["freezing"]:
+            products.append(PySDM_products.IceWaterContent())
+        if self.settings.processes["PartMC piggy-backer"]:
+            products.append(PySDM_products.PartMC.VolumeFractalDimension())
 
         attributes = environment.init_attributes(spatial_discretisation=spatial_sampling.Pseudorandom(),
                                                  spectral_discretisation=spectral_sampling.ConstantMultiplicity(
