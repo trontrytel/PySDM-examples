@@ -2,6 +2,10 @@ import numpy as np
 from PySDM_examples.Morrison_and_Grabowski_2007.common import Common
 from PySDM.physics import si
 from PySDM.backends.numba.conf import JIT_FLAGS
+from PySDM_examples.Szumowski_et_al_1998 import sounding
+from scipy.interpolate import interp1d
+from PySDM.physics import constants as const
+from scipy.integrate import solve_ivp
 
 
 class Cumulus(Common):
@@ -11,12 +15,65 @@ class Cumulus(Common):
         self.hx = 1.8 * si.km
         self.x0 = 3.6 * si.km
         self.xc = self.size[0]/2
-        self.grid = tuple(s/(50*si.m) for s in self.size)
+        self.dz = 50 * si.m
+        self.grid = tuple(s/self.dz for s in self.size)
         for g in self.grid:
             assert int(g) == g
         self.grid = tuple(int(g) for g in self.grid)
         self.dt = 1 * si.s
         self.simulation_time = 60 * si.min
+
+        self.__init_profiles()
+
+    def __init_profiles(self):
+        z_of_p = self.__z_of_p()
+        T_of_z = interp1d(z_of_p, sounding.temperature)
+        p_of_z = interp1d(z_of_p, sounding.pressure)
+        q_of_z = interp1d(z_of_p, sounding.mixing_ratio)
+
+        z_points_scalar = np.linspace(self.dz/2, self.size[-1]-self.dz/2, num=self.grid[-1], endpoint=True)
+        z_points_both = np.linspace(0, self.size[-1], num=2 * self.grid[-1] + 1, endpoint=True)
+        rhod_of_z = self.__rhod_of_z(T_of_z, p_of_z, q_of_z, z_of_p, z_points_both)
+        self.rhod = interp1d(z_points_both/self.size[-1], rhod_of_z)
+        self.qv0 = q_of_z(z_points_scalar)
+        self.th_std0 = self.formulae.trivia.th_std(p_of_z(z_points_scalar), T_of_z(z_points_scalar))
+
+    def rhod_of_zZ(self, zZ):
+        return self.rhod(zZ)
+
+    def __rhod_of_z(self, T_of_z, p_of_z, q_of_z, z_of_p, z_points):
+        def drhod_dz(z, _):
+            lv = self.formulae.latent_heat.lv(T_of_z(z))
+            return self.formulae.hydrostatics.drho_dz(const.g_std, p_of_z(z), T_of_z(z), q_of_z(z), lv)
+
+        theta_std0 = self.formulae.trivia.th_std(sounding.pressure[0], sounding.temperature[0])
+        rhod0 = self.formulae.state_variable_triplet.rho_d(sounding.pressure[0], sounding.mixing_ratio[0], theta_std0)
+        rhod_solution = solve_ivp(
+            fun=drhod_dz,
+            t_span=(0, np.amax(z_of_p)),
+            y0=np.asarray((rhod0,)),
+            t_eval=z_points
+        )
+        assert rhod_solution.success
+        return rhod_solution.y[0]
+
+    def __z_of_p(self):
+        T_virt_of_p = interp1d(
+            sounding.pressure,
+            sounding.temperature * (1 + sounding.mixing_ratio / const.eps) / (1 + sounding.mixing_ratio)
+        )
+
+        def dz_dp(p, _):
+            return -const.Rd * T_virt_of_p(p) / const.g_std / p
+
+        z_of_p = solve_ivp(
+            fun=dz_dp,
+            t_span=(max(sounding.pressure), min(sounding.pressure)),
+            y0=np.asarray((0,)),
+            t_eval=sounding.pressure
+        )
+        assert z_of_p.success
+        return z_of_p.y[0]
 
     @staticmethod
     def z0(z):
@@ -61,3 +118,8 @@ class Cumulus(Common):
                     * np.cos(self.alpha(x) * np.pi * (x-self.x0)/self.hx)
                 + self.A2(t)/2*zZ**2
         )
+
+    def rhod(self, zZ):
+        p = self.formulae.hydrostatics.p_of_z_assuming_const_th_and_qv(self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
+        rhod = self.formulae.state_variable_triplet.rho_d(p, self.qv0, self.th_std0)
+        return rhod

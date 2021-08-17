@@ -6,7 +6,6 @@ import os
 import inspect
 
 
-
 class GUISettings:
     def __dir__(self):
         return self.__settings.__dir__()
@@ -92,7 +91,7 @@ class GUISettings:
         self.coalescence_optimized_random = settings.coalescence_optimized_random
         self.coalescence_substeps = settings.coalescence_substeps
 
-        for attr in ('n_sd', 'rhod', 'versions', 'n_spin_up', 'stream_function'):
+        for attr in ('n_sd', 'rhod_of_zZ', 'versions', 'n_spin_up', 'stream_function'):
             setattr(self, attr, getattr(settings, attr))
 
     @property

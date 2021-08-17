@@ -13,6 +13,3 @@ class ColdCumulus(Cumulus):
     def kappa(self):
         return 1
 
-    @property
-    def spectrum_per_mass_of_dry_air(self):
-        return None

@@ -2,6 +2,7 @@ from PySDM.physics import si, Formulae, constants as const
 from PySDM.dynamics import condensation, coalescence
 import numpy, numpy as np
 from PySDM.physics.coalescence_kernels import Geometric
+from PySDM.physics import spectra
 import PySDM, PyMPDATA
 import numba
 import scipy
@@ -34,6 +35,18 @@ class Common:
         self.output_interval = 1 * si.minute
         self.spin_up_time = 0
 
+        self.mode_1 = spectra.Lognormal(
+            norm_factor=60 / si.centimetre ** 3 / const.rho_STP,
+            m_mode=0.04 * si.micrometre,
+            s_geom=1.4
+        )
+        self.mode_2 = spectra.Lognormal(
+          norm_factor=40 / si.centimetre**3 / const.rho_STP,
+          m_mode=0.15 * si.micrometre,
+          s_geom=1.6
+        )
+        self.spectrum_per_mass_of_dry_air = spectra.Sum((self.mode_1, self.mode_2))
+
         self.processes = {
             "particle advection": True,
             "fluid advection": True,
@@ -58,11 +71,6 @@ class Common:
             except AttributeError:
                 pass
         self.versions = str(self.versions)
-
-    def rhod(self, zZ):
-        p = self.formulae.hydrostatics.p_of_z_assuming_const_th_and_qv(self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
-        rhod = self.formulae.state_variable_triplet.rho_d(p, self.qv0, self.th_std0)
-        return rhod
 
     @property
     def n_steps(self) -> int:

@@ -32,7 +32,7 @@ class Simulation:
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,
-                                  rhod_of=self.settings.rhod)
+                                  rhod_of=self.settings.rhod_of_zZ)
         builder.set_environment(environment)
 
         cloud_range = (self.settings.aerosol_radius_threshold, self.settings.drizzle_radius_threshold)
