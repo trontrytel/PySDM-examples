@@ -17,7 +17,6 @@ class Simulation:
 
     def __init__(self, settings, backend=CPU):
         dt_output = settings.total_time / settings.n_steps  # TODO #334 overwritten in jupyter example
-        #dt_output = settings.dt_output
         self.n_substeps = 1  # TODO #334 use condensation substeps
         while (dt_output / self.n_substeps >= settings.dt_max):
             self.n_substeps += 1
@@ -49,10 +48,7 @@ class Simulation:
             PySDM_products.ParticlesWetSizeSpectrum(radius_bins_edges=settings.r_bins_edges),
             PySDM_products.CondensationTimestepMin(),
             PySDM_products.CondensationTimestepMax(),
-            PySDM_products.ActivatingRate(),
-            PySDM_products.DeactivatingRate(),
-            PySDM_products.RipeningRate(),
-            PySDM_products.PeakSupersaturation()
+            PySDM_products.RipeningRate()
         ]
 
         attributes = environment.init_attributes(
@@ -78,13 +74,10 @@ class Simulation:
         output["dt_cond_max"].append(self.core.products["dt_cond_max"].get()[cell_id].copy())
         output["dt_cond_min"].append(self.core.products["dt_cond_min"].get()[cell_id].copy())
         output['ripening_rate'].append(self.core.products['ripening_rate'].get()[cell_id].copy())
-        output['activating_rate'].append(self.core.products['activating_rate'].get()[cell_id].copy())
-
 
     def run(self):
         output = {"r": [], "S": [], "z": [], "t": [], "qv": [], "T": [],
-                  "r_bins_values": [], "dt_cond_max": [], "dt_cond_min": [], "ripening_rate": [],
-                   "activating_rate": []}
+                  "r_bins_values": [], "dt_cond_max": [], "dt_cond_min": [], "ripening_rate": []}
 
         self.save(output)
         for step in range(self.n_steps):
