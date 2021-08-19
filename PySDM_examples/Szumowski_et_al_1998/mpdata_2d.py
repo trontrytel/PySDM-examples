@@ -3,16 +3,27 @@ from threading import Thread
 from PyMPDATA import Options, Stepper, VectorField, ScalarField, Solver
 from PyMPDATA.arakawa_c.boundary_condition.periodic_boundary_condition import PeriodicBoundaryCondition
 from PySDM.backends.numba import conf
-from numba.core.errors import NumbaExperimentalFeatureWarning
+from PySDM_examples.Szumowski_et_al_1998.fields import nondivergent_vector_field_2d, x_vec_coord, z_vec_coord
+from PySDM.state.arakawa_c import make_rhod
+import inspect
 
 
 class MPDATA_2D:
-    def __init__(self, *, fields,
+    def __init__(self, *, fields, stream_function, rhod_of_zZ, dt, grid, size,
+                 displacement,
                  n_iters=2, infinite_gauge=True,
-                 flux_corrected_transport=True, third_order_terms=False):
-        self.grid = fields.g_factor.shape
+                 flux_corrected_transport=True,
+                 third_order_terms=False
+                 ):
+        self.grid = grid
+        self.size = size
+        self.dt = dt
+        self.stream_function = stream_function
+        self.stream_function_time_dependent = 't' in inspect.signature(stream_function).parameters
         self.asynchronous = False
         self.thread: (Thread, None) = None
+        self.displacement = displacement
+        self.t = 0
 
         options = Options(
             n_iters=n_iters,
@@ -26,21 +37,28 @@ class MPDATA_2D:
 
         stepper = Stepper(options=options, grid=self.grid, non_unit_g_factor=True, **disable_threads_if_needed)
 
-        # CFL condition
-        for d in range(len(fields.advector)):
-            np.testing.assert_array_less(np.abs(fields.advector[d]), 1)
+        advector_impl = VectorField(
+            (
+                np.full((grid[0]+1, grid[1]), np.nan),
+                np.full((grid[0], grid[1]+1), np.nan)
+            ),
+            halo=options.n_halo,
+            boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition())
+        )
 
-        advector_impl = VectorField(fields.advector, halo=options.n_halo,
-                                    boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition()))
-
-        self.g_factor = fields.g_factor
-        g_factor_impl = ScalarField(fields.g_factor.astype(dtype=options.dtype), halo=options.n_halo,
+        g_factor = make_rhod(self.grid, rhod_of_zZ)
+        g_factor_impl = ScalarField(g_factor.astype(dtype=options.dtype), halo=options.n_halo,
                                boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition()))
+
+        self.g_factor_vec = (
+            rhod_of_zZ(zZ=x_vec_coord(self.grid)[-1]),
+            rhod_of_zZ(zZ=z_vec_coord(self.grid)[-1])
+        )
         self.mpdatas = {}
         for k, v in fields.advectees.items():
-            advectee = ScalarField(np.asarray(v, dtype=options.dtype), halo=options.n_halo,
+            advectee_impl = ScalarField(np.asarray(v, dtype=options.dtype), halo=options.n_halo,
                                    boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition()))
-            self.mpdatas[k] = Solver(stepper=stepper, advectee=advectee, advector=advector_impl, g_factor=g_factor_impl)
+            self.mpdatas[k] = Solver(stepper=stepper, advectee=advectee_impl, advector=advector_impl, g_factor=g_factor_impl)
 
     def __getitem__(self, item):
         return self.mpdatas[item]
@@ -57,6 +75,25 @@ class MPDATA_2D:
             if self.thread is not None:
                 self.thread.join()
 
+    def refresh_advector(self):
+        for mpdata in self.mpdatas.values():
+            advector = nondivergent_vector_field_2d(self.grid, self.size, self.dt, self.stream_function, t=self.t)
+            for d in range(len(self.grid)):
+                np.testing.assert_array_less(np.abs(advector[d]), 1)
+                mpdata.advector.get_component(d)[:] = advector[d]
+            if self.displacement is not None:
+                for d in range(len(self.grid)):
+                    advector[d] /= self.g_factor_vec[d]
+                self.displacement.upload_courant_field(advector)
+            break  # the advector field is shared
+
     def step(self):
+        if not self.stream_function_time_dependent and self.t == 0:
+            self.refresh_advector()
+
+        self.t += .5 * self.dt
+        if self.stream_function_time_dependent:
+            self.refresh_advector()
         for mpdata in self.mpdatas.values():
             mpdata.advance(1)
+        self.t += .5 * self.dt

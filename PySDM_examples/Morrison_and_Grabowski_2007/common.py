@@ -46,6 +46,7 @@ class Common:
           s_geom=1.6
         )
         self.spectrum_per_mass_of_dry_air = spectra.Sum((self.mode_1, self.mode_2))
+        self.kappa = 1  # TODO #441!
 
         self.processes = {
             "particle advection": True,
@@ -91,3 +92,11 @@ class Common:
     @property
     def n_sd(self):
         return self.grid[0] * self.grid[1] * self.n_sd_per_gridbox
+
+    @property
+    def initial_vapour_mixing_ratio_profile(self):
+        return np.full(self.grid[-1], self.qv0)
+
+    @property
+    def initial_dry_potential_temperature_profile(self):
+        return np.full(self.grid[-1], self.formulae.state_variable_triplet.th_dry(self.th_std0, self.qv0))

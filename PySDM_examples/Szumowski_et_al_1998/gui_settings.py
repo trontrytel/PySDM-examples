@@ -14,7 +14,6 @@ class GUISettings:
         self.__settings = settings
         self.ui_dth0 = FloatSlider(description="$\\Delta\\theta_0$ [K]", value=0, min=-10, max=10)
         self.ui_dqv0 = FloatSlider(description="$\\Delta q_{v0}$ [g/kg]", value=0, min=-1, max=1)
-        self.ui_p0 = FloatSlider(description="p$_0$ [hPa]", value=settings.p0 / 100, min=900, max=1100)
         self.ui_kappa = FloatSlider(description="$\\kappa$ [1]", value=settings.kappa, min=0, max=1.5)
         self.ui_nx = IntSlider(value=settings.grid[0], min=10, max=100, description="nx")
         self.ui_nz = IntSlider(value=settings.grid[1], min=10, max=100, description="nz")
@@ -132,10 +131,6 @@ class GUISettings:
         return np.arange(0, self.n_steps + 1, self.steps_per_output_interval)
 
     @property
-    def p0(self):
-        return self.ui_p0.value*100
-
-    @property
     def kappa(self):
         return self.ui_kappa.value
 
@@ -208,7 +203,7 @@ class GUISettings:
 
     def box(self):
         layout = Accordion(children=[
-            VBox([self.ui_dth0, self.ui_dqv0, self.ui_p0, self.ui_kappa]),
+            VBox([self.ui_dth0, self.ui_dqv0, self.ui_kappa]),
             VBox([*self.ui_processes]),
             VBox([self.ui_nx, self.ui_nz, self.ui_sdpg, self.ui_dt, self.ui_simulation_time,
                   self.ui_condensation_rtol_x, self.ui_condensation_rtol_thd,

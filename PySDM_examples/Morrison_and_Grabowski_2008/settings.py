@@ -3,13 +3,6 @@ from PySDM.physics import si
 from pystrict import strict
 
 
-@strict
+#@strict
 class ColdCumulus(Cumulus):
-    @property
-    def p0(self):
-        return 1013 * si.hPa
-
-    @property
-    def kappa(self):
-        return 1
-
+    pass

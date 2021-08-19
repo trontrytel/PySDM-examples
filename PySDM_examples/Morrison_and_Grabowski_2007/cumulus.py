@@ -95,18 +95,18 @@ class Cumulus(Common):
         if t <= 900 * si.s:
             return 5.73e2
         elif t <= 1500 * si.s:
-            return 5.73e2 + 2.02e3 * (1 + np.cos(np.pi*(t-900)/600 + 1))
+            return 5.73e2 + 2.02e3 * (1 + np.cos(np.pi*((t - 900)/600 + 1)))
         else:
-            return 1.15e3 + 1.72e3 * (1 + np.cos(np.pi*(min(t, 2400)-1500)/900 + 1))
+            return 1.15e3 + 1.72e3 * (1 + np.cos(np.pi*((min(t, 2400)-1500)/900 + 1)))
 
     @staticmethod
     def A2(t):
         if t <= 300 * si.s:
             return 0
         elif t <= 1500 * si.s:
-            return 6e2 * (1 + np.cos(np.pi * (t - 300)/600 - 1))
+            return 6e2 * (1 + np.cos(np.pi * ((t - 300)/600 - 1)))
         else:
-            return 5e2 * (1 + np.cos(np.pi * (min(2400, t) - 1500)/900 - 1))
+            return 5e2 * (1 + np.cos(np.pi * ((min(2400, t) - 1500)/900 - 1)))
 
     # see Appendix (page 2859)
     def stream_function(self, xX, zZ, t):
@@ -114,8 +114,8 @@ class Cumulus(Common):
         z = zZ * self.size[-1]
         return (
                 - self.A1(t)
-                    * np.sin(self.beta(x) * np.pi * (z-self.z0(z))/self.hz(z))
-                    * np.cos(self.alpha(x) * np.pi * (x-self.x0)/self.hx)
+                * np.cos(self.alpha(x) * np.pi * (x - self.x0) / self.hx)
+                * np.sin(self.beta(x) * np.pi * (z-self.z0(z))/self.hz(z))
                 + self.A2(t)/2*zZ**2
         )
 
