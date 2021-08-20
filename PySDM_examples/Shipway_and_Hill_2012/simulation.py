@@ -38,7 +38,8 @@ class Simulation:
                 kernel=Geometric(collection_efficiency=1),
                 adaptive=settings.coalescence_adaptive
             ))
-            builder.add_dynamic(Displacement(enable_sedimentation=True, courant_field=(np.zeros(settings.nz+1),)))  # TODO #414
+            displacement = Displacement(enable_sedimentation=True)
+            builder.add_dynamic(displacement)
         attributes = env.init_attributes(
             spatial_discretisation=spatial_sampling.Pseudorandom(),
             spectral_discretisation=spectral_sampling.ConstantMultiplicity(
@@ -67,6 +68,8 @@ class Simulation:
             PySDM_products.PeakSupersaturation()
         ]
         self.core = builder.build(attributes=attributes, products=products)
+        if settings.precip:
+            displacement.upload_courant_field(courant_field=(np.zeros(settings.nz + 1),))  # TODO #414
 
     def save(self, output, step):
         for k, v in self.core.products.items():

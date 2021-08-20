@@ -22,5 +22,3 @@ class Settings(StratoCumulus):
         self.simulation_time = 90 * si.minute
         self.dt = 5 * si.second
         self.spin_up_time = 1 * si.hour
-
-        self.kappa = 1  # TODO #441!

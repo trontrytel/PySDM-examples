@@ -58,14 +58,10 @@ class Simulation:
             PySDM_products.DryAirPotentialTemperature(),
             PySDM_products.CPUTime(),
             PySDM_products.WallTime(),
-            PySDM_products.CloudDropletEffectiveRadius(radius_range=cloud_range),
-            PySDM_products.PeakSupersaturation(),
-            PySDM_products.ActivatingRate(),
-            PySDM_products.DeactivatingRate(),
-            PySDM_products.RipeningRate()
+            PySDM_products.CloudDropletEffectiveRadius(radius_range=cloud_range)
         ]
 
-        fields = Fields(environment, self.settings.stream_function,
+        fields = Fields(environment,
             {
                 'th': self.settings.initial_dry_potential_temperature_profile,
                 'qv': self.settings.initial_vapour_mixing_ratio_profile
@@ -85,9 +81,19 @@ class Simulation:
             builder.add_dynamic(condensation)
             products.append(PySDM_products.CondensationTimestepMin())  # TODO #37 and what if a user doesn't want it?
             products.append(PySDM_products.CondensationTimestepMax())
+            products.append(PySDM_products.PeakSupersaturation())
+        displacement = None
+        if self.settings.processes["particle advection"]:
+            displacement = Displacement(enable_sedimentation=self.settings.processes["sedimentation"])
         if self.settings.processes['fluid advection']:
             solver = MPDATA_2D(
                 fields=fields,
+                stream_function=self.settings.stream_function,
+                rhod_of_zZ=self.settings.rhod_of_zZ,
+                dt=self.settings.dt,
+                grid=self.settings.grid,
+                size=self.settings.size,
+                displacement=displacement,
                 n_iters=self.settings.mpdata_iters,
                 infinite_gauge=self.settings.mpdata_iga,
                 flux_corrected_transport=self.settings.mpdata_fct,
@@ -95,9 +101,6 @@ class Simulation:
             )
             builder.add_dynamic(EulerianAdvection(solver))
         if self.settings.processes["particle advection"]:
-            displacement = Displacement(
-                courant_field=fields.courant_field,
-                enable_sedimentation=self.settings.processes["sedimentation"])
             builder.add_dynamic(displacement)
             products.append(PySDM_products.SurfacePrecipitation())  # TODO #37 ditto
         if self.settings.processes["coalescence"]:
@@ -112,6 +115,9 @@ class Simulation:
             products.append(PySDM_products.CoalescenceTimestepMin())
             products.append(PySDM_products.CollisionRate())
             products.append(PySDM_products.CollisionRateDeficit())
+            products.append(PySDM_products.ActivatingRate())
+            products.append(PySDM_products.DeactivatingRate())
+            products.append(PySDM_products.RipeningRate())
         if self.settings.processes["freezing"]:
             products.append(PySDM_products.IceWaterContent())
         if self.settings.processes["PartMC piggy-backer"]:
