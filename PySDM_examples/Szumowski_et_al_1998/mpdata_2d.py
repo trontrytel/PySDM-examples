@@ -9,7 +9,7 @@ import inspect
 
 
 class MPDATA_2D:
-    def __init__(self, *, fields, stream_function, rhod_of_zZ, dt, grid, size,
+    def __init__(self, *, advectees, stream_function, rhod_of_zZ, dt, grid, size,
                  displacement,
                  n_iters=2, infinite_gauge=True,
                  flux_corrected_transport=True,
@@ -55,7 +55,7 @@ class MPDATA_2D:
             rhod_of_zZ(zZ=z_vec_coord(self.grid)[-1])
         )
         self.mpdatas = {}
-        for k, v in fields.advectees.items():
+        for k, v in advectees.items():
             advectee_impl = ScalarField(np.asarray(v, dtype=options.dtype), halo=options.n_halo,
                                    boundary_conditions=(PeriodicBoundaryCondition(), PeriodicBoundaryCondition()))
             self.mpdatas[k] = Solver(stepper=stepper, advectee=advectee_impl, advector=advector_impl, g_factor=g_factor_impl)
