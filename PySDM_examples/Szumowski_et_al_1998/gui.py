@@ -1,18 +1,19 @@
 import sys
 from PySDM_examples.Szumowski_et_al_1998.gui_controller import GUIController
-from PySDM_examples.Szumowski_et_al_1998.gui_settings import GUISettings
 from PySDM_examples.Szumowski_et_al_1998.gui_viewer import GUIViewer
-from PySDM_examples.Szumowski_et_al_1998.storage import Storage
-from PySDM.exporters.netcdf_exporter import NetCDFExporter
+from PySDM.exporters import NetCDFExporter
 from PySDM_examples.utils.temporary_file import TemporaryFile
 from PySDM_examples.utils.widgets import display, Tab, VBox, HTML
 
 
 def launch(settings, simulation, storage):
-    temporary_file = TemporaryFile('.nc')
-    exporter = NetCDFExporter(storage, settings, simulation, temporary_file.absolute_path)
+    ncdf_file = TemporaryFile('.nc')
+    ncdf_exporter = NetCDFExporter(storage, settings, simulation, ncdf_file.absolute_path)
+
+    vtk_file = TemporaryFile('.zip')
+
     viewer = GUIViewer(storage, settings)
-    controller = GUIController(simulation, viewer, exporter, temporary_file)
+    controller = GUIController(simulation, viewer, ncdf_exporter, ncdf_file, vtk_file)
 
     tabs = Tab([VBox([controller.box(), viewer.box()]), settings.box()])
     tabs.set_title(1, "Settings")

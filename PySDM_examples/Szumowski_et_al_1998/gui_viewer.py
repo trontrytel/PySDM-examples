@@ -15,7 +15,7 @@ class GUIViewer:
         self.settings = settings
 
         self.play = Play(interval=1000)
-        self.step_slider = IntSlider(continuous_update=False, description='t/dt:')
+        self.step_slider = IntSlider(continuous_update=False, description='t/dt_out:')
         self.product_select = Dropdown()
         self.plots_box = Box()
 

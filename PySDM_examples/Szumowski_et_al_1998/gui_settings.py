@@ -90,8 +90,12 @@ class GUISettings:
         self.coalescence_optimized_random = settings.coalescence_optimized_random
         self.coalescence_substeps = settings.coalescence_substeps
 
-        for attr in ('n_sd', 'rhod_of_zZ', 'versions', 'n_spin_up', 'stream_function'):
+        for attr in ('rhod_of_zZ', 'versions', 'n_spin_up', 'stream_function'):
             setattr(self, attr, getattr(settings, attr))
+
+    @property
+    def n_sd(self):
+        return self.grid[0] * self.grid[1] * self.n_sd_per_gridbox
 
     @property
     def initial_vapour_mixing_ratio_profile(self):
