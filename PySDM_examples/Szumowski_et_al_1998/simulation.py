@@ -1,15 +1,10 @@
 from PySDM.backends import CPU
 from PySDM.builder import Builder
-from PySDM.dynamics import AmbientThermodynamics
-from PySDM.dynamics import Coalescence
-from PySDM.dynamics import Condensation
-from PySDM.dynamics import Displacement
-from PySDM.dynamics import EulerianAdvection
+from PySDM.dynamics import Coalescence, Condensation, Displacement, EulerianAdvection, AmbientThermodynamics, Freezing
 from PySDM.environments import Kinematic2D
 from PySDM.initialisation import spectral_sampling, spatial_sampling
 from PySDM import products as PySDM_products
 from .mpdata_2d import MPDATA_2D
-from .fields import Fields
 from PySDM_examples.utils import DummyController
 import numpy as np
 
@@ -61,11 +56,6 @@ class Simulation:
             PySDM_products.CloudDropletEffectiveRadius(radius_range=cloud_range)
         ]
 
-        fields = Fields(environment,
-            {
-                'th': self.settings.initial_dry_potential_temperature_profile,
-                'qv': self.settings.initial_vapour_mixing_ratio_profile
-            })
         if self.settings.processes['fluid advection']:  # TODO #37 ambient thermodynamics checkbox
             builder.add_dynamic(AmbientThermodynamics())
         if self.settings.processes["condensation"]:
@@ -86,8 +76,19 @@ class Simulation:
         if self.settings.processes["particle advection"]:
             displacement = Displacement(enable_sedimentation=self.settings.processes["sedimentation"])
         if self.settings.processes['fluid advection']:
+            initial_profiles = {
+                    'th': self.settings.initial_dry_potential_temperature_profile,
+                    'qv': self.settings.initial_vapour_mixing_ratio_profile
+                }
+            advectees = dict(
+                (key, np.repeat(
+                    profile.reshape(1, -1),
+                    environment.mesh.grid[0],
+                    axis=0)
+                 ) for key, profile in initial_profiles.items()
+            )
             solver = MPDATA_2D(
-                fields=fields,
+                advectees=advectees,
                 stream_function=self.settings.stream_function,
                 rhod_of_zZ=self.settings.rhod_of_zZ,
                 dt=self.settings.dt,
@@ -119,6 +120,7 @@ class Simulation:
             products.append(PySDM_products.DeactivatingRate())
             products.append(PySDM_products.RipeningRate())
         if self.settings.processes["freezing"]:
+            builder.add_dynamic(Freezing())
             products.append(PySDM_products.IceWaterContent())
         if self.settings.processes["PartMC piggy-backer"]:
             products.append(PySDM_products.PartMC.VolumeFractalDimension())
@@ -128,6 +130,10 @@ class Simulation:
                                                      spectrum=self.settings.spectrum_per_mass_of_dry_air
                                                  ),
                                                  kappa=self.settings.kappa)
+
+        if self.settings.processes["freezing"]:
+            attributes['spheroid mass'] = np.zeros(self.settings.n_sd),
+            attributes['freezing temperature'] = np.zeros(self.settings.n_sd)
 
         self.core = builder.build(attributes, products)
         if self.SpinUp is not None:

@@ -45,15 +45,3 @@ def nondivergent_vector_field_2d(grid: tuple, size: tuple, dt: float, stream_fun
     rho_times_courant = [rho_velocity_x * dt / dx, rho_velocity_z * dt / dz]
     return rho_times_courant
 
-
-class Fields:
-    def __init__(self, environment, initial_profiles):
-        self.environment = environment
-        self.advectees = dict(
-            (key, np.repeat(
-                profile.reshape(1, -1),
-                environment.mesh.grid[0],
-                axis=0)
-             ) for key, profile in initial_profiles.items()
-        )
-
