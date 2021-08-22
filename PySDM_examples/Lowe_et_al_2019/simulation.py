@@ -23,7 +23,6 @@ class Simulation:
 
         builder.add_dynamic(AmbientThermodynamics())
         builder.add_dynamic(Condensation())
-        builder.add_dynamic(SurfaceOrganics())
 
         products = products or (
             # PySDM_products.RelativeHumidity(),
