@@ -29,8 +29,7 @@ class Simulation:
         builder.add_dynamic(Condensation(
             adaptive=settings.condensation_adaptive,
             rtol_thd=settings.condensation_rtol_thd,
-            rtol_x=settings.condensation_rtol_x,
-            kappa=settings.kappa
+            rtol_x=settings.condensation_rtol_x
         ))
         builder.add_dynamic(EulerianAdvection(mpdata))
         if settings.precip:

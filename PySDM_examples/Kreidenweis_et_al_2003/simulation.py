@@ -24,7 +24,7 @@ class Simulation:
         attributes = {**attributes, **settings.starting_amounts, 'pH': np.zeros(settings.n_sd)}
 
         builder.add_dynamic(AmbientThermodynamics())
-        builder.add_dynamic(Condensation(kappa=settings.kappa))
+        builder.add_dynamic(Condensation())
         builder.add_dynamic(AqueousChemistry(
             settings.ENVIRONMENT_MOLE_FRACTIONS,
             system_type=settings.system_type,
