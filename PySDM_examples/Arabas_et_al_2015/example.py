@@ -1,8 +1,8 @@
 from PySDM.exporters import NetCDFExporter
-from PySDM_examples.Arabas_et_al_2015.settings import Settings, si
-from PySDM_examples.Szumowski_et_al_1998.simulation import Simulation
-from PySDM_examples.Szumowski_et_al_1998.storage import Storage
-from PySDM_examples.utils import TemporaryFile
+from PySDM.physics import si
+from PySDM_examples.Arabas_et_al_2015 import Settings, SpinUp
+from PySDM_examples.Szumowski_et_al_1998 import Simulation, Storage
+from PySDM_examples.utils import TemporaryFile, DummyController
 
 
 def main():
@@ -13,12 +13,12 @@ def main():
     settings.simulation_time = 5400 * si.second
 
     storage = Storage()
-    simulation = Simulation(settings, storage)
+    simulation = Simulation(settings, storage, SpinUp)
     simulation.reinit()
     simulation.run()
     temp_file = TemporaryFile('.nc')
     exporter = NetCDFExporter(storage, settings, simulation, temp_file.absolute_path)
-    exporter.run(controller=DummpyController())
+    exporter.run(controller=DummyController())
 
 
 if __name__ == '__main__':
