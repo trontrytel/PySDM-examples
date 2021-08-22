@@ -2,7 +2,7 @@ from PySDM.environments import Parcel
 from PySDM import Builder
 from PySDM.backends import CPU
 from PySDM.physics import si
-from PySDM.dynamics import AmbientThermodynamics, Condensation, SurfaceOrganics
+from PySDM.dynamics import AmbientThermodynamics, Condensation
 import PySDM.products as PySDM_products
 import numpy as np
 
