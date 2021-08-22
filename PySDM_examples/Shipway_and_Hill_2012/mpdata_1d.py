@@ -1,6 +1,5 @@
 from PyMPDATA import Solver, Stepper, Options, ScalarField, VectorField, ExtrapolatedBoundaryCondition
 from PySDM.state import arakawa_c
-from numba.core.errors import NumbaExperimentalFeatureWarning
 import numpy as np
 
 

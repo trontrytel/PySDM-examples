@@ -1,25 +1,21 @@
-"""
-Created at 02.10.2019
-"""
-
 import numpy as np
 from PySDM.physics import formulae as phys
 from PySDM.physics import constants as const
-from ..utils.show_plot import save_and_make_link
-from ..utils.widgets import VBox, Box, Play, Output, IntSlider, IntRangeSlider, jslink, \
+from PySDM_examples.utils.show_plot import save_and_make_link
+from PySDM_examples.utils.widgets import VBox, Box, Play, Output, IntSlider, IntRangeSlider, jslink, \
     HBox, Dropdown, Button, Layout, clear_output, display
-from .demo_plots import _ImagePlot, _SpectrumPlot, _TimeseriesPlot
+from .plots import _ImagePlot, _SpectrumPlot, _TimeseriesPlot
 from matplotlib import pyplot, rcParams
 
 
-class DemoViewer:
+class GUIViewer:
 
     def __init__(self, storage, settings):
         self.storage = storage
         self.settings = settings
 
         self.play = Play(interval=1000)
-        self.step_slider = IntSlider(continuous_update=False, description='t/dt:')
+        self.step_slider = IntSlider(continuous_update=False, description='t/dt_out:')
         self.product_select = Dropdown()
         self.plots_box = Box()
 

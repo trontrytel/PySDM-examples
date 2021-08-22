@@ -1,7 +1,8 @@
 from PySDM.products.stats.timers import CPUTime, WallTime
+from contextlib import AbstractContextManager
 
 
-class DummyController:
+class DummyController(AbstractContextManager):
 
     def __init__(self):
         self.panic = False

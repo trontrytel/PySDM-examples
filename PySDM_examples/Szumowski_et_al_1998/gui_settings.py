@@ -1,9 +1,4 @@
-"""
-Created at 02.10.2019
-"""
-
-from ..utils.widgets import IntSlider, FloatSlider, VBox, Checkbox, Accordion, Dropdown
-from PySDM_examples.Arabas_et_al_2015.settings import Settings
+from PySDM_examples.utils.widgets import IntSlider, FloatSlider, VBox, Checkbox, Accordion, Dropdown
 from PySDM import physics
 import numpy as np
 import numba
@@ -11,17 +6,15 @@ import os
 import inspect
 
 
-class DemoSettings:
-    __dir__ = Settings.__dir__
+class GUISettings:
+    def __dir__(self):
+        return self.__settings.__dir__()
 
-    def __init__(self):
-        settings = Settings()
-
-        self.ui_th_std0 = FloatSlider(description="$\\theta_0$ [K]", value=settings.th_std0, min=280, max=300)
-        self.ui_qv0 = FloatSlider(description="q$_{v0}$ [g/kg]", value=settings.qv0 * 1000, min=5, max=10)
-        self.ui_p0 = FloatSlider(description="p$_0$ [hPa]", value=settings.p0 / 100, min=900, max=1100)
+    def __init__(self, settings):
+        self.__settings = settings
+        self.ui_dth0 = FloatSlider(description="$\\Delta\\theta_0$ [K]", value=0, min=-10, max=10)
+        self.ui_dqv0 = FloatSlider(description="$\\Delta q_{v0}$ [g/kg]", value=0, min=-1, max=1)
         self.ui_kappa = FloatSlider(description="$\\kappa$ [1]", value=settings.kappa, min=0, max=1.5)
-        self.ui_amplitude = FloatSlider(description="$\\psi_{_{mx}}$[kg/s/m$^{_2}$]", value=settings.rho_w_max, min=-1, max=1)
         self.ui_nx = IntSlider(value=settings.grid[0], min=10, max=100, description="nx")
         self.ui_nz = IntSlider(value=settings.grid[1], min=10, max=100, description="nz")
         self.ui_dt = FloatSlider(value=settings.dt, min=.5, max=60, description="dt (Eulerian)")
@@ -97,8 +90,23 @@ class DemoSettings:
         self.coalescence_optimized_random = settings.coalescence_optimized_random
         self.coalescence_substeps = settings.coalescence_substeps
 
-        for attr in ('n_sd', 'rhod', 'field_values', 'versions', 'n_spin_up', 'stream_function'):
+        for attr in ('rhod_of_zZ', 'versions', 'n_spin_up', 'stream_function'):
             setattr(self, attr, getattr(settings, attr))
+
+    @property
+    def n_sd(self):
+        return self.grid[0] * self.grid[1] * self.n_sd_per_gridbox
+
+    @property
+    def initial_vapour_mixing_ratio_profile(self):
+        return np.full(self.grid[-1], self.__settings.qv0 + self.ui_dqv0.value / 1000)
+
+    @property
+    def initial_dry_potential_temperature_profile(self):
+        return np.full(self.grid[-1], self.formulae.state_variable_triplet.th_dry(
+            self.__settings.th_std0 + self.ui_dth0.value,
+            self.__settings.qv0 + self.ui_dqv0.value / 1000
+        ))
 
     @property
     def aerosol_radius_threshold(self):
@@ -127,24 +135,8 @@ class DemoSettings:
         return np.arange(0, self.n_steps + 1, self.steps_per_output_interval)
 
     @property
-    def th_std0(self):
-        return self.ui_th_std0.value
-
-    @property
-    def qv0(self):
-        return self.ui_qv0.value/1000
-
-    @property
-    def p0(self):
-        return self.ui_p0.value*100
-
-    @property
     def kappa(self):
         return self.ui_kappa.value
-
-    @property
-    def amplitude(self):
-        return self.ui_amplitude.value
 
     @property
     def grid(self):
@@ -215,7 +207,7 @@ class DemoSettings:
 
     def box(self):
         layout = Accordion(children=[
-            VBox([self.ui_th_std0, self.ui_qv0, self.ui_p0, self.ui_kappa, self.ui_amplitude]),
+            VBox([self.ui_dth0, self.ui_dqv0, self.ui_kappa]),
             VBox([*self.ui_processes]),
             VBox([self.ui_nx, self.ui_nz, self.ui_sdpg, self.ui_dt, self.ui_simulation_time,
                   self.ui_condensation_rtol_x, self.ui_condensation_rtol_thd,

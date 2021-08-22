@@ -1,31 +1,22 @@
-"""
-Created at 25.09.2019
-"""
-
 from PySDM.backends import CPU
 from PySDM.builder import Builder
-from PySDM.dynamics import AmbientThermodynamics
-from PySDM.dynamics import Coalescence
-from PySDM.dynamics import Condensation
-from PySDM.dynamics import Displacement
-from PySDM.dynamics import EulerianAdvection
+from PySDM.dynamics import Coalescence, Condensation, Displacement, EulerianAdvection, AmbientThermodynamics, Freezing
 from PySDM.environments import Kinematic2D
 from PySDM.initialisation import spectral_sampling, spatial_sampling
 from PySDM import products as PySDM_products
-from PySDM.state.arakawa_c import Fields
-from .mpdata import MPDATA
-from .dummy_controller import DummyController
-from .spin_up import SpinUp
+from .mpdata_2d import MPDATA_2D
+from PySDM_examples.utils import DummyController
 import numpy as np
 
 
 class Simulation:
 
-    def __init__(self, settings, storage, backend=CPU):
+    def __init__(self, settings, storage, SpinUp, backend=CPU):
         self.settings = settings
         self.storage = storage
         self.core = None
         self.backend = backend
+        self.SpinUp = SpinUp
 
     @property
     def products(self):
@@ -36,8 +27,7 @@ class Simulation:
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,
-                                  rhod_of=self.settings.rhod,
-                                  field_values=self.settings.field_values)
+                                  rhod_of=self.settings.rhod_of_zZ)
         builder.set_environment(environment)
 
         cloud_range = (self.settings.aerosol_radius_threshold, self.settings.drizzle_radius_threshold)
@@ -63,14 +53,9 @@ class Simulation:
             PySDM_products.DryAirPotentialTemperature(),
             PySDM_products.CPUTime(),
             PySDM_products.WallTime(),
-            PySDM_products.CloudDropletEffectiveRadius(radius_range=cloud_range),
-            PySDM_products.PeakSupersaturation(),
-            PySDM_products.ActivatingRate(),
-            PySDM_products.DeactivatingRate(),
-            PySDM_products.RipeningRate()
+            PySDM_products.CloudDropletEffectiveRadius(radius_range=cloud_range)
         ]
 
-        fields = Fields(environment, self.settings.stream_function)
         if self.settings.processes['fluid advection']:  # TODO #37 ambient thermodynamics checkbox
             builder.add_dynamic(AmbientThermodynamics())
         if self.settings.processes["condensation"]:
@@ -85,9 +70,30 @@ class Simulation:
             builder.add_dynamic(condensation)
             products.append(PySDM_products.CondensationTimestepMin())  # TODO #37 and what if a user doesn't want it?
             products.append(PySDM_products.CondensationTimestepMax())
+            products.append(PySDM_products.PeakSupersaturation())
+        displacement = None
+        if self.settings.processes["particle advection"]:
+            displacement = Displacement(enable_sedimentation=self.settings.processes["sedimentation"])
         if self.settings.processes['fluid advection']:
-            solver = MPDATA(
-                fields=fields,
+            initial_profiles = {
+                    'th': self.settings.initial_dry_potential_temperature_profile,
+                    'qv': self.settings.initial_vapour_mixing_ratio_profile
+                }
+            advectees = dict(
+                (key, np.repeat(
+                    profile.reshape(1, -1),
+                    environment.mesh.grid[0],
+                    axis=0)
+                 ) for key, profile in initial_profiles.items()
+            )
+            solver = MPDATA_2D(
+                advectees=advectees,
+                stream_function=self.settings.stream_function,
+                rhod_of_zZ=self.settings.rhod_of_zZ,
+                dt=self.settings.dt,
+                grid=self.settings.grid,
+                size=self.settings.size,
+                displacement=displacement,
                 n_iters=self.settings.mpdata_iters,
                 infinite_gauge=self.settings.mpdata_iga,
                 flux_corrected_transport=self.settings.mpdata_fct,
@@ -95,9 +101,6 @@ class Simulation:
             )
             builder.add_dynamic(EulerianAdvection(solver))
         if self.settings.processes["particle advection"]:
-            displacement = Displacement(
-                courant_field=fields.courant_field,
-                enable_sedimentation=self.settings.processes["sedimentation"])
             builder.add_dynamic(displacement)
             products.append(PySDM_products.SurfacePrecipitation())  # TODO #37 ditto
         if self.settings.processes["coalescence"]:
@@ -112,6 +115,14 @@ class Simulation:
             products.append(PySDM_products.CoalescenceTimestepMin())
             products.append(PySDM_products.CollisionRate())
             products.append(PySDM_products.CollisionRateDeficit())
+            products.append(PySDM_products.ActivatingRate())
+            products.append(PySDM_products.DeactivatingRate())
+            products.append(PySDM_products.RipeningRate())
+        if self.settings.processes["freezing"]:
+            builder.add_dynamic(Freezing())
+            products.append(PySDM_products.IceWaterContent())
+        if self.settings.processes["PartMC piggy-backer"]:
+            products.append(PySDM_products.PartMC.VolumeFractalDimension())
 
         attributes = environment.init_attributes(spatial_discretisation=spatial_sampling.Pseudorandom(),
                                                  spectral_discretisation=spectral_sampling.ConstantMultiplicity(
@@ -119,8 +130,13 @@ class Simulation:
                                                  ),
                                                  kappa=self.settings.kappa)
 
+        if self.settings.processes["freezing"]:
+            attributes['spheroid mass'] = np.zeros(self.settings.n_sd),
+            attributes['freezing temperature'] = np.zeros(self.settings.n_sd)
+
         self.core = builder.build(attributes, products)
-        SpinUp(self.core, self.settings.n_spin_up)
+        if self.SpinUp is not None:
+            self.SpinUp(self.core, self.settings.n_spin_up)
         if self.storage is not None:
             self.storage.init(self.settings)
 
