@@ -3,6 +3,8 @@ from PySDM import Builder
 from PySDM.backends import CPU
 from PySDM.physics import si
 from PySDM.dynamics import AmbientThermodynamics, Condensation
+from PySDM.initialisation.multiplicities import discretise_n
+from PySDM.initialisation.r_wet_init import r_wet_init
 import PySDM.products as PySDM_products
 import numpy as np
 
@@ -15,11 +17,15 @@ class Simulation:
         builder = Builder(n_sd=settings.n_sd, backend=CPU, formulae=settings.formulae)
         builder.set_environment(env)
 
-        attributes = env.init_attributes(
-            n_in_dv=settings.n_in_dv,
-            kappa=settings.kappa,
-            r_dry=settings.r_dry
-        )
+        self.r_dry, self.n_in_dv = settings.spectral_sampling(spectrum=settings.spectrum).sample(settings.n_sd)
+        self.n_in_dv /= settings.rho0 * settings.mass_of_dry_air
+        attributes = {}
+        attributes['dry volume inorganic'] = settings.formulae.trivia.volume(radius=self.r_dry)
+        attributes['dry volume organic'] = np.zeros_like(self.r_dry)
+        attributes['kappa times dry volume'] = attributes['dry volume inorganic'] * settings.kappa
+        attributes['n'] = discretise_n(self.n_in_dv)
+        r_wet = r_wet_init(self.r_dry, env, kappa_times_dry_volume=attributes['kappa times dry volume'])
+        attributes['volume'] = settings.formulae.trivia.volume(radius=r_wet)
 
         builder.add_dynamic(AmbientThermodynamics())
         builder.add_dynamic(Condensation())
