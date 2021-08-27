@@ -2,7 +2,7 @@ from PySDM.backends import CPU
 from PySDM.builder import Builder
 from PySDM.dynamics import Coalescence, Condensation, Displacement, EulerianAdvection, AmbientThermodynamics, Freezing
 from PySDM.environments import Kinematic2D
-from PySDM.initialisation import spectral_sampling, spatial_sampling
+from PySDM.initialisation import spectral_sampling, spatial_sampling, spectro_glacial
 from PySDM import products as PySDM_products
 from .mpdata_2d import MPDATA_2D
 from PySDM_examples.utils import DummyController
@@ -121,18 +121,30 @@ class Simulation:
         if self.settings.processes["freezing"]:
             builder.add_dynamic(Freezing())
             products.append(PySDM_products.IceWaterContent())
+            products.append(PySDM_products.FreezableSpecificConcentration(self.settings.T_bins_edges))
+            products.append(PySDM_products.ParticlesConcentration(specific=True))
         if self.settings.processes["PartMC piggy-backer"]:
             products.append(PySDM_products.PartMC.VolumeFractalDimension())
 
-        attributes = environment.init_attributes(spatial_discretisation=spatial_sampling.Pseudorandom(),
-                                                 spectral_discretisation=spectral_sampling.ConstantMultiplicity(
-                                                     spectrum=self.settings.spectrum_per_mass_of_dry_air
-                                                 ),
-                                                 kappa=self.settings.kappa)
+        kw = {}
+        if self.settings.processes["freezing"]:
+            kw['spectro_glacial_discretisation'] = spectro_glacial.Independent(
+                size_spectrum=self.settings.spectrum_per_mass_of_dry_air,
+                freezing_temperature_spectrum=self.settings.formulae.freezing_temperature_spectrum
+            )
+        else:
+            kw['spectral_discretisation'] = spectral_sampling.UniformRandom(
+                spectrum=self.settings.spectrum_per_mass_of_dry_air
+            )
+
+        attributes = environment.init_attributes(
+            spatial_discretisation=spatial_sampling.Pseudorandom(),
+            **kw,
+            kappa=self.settings.kappa
+        )
 
         if self.settings.processes["freezing"]:
             attributes['spheroid mass'] = np.zeros(self.settings.n_sd),
-            attributes['freezing temperature'] = np.zeros(self.settings.n_sd)
 
         self.core = builder.build(attributes, products)
         if self.SpinUp is not None:

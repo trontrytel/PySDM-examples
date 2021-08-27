@@ -12,8 +12,8 @@ class GUISettings:
 
     def __init__(self, settings):
         self.__settings = settings
-        self.ui_dth0 = FloatSlider(description="$\\Delta\\theta_0$ [K]", value=0, min=-10, max=10)
-        self.ui_dqv0 = FloatSlider(description="$\\Delta q_{v0}$ [g/kg]", value=0, min=-1, max=1)
+        self.ui_dth0 = FloatSlider(description="$\\Delta\\theta_0$ [K]", value=0, min=-15, max=15)
+        self.ui_dqv0 = FloatSlider(description="$\\Delta q_{v0}$ [g/kg]", value=0, min=-6, max=6)
         self.ui_kappa = FloatSlider(description="$\\kappa$ [1]", value=settings.kappa, min=0, max=1.5)
         self.ui_nx = IntSlider(value=settings.grid[0], min=10, max=100, description="nx")
         self.ui_nz = IntSlider(value=settings.grid[1], min=10, max=100, description="nz")
@@ -80,6 +80,7 @@ class GUISettings:
 
         # TODO #37
         self.r_bins_edges = settings.r_bins_edges
+        self.T_bins_edges = settings.T_bins_edges
         self.size = settings.size
         self.condensation_substeps = settings.condensation_substeps
         self.condensation_dt_cond_range = settings.condensation_dt_cond_range
