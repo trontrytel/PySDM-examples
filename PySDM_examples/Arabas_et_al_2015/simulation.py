@@ -32,8 +32,7 @@ class Simulation:
         return self.core.products
 
     def reinit(self, products=None):
-
-        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend)
+        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend, formulae=self.settings.formulae)
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,
@@ -45,8 +44,9 @@ class Simulation:
         if products is not None:
             products = list(products)
         products = products or [
-            PySDM_products.ParticlesWetSizeSpectrum(v_bins=self.settings.v_bins, normalise_by_dv=True),
-            PySDM_products.ParticlesDrySizeSpectrum(v_bins=self.settings.v_bins, normalise_by_dv=True),  # Note: better v_bins
+            # Note: consider better radius_bins_edges
+            PySDM_products.ParticlesWetSizeSpectrum(radius_bins_edges=self.settings.r_bins_edges, normalise_by_dv=True),
+            PySDM_products.ParticlesDrySizeSpectrum(radius_bins_edges=self.settings.r_bins_edges, normalise_by_dv=True),
             PySDM_products.TotalParticleConcentration(),
             PySDM_products.TotalParticleSpecificConcentration(),
             PySDM_products.AerosolConcentration(radius_threshold=self.settings.aerosol_radius_threshold),
@@ -78,7 +78,6 @@ class Simulation:
                 kappa=self.settings.kappa,
                 rtol_x=self.settings.condensation_rtol_x,
                 rtol_thd=self.settings.condensation_rtol_thd,
-                coord=self.settings.condensation_coord,
                 adaptive=self.settings.condensation_adaptive,
                 substeps=self.settings.condensation_substeps,
                 dt_cond_range=self.settings.condensation_dt_cond_range,
@@ -99,7 +98,6 @@ class Simulation:
         if self.settings.processes["particle advection"]:
             displacement = Displacement(
                 courant_field=fields.courant_field,
-                scheme='FTBS',
                 enable_sedimentation=self.settings.processes["sedimentation"])
             builder.add_dynamic(displacement)
             products.append(PySDM_products.SurfacePrecipitation())  # TODO #37 ditto
@@ -127,7 +125,7 @@ class Simulation:
         if self.storage is not None:
             self.storage.init(self.settings)
 
-    def run(self, controller=DummyController()):
+    def run(self, controller=DummyController(), vtk_exporter=None):
         with controller:
             for step in self.settings.output_steps:
                 if controller.panic:
@@ -136,6 +134,9 @@ class Simulation:
                 self.core.run(step - self.core.n_steps)
 
                 self.store(step)
+                
+                if vtk_exporter is not None:
+                    vtk_exporter.export_particles(self.core)
 
                 controller.set_percent(step / self.settings.output_steps[-1])
 

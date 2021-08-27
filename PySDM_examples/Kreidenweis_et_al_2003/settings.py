@@ -1,19 +1,20 @@
-from PySDM.physics import si
-from PySDM.initialisation import spectra
-from PySDM.initialisation import spectral_sampling as spec_sampling
-from PySDM.physics import formulae as phys
-from PySDM.physics import constants as const
 from chempy import Substance
 import numpy as np
-from PySDM.dynamics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS
 from pystrict import strict
+from PySDM.physics.aqueous_chemistry.support import AQUEOUS_COMPOUNDS
+from PySDM.initialisation import spectral_sampling as spec_sampling
+from PySDM.physics import si, Formulae, spectra, constants as const
 
 
 @strict
 class Settings:
     def __init__(self, dt: float, n_sd: int, n_substep: int,
                  spectral_sampling: spec_sampling.SpectralSampling = spec_sampling.Logarithmic):
+        self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus')
+
         self.DRY_RHO = 1800 * si.kg / (si.m ** 3)
+        self.dry_molar_mass = Substance.from_formula("NH4HSO4").mass * si.gram / si.mole
+
         self.system_type = 'closed'
 
         self.t_max = (2400 + 196) * si.s
@@ -28,20 +29,20 @@ class Settings:
 
         self.p0 = 950 * si.mbar
         self.T0 = 285.2 * si.K
-        pv0 = .95 * phys.pvs(self.T0)
+        pv0 = .95 * self.formulae.saturation_vapour_pressure.pvs_Celsius(self.T0 - const.T0)
         self.q0 = const.eps * pv0 / (self.p0 - pv0)
-        self.kappa = .61  # TODO #442
+        self.kappa = .61
 
         self.cloud_radius_range = (
                 .5 * si.micrometre,
                 25 * si.micrometre
         )
 
-        # TODO #442
         self.mass_of_dry_air = 44
-        # note: .83 found to match best the initial condition (see test Table_3)
-        # rho0 = .83 * phys.MoistAir.rho_of_p_qv_T(self.p0, self.q0, self.T0)
+
+        # note: rho is not specified in the paper
         rho0 = 1
+
         self.r_dry, self.n_in_dv = spectral_sampling(
             spectrum=spectra.Lognormal(
                 norm_factor=566 / si.cm**3 / rho0 * self.mass_of_dry_air,
@@ -61,13 +62,13 @@ class Settings:
 
         self.starting_amounts = {
             "moles_"+k:
-                phys.volume(self.r_dry) * self.DRY_RHO / (Substance.from_formula("NH4HSO4").mass * si.gram / si.mole)
+                self.formulae.trivia.volume(self.r_dry) * self.DRY_RHO / self.dry_molar_mass
                 if k in ("N_mIII", "S_VI")
                 else np.zeros(self.n_sd)
             for k in AQUEOUS_COMPOUNDS.keys()
         }
         
-        self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(1 * si.um), 101, endpoint=True) / 2
+        self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(1 * si.um), 51, endpoint=True) / 2
 
     @property
     def nt(self):

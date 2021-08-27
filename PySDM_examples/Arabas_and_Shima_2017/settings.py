@@ -5,20 +5,24 @@ Created at 29.11.2019
 from PySDM.physics.constants import si
 from PySDM.physics import constants as const, formulae as phys
 from PySDM.dynamics import condensation
+from PySDM.physics.formulae import Formulae
 import numpy as np
 from pystrict import strict
 
 
 @strict
 class Settings:
-    def __init__(self, w_avg: float, N_STP: float, r_dry: float, mass_of_dry_air: float):
+    def __init__(self, w_avg: float, N_STP: float, r_dry: float, mass_of_dry_air: float, coord: str = 'VolumeLogarithm'):
+        self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus', condensation_coordinate=coord)
+
         self.p0 = 1000 * si.hectopascals
         self.RH0 = .98
         self.kappa = .2  # TODO #441
         self.T0 = 300 * si.kelvin
         self.z_half = 150 * si.metres
 
-        self.q0 = const.eps / (self.p0 / self.RH0 / phys.pvs(self.T0) - 1)
+        pvs = self.formulae.saturation_vapour_pressure.pvs_Celsius(self.T0 - const.T0)
+        self.q0 = const.eps / (self.p0 / self.RH0 / pvs - 1)
         self.w_avg = w_avg
         self.r_dry = r_dry
         self.N_STP = N_STP
@@ -29,7 +33,7 @@ class Settings:
         self.rtol_x = condensation.default_rtol_x
         self.rtol_thd = condensation.default_rtol_thd
         self.coord = 'volume logarithm'
-        self.dt_cond_range = (1e-10 * si.s, 1 * si.s)
+        self.dt_cond_range = condensation.default_cond_range
 
     @property
     def dt_max(self):

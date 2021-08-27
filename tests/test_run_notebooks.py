@@ -11,6 +11,7 @@ import re
 import os
 from nbconvert.preprocessors import ExecutePreprocessor
 
+
 # https://stackoverflow.com/questions/7012921/recursive-grep-using-python
 def findfiles(path, regex):
     regObj = re.compile(regex)

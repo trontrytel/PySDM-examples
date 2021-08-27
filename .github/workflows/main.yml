@@ -1,4 +1,4 @@
-name: Build Status
+name: PySDM-examples
 
 defaults:
   run:
@@ -27,11 +27,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - run: |
-          pip install pytest nbconvert
+          pip install -r test-time-requirements.txt
       - run: |
           pip install -e .
 
-      # TODO #184 (https://github.com/numba/numba/issues/6350#issuecomment-728174860)
+      # https://github.com/numba/numba/issues/6350#issuecomment-728174860
       - if: matrix.platform == 'ubuntu-latest'
         env: 
           NUMBA_THREADING_LAYER: omp
