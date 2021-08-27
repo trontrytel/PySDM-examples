@@ -31,7 +31,8 @@ class Common:
         self.drizzle_radius_threshold = 25 * si.micrometre
         self.r_bins_edges = np.logspace(np.log10(0.001 * si.micrometre),
                                         np.log10(100 * si.micrometre),
-                                        101, endpoint=True)
+                                        64, endpoint=True)
+        self.T_bins_edges = np.linspace(const.T0-40, const.T0-20, 64, endpoint=True)
         self.output_interval = 1 * si.minute
         self.spin_up_time = 0
 
