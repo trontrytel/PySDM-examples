@@ -36,9 +36,9 @@ ionic_dissociation_phi = {
     'palmitic': 1,
     'SOA1': 1,
     'SOA2': 1,
-    '(NH4)2SO4': 1,
-    'NH4NO3': 1,
-    'NaCl': 1
+    '(NH4)2SO4': 3,
+    'NH4NO3': 2,
+    'NaCl': 2
 }
 
 def volume_fractions(mass_fractions: dict):
