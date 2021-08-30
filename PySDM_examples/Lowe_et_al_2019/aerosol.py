@@ -137,7 +137,7 @@ class AerosolBoreal(_Aerosol):
 @strict
 class AerosolNascent(_Aerosol):
     Ultrafine = {'palmitic': 0, 'SOA1': .52, 'SOA2': 0, '(NH4)2SO4': .48, 'NH4NO3': 0, 'NaCl': 0}
-    Accumulation = {'palmitic': 0, 'SOA1': 0, 'SOA2': .3, '(NH4)2SO4': .6, 'NH4NO3': 0, 'NaCl': 0}  # TODO: just approx from plot
+    Accumulation = {'palmitic': 0, 'SOA1': 0, 'SOA2': .3, '(NH4)2SO4': .6, 'NH4NO3': 0, 'NaCl': 0}  # TODO #586: just approx from plot
     def __init__(self):
         self.aerosol_modes_per_cc = (
         {
