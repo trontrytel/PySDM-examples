@@ -57,7 +57,7 @@ def kappa(mass_fractions: dict):
     kappa = {}
     for model in ('bulk', 'film'):
         volfrac = volume_fractions(mass_fractions)
-        molar_volumes = {i:densities[i] / molar_masses[i] for i in compounds}
+        molar_volumes = {i: molar_masses[i] / densities[i] for i in compounds}
 
         _masked = {k: (not is_organic[k]) * volfrac[k] for k in compounds}
         volume_fractions_of_just_inorg = {k:_masked[k] / np.sum(list(_masked.values())) for k in compounds}
