@@ -5,6 +5,7 @@ from PySDM.physics import si
 from PySDM.dynamics import AmbientThermodynamics, Condensation
 from PySDM.initialisation.multiplicities import discretise_n
 from PySDM.initialisation.r_wet_init import r_wet_init
+from PySDM.physics.spectra import Sum
 import PySDM.products as PySDM_products
 import numpy as np
 
@@ -13,33 +14,52 @@ class Simulation:
     def __init__(self, settings, products=None):
         env = Parcel(dt=settings.dt, mass_of_dry_air=settings.mass_of_dry_air, p0=settings.p0, q0=settings.q0,
                      T0=settings.T0, w=settings.w, g=settings.g)
-
-        builder = Builder(n_sd=settings.n_sd, backend=CPU, formulae=settings.formulae)
+        n_sd = settings.n_sd_per_mode * len(settings.aerosol.aerosol_modes_per_cc)
+        builder = Builder(n_sd=n_sd, backend=CPU, formulae=settings.formulae)
         builder.set_environment(env)
 
-        self.r_dry, self.n_in_dv = settings.spectral_sampling(spectrum=settings.spectrum).sample(settings.n_sd)
-        self.n_in_dv /= settings.rho0 * settings.mass_of_dry_air
-        attributes = {}
-        attributes['dry volume inorganic'] = settings.formulae.trivia.volume(radius=self.r_dry)
-        attributes['dry volume organic'] = np.zeros_like(self.r_dry)
-        attributes['kappa times dry volume'] = attributes['dry volume inorganic'] * settings.kappa
-        attributes['n'] = discretise_n(self.n_in_dv)
-        r_wet = r_wet_init(self.r_dry, env, kappa_times_dry_volume=attributes['kappa times dry volume'])
+        attributes = {
+            'dry volume inorganic':np.empty(0),
+            'dry volume organic':np.empty(0),
+            'kappa times dry volume':np.empty(0),
+            'n': np.ndarray(0)
+        }
+        for mode in settings.aerosol.aerosol_modes_per_cc:
+            r_dry, n_in_dv = settings.spectral_sampling(spectrum=mode['spectrum']).sample(settings.n_sd_per_mode)
+            n_in_dv /= (settings.rho0 / settings.mass_of_dry_air)
+            v_dry = settings.formulae.trivia.volume(radius=r_dry)
+            attributes['n'] = np.append(attributes['n'], n_in_dv)
+            attributes['dry volume inorganic'] = np.append(attributes['dry volume inorganic'], (1 - mode['f_org']) * v_dry)
+            attributes['dry volume organic'] = np.append(attributes['dry volume organic'], mode['f_org'] * v_dry)
+            attributes['kappa times dry volume'] = np.append(attributes['kappa times dry volume'], v_dry * mode['kappa'][settings.model])
+        for attribute in attributes.values():
+            assert attribute.shape[0] == n_sd
+
+        attributes['n'] = discretise_n(attributes['n'])
+
+        dv = settings.mass_of_dry_air / settings.rho0
+        np.testing.assert_approx_equal(
+            np.sum(attributes['n']) / dv,
+            Sum(
+                tuple([settings.aerosol.aerosol_modes_per_cc[i]['spectrum'] for i in range(len(settings.aerosol.aerosol_modes_per_cc))])
+            ).norm_factor,
+            significant=5
+        )
+        r_wet = r_wet_init(
+            r_dry=settings.formulae.trivia.radius(volume=attributes['dry volume inorganic']+attributes['dry volume organic']),
+            environment=env,
+            kappa_times_dry_volume=attributes['kappa times dry volume'],
+            f_org=attributes['dry volume organic']/(attributes['dry volume organic']+attributes['dry volume inorganic'])
+        )
         attributes['volume'] = settings.formulae.trivia.volume(radius=r_wet)
 
         builder.add_dynamic(AmbientThermodynamics())
         builder.add_dynamic(Condensation())
 
         products = products or (
-            # PySDM_products.RelativeHumidity(),
-            PySDM_products.WaterMixingRatio(name='ql', description_prefix='liquid', radius_range=[1*si.um, np.inf]),
+            PySDM_products.WaterMixingRatio(name='ql', description_prefix='liquid', radius_range=settings.cloud_radius_range),
             PySDM_products.ParcelDisplacement(),
-            # PySDM_products.Pressure(),
-            # PySDM_products.Temperature(),
-            # PySDM_products.DryAirDensity(),
-            # PySDM_products.WaterVapourMixingRatio(),
             PySDM_products.Time(),
-            # PySDM_products.TotalDryMassMixingRatio(settings.DRY_RHO),
             PySDM_products.PeakSupersaturation(),
             PySDM_products.CloudDropletConcentration(radius_range=settings.cloud_radius_range),
             PySDM_products.AerosolConcentration(radius_threshold=settings.cloud_radius_range[0]),

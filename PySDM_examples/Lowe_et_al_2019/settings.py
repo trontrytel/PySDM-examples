@@ -2,19 +2,23 @@ import numpy as np
 from pystrict import strict
 from PySDM.initialisation import spectral_sampling as spec_sampling
 from PySDM.physics import si, Formulae, spectra, constants as const
+from PySDM_examples.Lowe_et_al_2019.aerosol import _Aerosol
 from PySDM.physics.spectra import Spectrum
 
 
 @strict
 class Settings:
-    def __init__(self, dt: float, n_sd: int,
-                 kappa: float,
-                 spectrum: Spectrum,
-                 surface_tension: str = 'CompressedFilm',
-                 spectral_sampling: spec_sampling.SpectralSampling = spec_sampling.Logarithmic):
-        self.formulae = Formulae(surface_tension=surface_tension)
+    def __init__(self, dt: float, n_sd_per_mode: int,
+                 aerosol: _Aerosol,
+                 model: str,
+                 spectral_sampling: spec_sampling.SpectralSampling,
+                 ):
+        assert model in ('bulk', 'film')
+        self.model = model
+        self.n_sd_per_mode = n_sd_per_mode
+        self.formulae = Formulae(surface_tension='CompressedFilm' if model=='film' else 'Constant')
+        self.aerosol = aerosol
         self.spectral_sampling = spectral_sampling
-        self.spectrum = spectrum
         self.t_max = (400 + 196) * si.s
         self.output_interval = 10 * si.s
         self.dt = dt
@@ -22,13 +26,10 @@ class Settings:
         self.w = .32 * si.m / si.s
         self.g = 9.81 * si.m / si.s**2
 
-        self.n_sd = n_sd
-
         self.p0 = 980 * si.mbar
         self.T0 = 280 * si.K
         pv0 = .99 * self.formulae.saturation_vapour_pressure.pvs_Celsius(self.T0 - const.T0)
         self.q0 = const.eps * pv0 / (self.p0 - pv0)
-        self.kappa = kappa
 
         self.cloud_radius_range = (
                 .5 * si.micrometre,
@@ -37,8 +38,8 @@ class Settings:
 
         self.mass_of_dry_air = 44
         
-        self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(1 * si.um), 51, endpoint=True) / 2
-        self.wet_radius_bins_edges = np.logspace(np.log10(.1 * si.um), np.log10(10 * si.um), 51, endpoint=True) / 2
+        self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(10 * si.um), 51, endpoint=True) / 2
+        self.wet_radius_bins_edges = np.logspace(np.log10(.1 * si.um), np.log10(100 * si.um), 51, endpoint=True) / 2
 
     @property
     def rho0(self):
