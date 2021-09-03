@@ -1,5 +1,6 @@
 This repository stores example files for PySDM.
 For information on the `PySDM` package itself, see [PySDM README.md](https://github.com/atmos-cloud-sim-uj/PySDM/blob/master/README.md) file.
+Please use the [PySDM issue-tracking](https://github.com/atmos-cloud-sim-uj/PySDM/issues) and [dicsussion](https://github.com/atmos-cloud-sim-uj/PySDM/discussions) infrastructure for `PySDM-examples` as well.
 
 ### 0D box-model coalescence-only examples:
 - [Shima et al. 2009](http://doi.org/10.1002/qj.441) (Box model, coalescence only, test case employing Golovin analytical solution):
@@ -13,15 +14,23 @@ For information on the `PySDM` package itself, see [PySDM README.md](https://git
      [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Berry_1967/figs_5_8_10.ipynb)
   
 ### 0D parcel-model condensation only examples:
-- [Arabas & Shima 2017](http://dx.doi.org/10.5194/npg-24-535-2017) (Adiabatic parcel, monodisperse size spectrum activation/deactivation test case):
+- [Arabas & Shima 2017](http://dx.doi.org/10.5194/npg-24-535-2017) (monodisperse size spectrum activation/deactivation test case):
   - Fig. 5:
     [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Arabas_and_Shima_2017/fig_5.ipynb)
     [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Arabas_and_Shima_2017/fig_5.ipynb)    
   
-- [Yang et al. 2018](https://doi.org/10.5194/acp-18-7313-2018) (Adiabatic parcel, polydisperse size spectrum activation/deactivation test case):
+- [Yang et al. 2018](https://doi.org/10.5194/acp-18-7313-2018) (polydisperse size spectrum activation/deactivation test case):
   - Fig. 2:
     [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Yang_et_al_2018/fig_2.ipynb)
     [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Yang_et_al_2018/fig_2.ipynb)
+
+- [Lowe et al. 2019](https://doi.org/10.1038/s41467-019-12982-0) (externally mixed polydisperse size spectrum with surface-active organics case):
+  - Fig. 1: 
+    [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Lowe_et_al_2019/fig_1.ipynb)
+    [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Lowe_et_al_2019/fig_1.ipynb)
+  - Fig. 2:
+    [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Lowe_et_al_2019/fig_2.ipynb)
+    [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Lowe_et_al_2019/fig_2.ipynb)
 
 ### 0D parcel-model condensation/aqueous-chemistry example:
 - [Kreidenweis et al. 2003](https://doi.org/10.1029/2002JD002697) (Adiabatic parcel, polydisperse size spectrum, aqueous‐phase SO2 oxidation test case):

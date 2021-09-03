@@ -2,9 +2,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from PySDM import products
+from PySDM.physics import constants as const
+
 
 class _Plot:
-
     def __init__(self, fig, ax):
         self.fig, self.ax = fig, ax
         self.ax.set_title(' ')
@@ -60,6 +61,8 @@ class _ImagePlot(_Plot):
             products.CondensationTimestepMin: ((.01, 10), 'log'),
             products.CondensationTimestepMax: ((.01, 10), 'log'),
             products.CoalescenceTimestepMin: ((.01, 10), 'log'),
+            products.IceWaterContent: ((.0001, .001), 'linear'),
+            products.ParticlesConcentration: ((0, 1e4), 'linear')
         }[product.__class__]
         data = np.full_like(self.nans, product_range[0])
         label = f"{product.description} [{product.unit}]"
@@ -88,7 +91,7 @@ class _ImagePlot(_Plot):
         data = self._transpose(data)
         if data is not None:
             self.im.set_data(data)
-            self.ax.set_title(f"min:{np.nanmin(data): .3g}    max:{np.nanmax(data): .3g}    t/dt:{step: >6}")
+            self.ax.set_title(f"min:{np.nanmin(data): .3g}    max:{np.nanmax(data): .3g}    t/dt_out:{step: >6}")
 
     def update_lines(self, focus_x, focus_z):
         self.lines['X'][0].set_xdata(x=focus_x[0] * self.dx)
@@ -99,7 +102,7 @@ class _ImagePlot(_Plot):
 
 class _SpectrumPlot(_Plot):
 
-    def __init__(self, r_bins, show=True):
+    def __init__(self, r_bins, initial_spectrum_per_mass_of_dry_air, show=True):
         super().__init__(*plt.subplots(1, 1))
         self.ax.set_xlim(np.amin(r_bins), np.amax(r_bins))
         self.ax.set_xlabel("particle radius [μm]")
@@ -108,15 +111,18 @@ class _SpectrumPlot(_Plot):
         self.ax.set_yscale('log')
         self.ax.set_ylim(1, 5e3)
         self.ax.grid(True)
-        self.spec_wet = self.ax.step(r_bins, np.full_like(r_bins, np.nan), label='wet')[0]
-        self.spec_dry = self.ax.step(r_bins, np.full_like(r_bins, np.nan), label='dry')[0]
+        vals = initial_spectrum_per_mass_of_dry_air.size_distribution(r_bins * const.si.um)
+        const.convert_to(vals, const.si.mg**-1 / const.si.um)
+        self.ax.plot(r_bins, vals, label='spectrum sampled at t=0')
+        self.spec_wet = self.ax.step(r_bins, np.full_like(r_bins, np.nan), label='binned super-particle wet sizes')[0]
+        self.spec_dry = self.ax.step(r_bins, np.full_like(r_bins, np.nan), label='binned super-particle dry sizes')[0]
         self.ax.legend()
         if show:
             plt.show()
 
     def update_wet(self, data, step):
         self.spec_wet.set_ydata(data)
-        self.ax.set_title(f"t/dt:{step}")
+        self.ax.set_title(f"t/dt_out:{step}")
 
     def update_dry(self, dry):
         self.spec_dry.set_ydata(dry)
@@ -142,3 +148,28 @@ class _TimeseriesPlot(_Plot):
         else:
             self.ydata[:] = np.nan
         self.timeseries.set_ydata(self.ydata)
+
+
+class _TemperaturePlot(_Plot):
+    def __init__(self, T_bins, formulae, show=True):
+        super().__init__(*plt.subplots(1, 1))
+        self.formulae = formulae
+        self.ax.set_xlim(np.amax(T_bins), np.amin(T_bins))
+        self.ax.set_xlabel("temperature [K]")
+        self.ax.set_ylabel("freezable fraction / cdf [1]")
+        self.ax.set_ylim(-.05, 1.05)
+        self.ax.grid(True)
+        self.ax.plot(T_bins, self.formulae.freezing_temperature_spectrum.cdf(T_bins),
+                     label=str(self.formulae.freezing_temperature_spectrum) + " (sampled at t=0)")
+        P0 = .5
+        T0 = 33
+        bigg_cdf = lambda TS: np.exp(np.log(1-P0)*np.exp(T0-TS))
+        self.ax.plot(T_bins, bigg_cdf(const.T0 - T_bins), label=f'Bigg 1953 for (TS_median={T0})')
+        self.spec = self.ax.step(T_bins, np.full_like(T_bins, np.nan), label='binned super-particle attributes', where='mid')[0]
+        self.ax.legend()
+        if show:
+            plt.show()
+
+    def update(self, data, step):
+        self.ax.set_title(f"t/dt_out:{step}")
+        self.spec.set_ydata(data)

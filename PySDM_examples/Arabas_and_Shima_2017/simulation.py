@@ -36,17 +36,19 @@ class Simulation:
 
         builder.add_dynamic(AmbientThermodynamics())
         builder.add_dynamic(Condensation(
-            kappa=settings.kappa,
             rtol_x=settings.rtol_x,
             rtol_thd=settings.rtol_thd,
             dt_cond_range=settings.dt_cond_range
         ))
         attributes = {}
         r_dry = np.array([settings.r_dry])
-        attributes['dry volume'] = settings.formulae.trivia.volume(radius=r_dry)
+        attributes['dry volume inorganic'] = settings.formulae.trivia.volume(radius=r_dry)
+        attributes['dry volume organic'] = np.zeros_like(r_dry)
+        attributes['kappa times dry volume'] = attributes['dry volume inorganic'] * settings.kappa
         attributes['n'] = np.array([settings.n_in_dv], dtype=np.int64)
         environment = builder.core.environment
-        r_wet = r_wet_init(r_dry, environment, kappa=settings.kappa)
+        r_wet = r_wet_init(r_dry, environment,
+                           kappa_times_dry_volume=attributes['kappa times dry volume'])
         attributes['volume'] = settings.formulae.trivia.volume(radius=r_wet)
         products = [
             PySDM_products.ParticleMeanRadius(),

@@ -2,6 +2,7 @@ from PySDM.physics import si, Formulae, constants as const
 from PySDM.dynamics import condensation, coalescence
 import numpy, numpy as np
 from PySDM.physics.coalescence_kernels import Geometric
+from PySDM.physics import spectra
 import PySDM, PyMPDATA
 import numba
 import scipy
@@ -30,9 +31,23 @@ class Common:
         self.drizzle_radius_threshold = 25 * si.micrometre
         self.r_bins_edges = np.logspace(np.log10(0.001 * si.micrometre),
                                         np.log10(100 * si.micrometre),
-                                        101, endpoint=True)
+                                        64, endpoint=True)
+        self.T_bins_edges = np.linspace(const.T0-40, const.T0-20, 64, endpoint=True)
         self.output_interval = 1 * si.minute
         self.spin_up_time = 0
+
+        self.mode_1 = spectra.Lognormal(
+            norm_factor=60 / si.centimetre ** 3 / const.rho_STP,
+            m_mode=0.04 * si.micrometre,
+            s_geom=1.4
+        )
+        self.mode_2 = spectra.Lognormal(
+          norm_factor=40 / si.centimetre**3 / const.rho_STP,
+          m_mode=0.15 * si.micrometre,
+          s_geom=1.6
+        )
+        self.spectrum_per_mass_of_dry_air = spectra.Sum((self.mode_1, self.mode_2))
+        self.kappa = 1  # TODO #441!
 
         self.processes = {
             "particle advection": True,
@@ -40,7 +55,9 @@ class Common:
             "coalescence": True,
             "condensation": True,
             "sedimentation": True,
-            # "relaxation": False  # TODO #338
+            # "relaxation": False  # TODO #338,
+            "freezing": False,
+            "PartMC piggy-backer": False
         }
 
         self.mpdata_iters = 2
@@ -56,11 +73,6 @@ class Common:
             except AttributeError:
                 pass
         self.versions = str(self.versions)
-
-    def rhod(self, zZ):
-        p = self.formulae.hydrostatics.p_of_z_assuming_const_th_and_qv(self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
-        rhod = self.formulae.state_variable_triplet.rho_d(p, self.qv0, self.th_std0)
-        return rhod
 
     @property
     def n_steps(self) -> int:
@@ -81,3 +93,11 @@ class Common:
     @property
     def n_sd(self):
         return self.grid[0] * self.grid[1] * self.n_sd_per_gridbox
+
+    @property
+    def initial_vapour_mixing_ratio_profile(self):
+        return np.full(self.grid[-1], self.qv0)
+
+    @property
+    def initial_dry_potential_temperature_profile(self):
+        return np.full(self.grid[-1], self.formulae.state_variable_triplet.th_dry(self.th_std0, self.qv0))

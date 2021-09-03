@@ -1,5 +1,5 @@
 import numpy as np
-from PySDM.state.arakawa_c import make_rhod, z_scalar_coord
+from PySDM.state.arakawa_c import z_scalar_coord
 
 
 def z_vec_coord(grid):
@@ -29,42 +29,19 @@ def x_vec_coord(grid):
     assert zZ.shape == (nx, nz)
     return xX, zZ
 
-def nondivergent_vector_field_2d(grid, size, dt, stream_function: callable):
+
+def nondivergent_vector_field_2d(grid: tuple, size: tuple, dt: float, stream_function: callable, t):
     dx = size[0] / grid[0]
     dz = size[1] / grid[1]
     dxX = 1 / grid[0]
     dzZ = 1 / grid[1]
 
     xX, zZ = x_vec_coord(grid)
-    rho_velocity_x = -(stream_function(xX, zZ + dzZ/2) - stream_function(xX, zZ - dzZ/2)) / dz
+    rho_velocity_x = -(stream_function(xX, zZ + dzZ/2, t) - stream_function(xX, zZ - dzZ/2, t)) / dz
 
     xX, zZ = z_vec_coord(grid)
-    rho_velocity_z = (stream_function(xX + dxX/2, zZ) - stream_function(xX - dxX/2, zZ)) / dx
+    rho_velocity_z = (stream_function(xX + dxX/2, zZ, t) - stream_function(xX - dxX/2, zZ, t)) / dx
 
     rho_times_courant = [rho_velocity_x * dt / dx, rho_velocity_z * dt / dz]
     return rho_times_courant
 
-
-class Fields:
-    def __init__(self, environment, stream_function, initial_profiles):
-        self.g_factor = make_rhod(environment.mesh.grid, environment.rhod_of)
-        self.environment = environment
-        self.stream_function = stream_function
-        self.advector = None
-        self.sample_advector()
-
-        self.advectees = dict(
-            (key, np.repeat(
-                profile.reshape(1,-1),
-                environment.mesh.grid[0],
-                axis=0)
-             ) for key, profile in initial_profiles.items()
-        )
-
-    def sample_advector(self):
-        self.advector = nondivergent_vector_field_2d(
-            self.environment.mesh.grid, self.environment.mesh.size, self.environment.dt, self.stream_function)
-        self.courant_field = (
-            self.advector[0] / self.environment.rhod_of(zZ=x_vec_coord(self.environment.mesh.grid)[-1]),
-            self.advector[1] / self.environment.rhod_of(zZ=z_vec_coord(self.environment.mesh.grid)[-1])
-        )

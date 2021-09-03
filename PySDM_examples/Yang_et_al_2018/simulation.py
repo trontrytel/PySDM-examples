@@ -36,7 +36,6 @@ class Simulation:
         environment = builder.core.environment
         builder.add_dynamic(AmbientThermodynamics())
         condensation = Condensation(
-            kappa=settings.kappa,
             adaptive=settings.adaptive,
             rtol_x=settings.rtol_x,
             rtol_thd=settings.rtol_thd,

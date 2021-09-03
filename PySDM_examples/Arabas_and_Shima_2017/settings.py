@@ -1,7 +1,3 @@
-"""
-Created at 29.11.2019
-"""
-
 from PySDM.physics.constants import si
 from PySDM.physics import constants as const, formulae as phys
 from PySDM.dynamics import condensation
