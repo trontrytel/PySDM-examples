@@ -11,7 +11,7 @@ class Settings:
     def __init__(self, dt: float, n_sd_per_mode: int,
                  aerosol: _Aerosol,
                  model: str,
-                 spectral_sampling: spec_sampling.SpectralSampling,
+                 spectral_sampling: type(spec_sampling.SpectralSampling),
                  ):
         assert model in ('bulk', 'film')
         self.model = model
@@ -54,3 +54,8 @@ class Settings:
     @property
     def steps_per_output_interval(self) -> int:
         return int(self.output_interval / self.dt)
+
+    @property
+    def output_steps(self) -> np.ndarray:
+        return np.arange(0, self.nt + 1, self.steps_per_output_interval)
+
