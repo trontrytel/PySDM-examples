@@ -1,5 +1,7 @@
-This repository stores example files for PySDM.
-For information on the `PySDM` package itself, see [PySDM README.md](https://github.com/atmos-cloud-sim-uj/PySDM/blob/master/README.md) file.
+This repository stores example files for `PySDM` depicting usage of `PySDM` from Python via Jupyter.
+For information on the `PySDM` package itself and examples of usage from Julia and Matlab, 
+see [PySDM README.md](https://github.com/atmos-cloud-sim-uj/PySDM/blob/master/README.md) file.
+
 Please use the [PySDM issue-tracking](https://github.com/atmos-cloud-sim-uj/PySDM/issues) and [dicsussion](https://github.com/atmos-cloud-sim-uj/PySDM/discussions) infrastructure for `PySDM-examples` as well.
 
 ### 0D box-model coalescence-only examples:
