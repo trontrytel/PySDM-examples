@@ -1,8 +1,3 @@
-"""
-Created at 23.04.2020
-"""
-
-
 from PySDM.backends import CPU
 from PySDM.builder import Builder
 from PySDM.dynamics import AmbientThermodynamics
@@ -36,7 +31,6 @@ class Simulation:
         environment = builder.core.environment
         builder.add_dynamic(AmbientThermodynamics())
         condensation = Condensation(
-            kappa=settings.kappa,
             adaptive=settings.adaptive,
             rtol_x=settings.rtol_x,
             rtol_thd=settings.rtol_thd,

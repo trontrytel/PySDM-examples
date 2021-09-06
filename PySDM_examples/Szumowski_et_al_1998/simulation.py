@@ -60,7 +60,6 @@ class Simulation:
             builder.add_dynamic(AmbientThermodynamics())
         if self.settings.processes["condensation"]:
             condensation = Condensation(
-                kappa=self.settings.kappa,
                 rtol_x=self.settings.condensation_rtol_x,
                 rtol_thd=self.settings.condensation_rtol_thd,
                 adaptive=self.settings.condensation_adaptive,
