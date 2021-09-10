@@ -15,6 +15,12 @@ Please use the [PySDM issue-tracking](https://github.com/atmos-cloud-sim-uj/PySD
      [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Berry_1967/figs_5_8_10.ipynb)
      [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Berry_1967/figs_5_8_10.ipynb)
   
+### 0D box-model immersion freezing-only example:
+- [Alpert & Knopf 2016](https://doi.org/10.5194/acp-16-2083-2016) (stochastic immersion freezing with monodisperse vs. lognormal immersed surface areas):
+  - Fig. 1: 
+      [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/atmos-cloud-sim-uj/PySDM-examples.git/main?urlpath=lab/tree/PySDM_examples/Alpert_and_Knopf_2016/fig_1.ipynb)
+      [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atmos-cloud-sim-uj/PySDM-examples/blob/main/PySDM_examples/Alpert_and_Knopf_2016/fig_1.ipynb)    
+  
 ### 0D parcel-model condensation only examples:
 - [Arabas & Shima 2017](http://dx.doi.org/10.5194/npg-24-535-2017) (monodisperse size spectrum activation/deactivation test case):
   - Fig. 5:
