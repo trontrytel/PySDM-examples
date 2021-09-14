@@ -15,10 +15,10 @@ def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, J_
     builder.set_environment(Box(dt=dt, dv=dv))
     builder.add_dynamic(Freezing(singular=False, J_het=J_het))
 
-    if spectrum.s_geom != 1:
-        _isa, _conc = spectral_sampling.ConstantMultiplicity(spectrum).sample(n_sd)
-    else:
+    if hasattr(spectrum, 's_geom') and spectrum.s_geom==1:
         _isa, _conc = np.full(n_sd, spectrum.m_mode), np.full(n_sd, multiplicity / dv)
+    else:
+        _isa, _conc = spectral_sampling.ConstantMultiplicity(spectrum).sample(n_sd)
     attributes = {
         'n': discretise_n(_conc * dv),
         'immersed surface area': _isa,
