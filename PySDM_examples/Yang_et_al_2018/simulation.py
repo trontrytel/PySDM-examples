@@ -58,7 +58,7 @@ class Simulation:
     def save(self, output):
         cell_id = 0
         output["r_bins_values"].append(self.particulator.products["Particles Wet Size Spectrum"].get())
-        volume = self.particulator.particles['volume'].to_ndarray()
+        volume = self.particulator.attributes['volume'].to_ndarray()
         output["r"].append(self.formulae.trivia.radius(volume=volume))
         output["S"].append(self.particulator.environment["RH"][cell_id] - 1)
         output["qv"].append(self.particulator.environment["qv"][cell_id])
