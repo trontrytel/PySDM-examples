@@ -1,14 +1,9 @@
 from PySDM.physics.spectra import Lognormal, TopHat
 from PySDM.physics import si
+from .table import Table
 
 
-class Table1:
-    def __getitem__(self, item):
-        return self._data[item]
-
-    def items(self):
-        return self._data.items()
-
+class Table1(Table):
     def label(self, key):
         if isinstance(self[key]['ISA'], Lognormal):
             return f"σ=ln({int(self[key]['ISA'].s_geom)}),N={int(self[key]['ISA'].norm_factor * self.dv)}"
@@ -16,7 +11,7 @@ class Table1:
             return key
 
     def __init__(self, *, dv=1*si.cm**3):
-        self.dv = dv
+        super().__init__(dv)
         self._data = {
             'Iso1': {
                 'ISA': Lognormal(norm_factor=1000/dv, m_mode=1e-5 * si.cm**2, s_geom=1),

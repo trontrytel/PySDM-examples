@@ -1,3 +1,3 @@
-from .simulation import simulation
+from .simulation import simulation, Simulation
 from .table_1 import Table1
-from .isothermal import Isothermal
+from .table_2 import Table2
