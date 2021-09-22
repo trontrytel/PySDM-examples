@@ -125,22 +125,18 @@ def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, J_
     products = [IceWaterContent(specific=False)]
     particulator = builder.build(attributes=attributes, products=products)
 
-    env['T'] = T0
+    temperature = T0
     env['a_w_ice'] = np.nan
 
     cell_id = 0
     data = []
     for i in range(int(total_time / dt) + 1):
         if cooling_rate != 0:
-            env['T'] = env['T'][cell_id] - cooling_rate * dt/2
-            env['a_w_ice'] = (
-                    formulae.saturation_vapour_pressure.ice_Celsius(env['T'][cell_id] - const.T0)
-                    /
-                    formulae.saturation_vapour_pressure.pvs_Celsius(env['T'][cell_id] - const.T0)
-            )
+            temperature -= cooling_rate * dt/2
+            env['a_w_ice'] = particulator.formulae.saturation_vapour_pressure.a_w_ice.py_func(temperature)
         particulator.run(0 if i == 0 else 1)
         if cooling_rate != 0:
-            env['T'] = env['T'][cell_id] - cooling_rate * dt/2
+            temperature -= cooling_rate * dt/2
 
         ice_mass_per_volume = particulator.products['qi'].get()[cell_id]
         ice_mass = ice_mass_per_volume * dv
