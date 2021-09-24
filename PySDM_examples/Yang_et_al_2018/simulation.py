@@ -17,7 +17,7 @@ class Simulation:
             self.n_substeps += 1
         self.formulae = Formulae(condensation_coordinate=settings.coord, saturation_vapour_pressure='AugustRocheMagnus')
         self.bins_edges = self.formulae.trivia.volume(settings.r_bins_edges)
-        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=self.formulae)
+        builder = Builder(backend=backend(formulae=self.formulae), n_sd=settings.n_sd)
         builder.set_environment(Parcel(
             dt=dt_output / self.n_substeps,
             mass_of_dry_air=settings.mass_of_dry_air,

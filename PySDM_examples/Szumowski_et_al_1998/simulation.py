@@ -23,7 +23,7 @@ class Simulation:
         return self.particulator.products
 
     def reinit(self, products=None):
-        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend, formulae=self.settings.formulae)
+        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend(formulae=self.settings.formulae))
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,

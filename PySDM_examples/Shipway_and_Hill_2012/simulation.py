@@ -15,7 +15,7 @@ class Simulation:
     def __init__(self, settings, backend=CPU):
         self.nt = settings.nt
 
-        builder = Builder(backend=backend, n_sd=settings.n_sd, formulae=settings.formulae)
+        builder = Builder(backend=backend(formulae=settings.formulae), n_sd=settings.n_sd)
         mesh = Mesh(grid=(settings.nz,), size=(settings.z_max,))
         env = Kinematic1D(dt=settings.dt, mesh=mesh, thd_of_z=settings.thd, rhod_of_z=settings.rhod)
 

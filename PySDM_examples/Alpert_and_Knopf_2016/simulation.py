@@ -160,7 +160,7 @@ def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, J_
     abifm.m = 54.48
     abifm.c = -10.67
     formulae = Formulae(seed=seed, heterogeneous_ice_nucleation_rate=heterogeneous_ice_nucleation_rate)
-    builder = Builder(n_sd=n_sd, backend=CPU, formulae=formulae)
+    builder = Builder(n_sd=n_sd, backend=CPU(formulae=formulae))
     env = Box(dt=dt, dv=dv)
     builder.set_environment(env)
     builder.add_dynamic(Freezing(singular=False))
