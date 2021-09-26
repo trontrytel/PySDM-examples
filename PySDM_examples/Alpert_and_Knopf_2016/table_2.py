@@ -8,8 +8,7 @@ class Table2(Table):
         return f"r={self[key]['cooling_rate']/(si.K/si.min)} K/min"
 
     def __init__(self, *, dv=1*si.cm**3):
-        super().__init__(dv)
-        self._data = {
+        super().__init__(dv=dv, data={
             'Cr1': {
                 'ISA': Lognormal(norm_factor=1000 / dv, s_geom=10, m_mode=1e-5*si.cm**2),
                 'cooling_rate': .5 * si.K / si.min,
@@ -20,4 +19,4 @@ class Table2(Table):
                 'cooling_rate': 5 * si.K / si.min,
                 'color': 'blue'
             }
-        }
+        })

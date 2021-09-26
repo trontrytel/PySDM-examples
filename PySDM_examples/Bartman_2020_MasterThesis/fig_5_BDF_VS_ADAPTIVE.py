@@ -1,15 +1,11 @@
-"""
-Created at 20.08.2020
-"""
-
-from PySDM_examples.Arabas_and_Shima_2017.simulation import Simulation
-from PySDM_examples.Arabas_and_Shima_2017.settings import setups
-from PySDM.backends.numba.test_helpers import bdf
-from PySDM.backends import CPU, GPU
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 from matplotlib.collections import LineCollection
+from PySDM_examples.Arabas_and_Shima_2017.simulation import Simulation
+from PySDM_examples.Arabas_and_Shima_2017.settings import setups
+from PySDM.backends.numba.test_helpers import bdf
+from PySDM.backends import CPU, GPU
 
 
 def data(n_output, rtols, schemes, setups_num):
