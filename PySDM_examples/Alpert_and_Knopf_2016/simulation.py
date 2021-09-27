@@ -46,8 +46,11 @@ class Simulation:
 
             if 'J_het' not in case:
                 case['J_het'] = None
+                abifm.c = case['ABIFM_c']
+                abifm.m = case['ABIFM_m']
             if 'cooling_rate' not in case:
                 case['cooling_rate'] = 0
+                constant.J_het = case['J_het']
 
             self.output[key] = []
             for i in range(self.n_runs_per_case):
@@ -60,7 +63,6 @@ class Simulation:
                     seed=i, n_sd=n_sd, dt=self.dt, dv=self.dv,
                     spectrum=case['ISA'],
                     droplet_volume=self.droplet_volume, multiplicity=self.multiplicity,
-                    J_het=case['J_het'],
                     total_time=total_time, number_of_real_droplets=number_of_real_droplets,
                     cooling_rate=self.cases[key]['cooling_rate'],
                     heterogeneous_ice_nucleation_rate=self.heterogeneous_ice_nucleation_rate,
@@ -103,11 +105,9 @@ class Simulation:
             pylab.ylabel("$f_{ufz}$")
             pylab.yscale('log')
 
-    def plot_J_het(self, variant: str):
+    def plot_J_het(self, variant: str, ylim=None):
         assert variant in ('apparent', 'actual')
 
-        abifm.c = -10.67
-        abifm.m = 54.48
         formulae = Formulae(heterogeneous_ice_nucleation_rate='ABIFM')
 
         yunit = 1 / si.cm**2 / si.s
@@ -151,18 +151,16 @@ class Simulation:
         pylab.xlabel('K')
         pylab.ylabel(f'$J_{{het}}$, $J_{{het}}^{{{variant}}}$ / cm$^{{-2}}$ s$^{{-1}}$')
         pylab.xlim(self.temperature_range)
-        pylab.ylim(1e-4, 1e10)
+        if ylim is not None:
+            pylab.ylim(ylim)
         pylab.legend()
         if version.parse(matplotlib.__version__) >= version.parse('3.3.0'):
             pylab.gca().set_box_aspect(1)
 
 
-def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, J_het, total_time,
+def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, total_time,
                number_of_real_droplets, cooling_rate=0,
                heterogeneous_ice_nucleation_rate='Constant', T0=np.nan):
-    constant.J_het = J_het
-    abifm.m = 54.48
-    abifm.c = -10.67
     formulae = Formulae(seed=seed,
                         heterogeneous_ice_nucleation_rate=heterogeneous_ice_nucleation_rate)
     builder = Builder(n_sd=n_sd, backend=CPU(formulae=formulae))
