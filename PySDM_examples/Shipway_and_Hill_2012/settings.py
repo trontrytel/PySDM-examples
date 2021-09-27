@@ -14,9 +14,9 @@ class Settings:
                  dz: float = 25*si.m, precip: bool = True):
         self.formulae = Formulae()
         self.n_sd_per_gridbox = n_sd_per_gridbox
-        self.kappa = .9  # TODO #414: not in the paper
+        self.kappa = .9  # TODO #424: not in the paper
         self.wet_radius_spectrum_per_mass_of_dry_air = spectra.Lognormal(
-            norm_factor=50/si.cm**3,  # TODO #414: / self.rho,
+            norm_factor=50/si.cm**3,  # TODO #424: / self.rho,
             m_mode=.08/2 * si.um,
             s_geom=1.4
         )
