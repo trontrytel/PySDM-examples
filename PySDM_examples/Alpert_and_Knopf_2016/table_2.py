@@ -1,6 +1,6 @@
-from .table import Table
 from PySDM.physics.spectra import Lognormal
 from PySDM.physics import si
+from .table import Table
 
 
 class Table2(Table):

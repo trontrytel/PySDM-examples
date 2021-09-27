@@ -7,8 +7,7 @@ class Table1(Table):
     def label(self, key):
         if isinstance(self[key]['ISA'], Lognormal):
             return f"σ=ln({int(self[key]['ISA'].s_geom)}),N={int(self[key]['ISA'].norm_factor * self.dv)}"
-        else:
-            return key
+        return key
 
     def __init__(self, *, dv=1*si.cm**3):
         super().__init__(dv=dv, data={

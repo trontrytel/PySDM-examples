@@ -26,7 +26,7 @@ jobs:
         pip install -r test-time-requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint --disable=fixme $(git ls-files '*.py')
     - name: Analysing notebook code with pyling
       run: |
-        nbqa pylint $(git ls-files '*.ipynb')
+        nbqa pylint --disable=fixme $(git ls-files '*.ipynb')
