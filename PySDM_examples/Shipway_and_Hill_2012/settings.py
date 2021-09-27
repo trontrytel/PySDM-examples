@@ -32,10 +32,10 @@ class Settings:
         self.rho_times_w = lambda t: rho_times_w_1 * np.sin(np.pi * t/t_1) if t < t_1 else 0
 
         self._th = interp1d((0, 740, 3260), (297.9, 297.9, 312.66))
-        self.qv = interp1d((0, 740, 3260), (.015, .0138, .0024))  # TODO #414: is initial particle water included in initial qv? (q1 logic)
+        self.qv = interp1d((0, 740, 3260), (.015, .0138, .0024))  # TODO #424: is initial particle water included in initial qv? (q1 logic)
         self.thd = lambda z: self.formulae.state_variable_triplet.th_dry(self._th(z), self.qv(z))
 
-        p0 = 975 * si.hPa  # TODO #414: not in the paper?
+        p0 = 975 * si.hPa  # TODO #424 not in the paper?
         g = const.g_std
         self.rhod0 = self.formulae.state_variable_triplet.rho_d(p0, self.qv(0), self._th(0))
 
