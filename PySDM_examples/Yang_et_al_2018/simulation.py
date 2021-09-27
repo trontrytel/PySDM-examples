@@ -3,7 +3,6 @@ from PySDM.builder import Builder
 from PySDM.dynamics import AmbientThermodynamics
 from PySDM.dynamics import Condensation
 from PySDM.environments import Parcel
-from PySDM.physics import formulae as phys
 from PySDM.physics.formulae import Formulae
 import PySDM.products as PySDM_products
 

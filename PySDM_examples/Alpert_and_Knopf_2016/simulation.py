@@ -56,8 +56,11 @@ class Simulation:
                 np.testing.assert_approx_equal(n_sd, int(n_sd))
                 n_sd = int(n_sd)
 
-                f_ufz, A_tot = simulation(seed=i, n_sd=n_sd, dt=self.dt, dv=self.dv, spectrum=case['ISA'],
-                    droplet_volume=self.droplet_volume, multiplicity=self.multiplicity, J_het=case['J_het'],
+                f_ufz, A_tot = simulation(
+                    seed=i, n_sd=n_sd, dt=self.dt, dv=self.dv,
+                    spectrum=case['ISA'],
+                    droplet_volume=self.droplet_volume, multiplicity=self.multiplicity,
+                    J_het=case['J_het'],
                     total_time=total_time, number_of_real_droplets=number_of_real_droplets,
                     cooling_rate=self.cases[key]['cooling_rate'],
                     heterogeneous_ice_nucleation_rate=self.heterogeneous_ice_nucleation_rate,
@@ -67,7 +70,7 @@ class Simulation:
 
     def plot(self, ylim, grid=None):
         pylab.rc('font', size=10)
-        for key in self.output.keys():
+        for key in self.output:
             for run in range(self.n_runs_per_case):
                 time = self.dt * np.arange(len(self.output[key][run]['f_ufz']))
                 if self.cases[key]['cooling_rate'] == 0:
@@ -116,7 +119,7 @@ class Simulation:
         pylab.grid()
         pylab.plot(x, y / yunit, color='red', label='ABIFM $J_{het}$')
 
-        for key in self.output.keys():
+        for key in self.output:
             for run in range(self.n_runs_per_case):
                 time = self.dt * np.arange(len(self.output[key][run]['f_ufz']))
                 if self.cases[key]['cooling_rate'] == 0:
@@ -155,11 +158,13 @@ class Simulation:
 
 
 def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, J_het, total_time,
-               number_of_real_droplets, cooling_rate=0, heterogeneous_ice_nucleation_rate='Constant', T0=np.nan):
+               number_of_real_droplets, cooling_rate=0,
+               heterogeneous_ice_nucleation_rate='Constant', T0=np.nan):
     constant.J_het = J_het
     abifm.m = 54.48
     abifm.c = -10.67
-    formulae = Formulae(seed=seed, heterogeneous_ice_nucleation_rate=heterogeneous_ice_nucleation_rate)
+    formulae = Formulae(seed=seed,
+                        heterogeneous_ice_nucleation_rate=heterogeneous_ice_nucleation_rate)
     builder = Builder(n_sd=n_sd, backend=CPU(formulae=formulae))
     env = Box(dt=dt, dv=dv)
     builder.set_environment(env)
@@ -180,6 +185,7 @@ def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, J_
 
     temperature = T0
     env['a_w_ice'] = np.nan
+    svp = particulator.formulae.saturation_vapour_pressure
 
     cell_id = 0
     f_ufz = []
@@ -187,7 +193,7 @@ def simulation(*, seed, n_sd, dt, dv, spectrum, droplet_volume, multiplicity, J_
     for i in range(int(total_time / dt) + 1):
         if cooling_rate != 0:
             temperature -= cooling_rate * dt/2
-            env['a_w_ice'] = particulator.formulae.saturation_vapour_pressure.a_w_ice.py_func(temperature)
+            env['a_w_ice'] = svp.a_w_ice.py_func(temperature)
         particulator.run(0 if i == 0 else 1)
         if cooling_rate != 0:
             temperature -= cooling_rate * dt/2

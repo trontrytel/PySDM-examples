@@ -1,15 +1,9 @@
-"""
-Created at 29.11.2019
-"""
-
 import numpy as np
-
 from PySDM.backends import CPU
 from PySDM.builder import Builder
 from PySDM.dynamics import AmbientThermodynamics
 from PySDM.dynamics import Condensation
 from PySDM.environments import Parcel
-from PySDM.physics import formulae as phys
 from PySDM.initialisation.r_wet_init import r_wet_init
 from PySDM.physics import constants as const
 import PySDM.products as PySDM_products
@@ -81,7 +75,7 @@ class Simulation:
                   "deactivating_rate": [], "ripening_rate": []}
 
         self.save(output)
-        for step in range(self.n_output):
+        for _ in range(self.n_output):
             self.particulator.run(self.n_substeps)
             self.save(output)
 

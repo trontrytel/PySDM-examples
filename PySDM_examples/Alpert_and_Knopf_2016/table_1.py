@@ -7,12 +7,10 @@ class Table1(Table):
     def label(self, key):
         if isinstance(self[key]['ISA'], Lognormal):
             return f"σ=ln({int(self[key]['ISA'].s_geom)}),N={int(self[key]['ISA'].norm_factor * self.dv)}"
-        else:
-            return key
+        return key
 
     def __init__(self, *, dv=1*si.cm**3):
-        super().__init__(dv)
-        self._data = {
+        super().__init__(dv=dv, data={
             'Iso1': {
                 'ISA': Lognormal(norm_factor=1000/dv, m_mode=1e-5 * si.cm**2, s_geom=1),
                 'color': '#298131',
@@ -68,4 +66,4 @@ class Table1(Table):
                 'J_het': 1 / si.cm ** 2 / si.s,
                 'color': '#95BDE1'
             }
-        }
+        })
