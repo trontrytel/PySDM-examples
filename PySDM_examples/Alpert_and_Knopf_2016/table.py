@@ -5,6 +5,6 @@ class Table:
     def items(self):
         return self._data.items()
 
-    def __init__(self, dv, data):
+    def __init__(self, volume, data):
         self._data = data
-        self.dv = dv
+        self.volume = volume
