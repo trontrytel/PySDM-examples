@@ -1,11 +1,13 @@
-from PySDM.physics import si, Formulae, constants as const
-from PySDM.dynamics import condensation, coalescence
-import numpy, numpy as np
-from PySDM.physics.coalescence_kernels import Geometric
-from PySDM.physics import spectra
-import PySDM, PyMPDATA
 import numba
 import scipy
+import ThrustRTC
+import numpy, numpy as np
+import PyMPDATA
+import PySDM
+from PySDM.physics import si, Formulae, constants as const
+from PySDM.dynamics import condensation, coalescence
+from PySDM.physics.coalescence_kernels import Geometric
+from PySDM.physics import spectra
 
 
 class Common:
@@ -64,7 +66,7 @@ class Common:
         self.mpdata_fct = True
         self.mpdata_tot = True
 
-        key_packages = (PySDM, PyMPDATA, numba, numpy, scipy)
+        key_packages = (PySDM, PyMPDATA, numba, numpy, scipy, ThrustRTC)
         self.versions = {}
         for pkg in key_packages:
             try:
