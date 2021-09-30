@@ -1,6 +1,5 @@
 import numba
 import scipy
-import ThrustRTC
 import numpy, numpy as np
 import PyMPDATA
 import PySDM
@@ -66,7 +65,12 @@ class Common:
         self.mpdata_fct = True
         self.mpdata_tot = True
 
-        key_packages = (PySDM, PyMPDATA, numba, numpy, scipy, ThrustRTC)
+        key_packages = (PySDM, PyMPDATA, numba, numpy, scipy)
+        try:
+            import ThrustRTC
+            key_packages.append(ThrustRTC)
+        except:
+            pass
         self.versions = {}
         for pkg in key_packages:
             try:
