@@ -28,6 +28,7 @@ def main():
         "coalescence": True,
         "condensation": False,
         "sedimentation": True,
+        'freezing': False
     }
 
     n_sd = range(14, 16, 1)
