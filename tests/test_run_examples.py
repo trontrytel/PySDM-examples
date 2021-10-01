@@ -2,7 +2,6 @@ import pytest
 import pathlib
 import re
 import os
-import imp
 
 
 # https://stackoverflow.com/questions/7012921/recursive-grep-using-python
@@ -23,5 +22,4 @@ def example_filename(request):
 
 def test_run_examples(example_filename):
     with open(example_filename, encoding="utf8") as f:
-        imp.load_module('__main__', f, example_filename, (".py", "r", imp.PY_SOURCE))
-
+        exec(f.read(), {'__name__': '__main__'})
