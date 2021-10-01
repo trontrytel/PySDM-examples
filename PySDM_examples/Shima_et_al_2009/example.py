@@ -1,7 +1,3 @@
-"""
-Created at 08.08.2019
-"""
-
 import numpy as np
 
 from PySDM.backends import CPU
@@ -17,7 +13,7 @@ from PySDM.products.stats.timers import WallTime
 
 
 def run(settings, backend=CPU, observers=()):
-    builder = Builder(n_sd=settings.n_sd, backend=backend, formulae=settings.formulae)
+    builder = Builder(n_sd=settings.n_sd, backend=backend(formulae=settings.formulae))
     builder.set_environment(Box(dv=settings.dv, dt=settings.dt))
     attributes = {}
     attributes['volume'], attributes['n'] = ConstantMultiplicity(settings.spectrum).sample(settings.n_sd)

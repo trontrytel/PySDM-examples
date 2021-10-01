@@ -75,6 +75,9 @@ class Simulation:
             products.append(PySDM_products.CondensationTimestepMin())
             products.append(PySDM_products.CondensationTimestepMax())
             products.append(PySDM_products.PeakSupersaturation())
+            products.append(PySDM_products.ActivatingRate())
+            products.append(PySDM_products.DeactivatingRate())
+            products.append(PySDM_products.RipeningRate())
         displacement = None
         if self.settings.processes["particle advection"]:
             displacement = Displacement(enable_sedimentation=self.settings.processes["sedimentation"])
@@ -119,16 +122,11 @@ class Simulation:
             products.append(PySDM_products.CoalescenceTimestepMin())
             products.append(PySDM_products.CollisionRate())
             products.append(PySDM_products.CollisionRateDeficit())
-            products.append(PySDM_products.ActivatingRate())
-            products.append(PySDM_products.DeactivatingRate())
-            products.append(PySDM_products.RipeningRate())
         if self.settings.processes["freezing"]:
             builder.add_dynamic(Freezing())
             products.append(PySDM_products.IceWaterContent())
             products.append(PySDM_products.FreezableSpecificConcentration(self.settings.T_bins_edges))
             products.append(PySDM_products.ParticlesConcentration(specific=True))
-        if self.settings.processes["PartMC piggy-backer"]:
-            products.append(PySDM_products.PartMC.VolumeFractalDimension())
 
         kw = {}
         if self.settings.processes["freezing"]:
