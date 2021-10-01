@@ -1,3 +1,5 @@
+import os
+
 from matplotlib import pyplot as plt
 from PySDM_examples.Shima_et_al_2009.settings import Settings
 from PySDM_examples.Shima_et_al_2009.example import run
@@ -57,4 +59,4 @@ def main(plot: bool = True, save: str = None):
 
 
 if __name__ == '__main__':
-    main(plot=True, save='.')
+    main(plot='CI' not in os.environ, save='.')

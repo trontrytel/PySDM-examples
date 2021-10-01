@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -51,7 +53,7 @@ def add_color_line(fig, ax, x, y, z):
     fig.colorbar(lc, ax=ax)
 
 
-def plot(data, rtols, schemes, setups_num, path=None):
+def plot(data, rtols, schemes, setups_num, show_plot, path=None):
     _rtol = '$r_{tol}$'
 
     fig, axs = plt.subplots(setups_num, len(rtols),
@@ -89,16 +91,17 @@ def plot(data, rtols, schemes, setups_num, path=None):
 
     if path is not None:
         plt.savefig(path + '.pdf', format='pdf')
-    plt.show()
+    if show_plot:
+        plt.show()
 
 
-def main(save=None):
+def main(save=None, show_plot=True):
     rtols = [1e-7, 1e-11]
     schemes = ['CPU', 'BDF']
     setups_num = len(setups)
     input_data = data(80, rtols, schemes, setups_num)
-    plot(input_data, rtols, schemes, setups_num, save)
+    plot(input_data, rtols, schemes, setups_num, show_plot, save)
 
 
 if __name__ == '__main__':
-    main('BDF_VS_ADAPTIVE')
+    main('BDF_VS_ADAPTIVE', show_plot='CI' not in os.environ)

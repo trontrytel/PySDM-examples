@@ -15,7 +15,7 @@ def findfiles(path, regex):
     return res
 
 
-@pytest.fixture(params=findfiles(pathlib.Path(__file__).parent.parent.absolute(), r'example.*\.(py)$'))
+@pytest.fixture(params=findfiles(pathlib.Path(__file__).parent.parent.absolute(), r'*\.(py)$'))
 def example_filename(request):
     return request.param
 

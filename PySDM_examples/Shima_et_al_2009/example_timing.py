@@ -26,7 +26,7 @@ def run(settings, backend):
     return states, last_wall_time
 
 
-def main():
+def main(plot: bool):
     settings = Settings()
     settings._steps = [100, 3600] if 'CI' not in os.environ else [1, 2]
 
@@ -48,8 +48,9 @@ def main():
     plt.grid()
     plt.legend()
     plt.loglog(base=2)
-    plt.show()
+    if plot:
+        plt.show()
 
 
 if __name__ == '__main__':
-    main()
+    main(plot='CI' not in os.environ)

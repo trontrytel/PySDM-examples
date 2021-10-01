@@ -1,4 +1,8 @@
 from typing import Union
+from packaging import version
+from matplotlib import pylab
+import matplotlib
+import numpy as np
 from PySDM import Builder
 from PySDM.dynamics import Freezing
 from PySDM.environments import Box
@@ -9,10 +13,6 @@ from PySDM.initialisation.multiplicities import discretise_n
 from PySDM.products import IceWaterContent, TotalUnfrozenImmersedSurfaceArea
 from PySDM.backends import CPU
 from PySDM.physics import si
-from matplotlib import pylab
-import matplotlib
-from packaging import version
-import numpy as np
 
 
 class Simulation:
