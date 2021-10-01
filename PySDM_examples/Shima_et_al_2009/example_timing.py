@@ -18,6 +18,7 @@ def run(settings, backend):
     particles = builder.build(attributes, products=[WallTime()])
 
     states = {}
+    last_wall_time = None
     for step in settings.output_steps:
         particles.run(step - particles.n_steps)
         last_wall_time = particles.products['wall_time'].get()
