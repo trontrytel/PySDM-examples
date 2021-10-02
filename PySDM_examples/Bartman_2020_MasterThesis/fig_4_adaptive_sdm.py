@@ -1,3 +1,5 @@
+import os
+
 from matplotlib import pyplot as plt
 from PySDM_examples.Shima_et_al_2009.settings import Settings
 from PySDM_examples.Shima_et_al_2009.example import run
@@ -10,6 +12,7 @@ def main(plot: bool = True, save: str = None):
     iters = 10
     base_time = None
 
+    plt.ioff()
     fig, axs = plt.subplots(len(dts), len(n_sds),
                             sharex=True, sharey=True, figsize=(10, 10))
 
@@ -57,4 +60,4 @@ def main(plot: bool = True, save: str = None):
 
 
 if __name__ == '__main__':
-    main(plot=True, save='.')
+    main(plot='CI' not in os.environ, save='.')

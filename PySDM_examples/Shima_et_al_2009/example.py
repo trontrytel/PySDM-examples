@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 
 from PySDM.backends import CPU
@@ -62,4 +64,4 @@ def main(plot: bool, save: str):
 
 
 if __name__ == '__main__':
-    main(plot=True, save=None)
+    main(plot='CI' not in os.environ, save=None)
