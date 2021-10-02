@@ -12,6 +12,7 @@ def main(plot: bool = True, save: str = None):
     iters = 10
     base_time = None
 
+    plt.ioff()
     fig, axs = plt.subplots(len(dts), len(n_sds),
                             sharex=True, sharey=True, figsize=(10, 10))
 

@@ -56,6 +56,7 @@ def add_color_line(fig, ax, x, y, z):
 def plot(data, rtols, schemes, setups_num, show_plot, path=None):
     _rtol = '$r_{tol}$'
 
+    plt.ioff()
     fig, axs = plt.subplots(setups_num, len(rtols),
                             sharex=True, sharey=True, figsize=(10, 13))
     for settings_idx in range(setups_num):
