@@ -12,7 +12,7 @@ class MPDATA_2D:
     def __init__(self, *, advectees, stream_function, rhod_of_zZ, dt, grid, size,
                  displacement,
                  n_iters=2, infinite_gauge=True,
-                 flux_corrected_transport=True,
+                 nonoscillatory=True,
                  third_order_terms=False
                  ):
         self.grid = grid
@@ -28,7 +28,7 @@ class MPDATA_2D:
         options = Options(
             n_iters=n_iters,
             infinite_gauge=infinite_gauge,
-            flux_corrected_transport=flux_corrected_transport,
+            nonoscillatory=nonoscillatory,
             third_order_terms=third_order_terms
         )
         disable_threads_if_needed = {}

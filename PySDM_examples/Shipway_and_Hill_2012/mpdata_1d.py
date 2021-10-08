@@ -14,7 +14,7 @@ class MPDATA_1D:
         options = Options(
             n_iters=mpdata_settings['n_iters'],
             infinite_gauge=mpdata_settings['iga'],
-            flux_corrected_transport=mpdata_settings['fct'],
+            nonoscillatory=mpdata_settings['fct'],
             third_order_terms=mpdata_settings['tot']
         )
         stepper = Stepper(options=options, grid=grid, non_unit_g_factor=True)
