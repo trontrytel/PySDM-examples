@@ -30,7 +30,7 @@ jobs:
       - run: |
           pip install -e .
       - run: |
-          python -We -c "import PySDM"
+          python -We -c "import PySDM_examples"
       - run: |
           pip install -r test-time-requirements.txt
 
