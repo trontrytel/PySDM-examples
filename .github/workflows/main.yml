@@ -29,6 +29,8 @@ jobs:
       - run: |
           pip install --use-deprecated=legacy-resolver -e .
       - run: |
+          python -We -c "import PySDM"
+      - run: |
           pip install --use-deprecated=legacy-resolver -r test-time-requirements.txt
 
       # https://github.com/numba/numba/issues/6350#issuecomment-728174860
