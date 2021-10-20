@@ -26,13 +26,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
-          pip install --upgrade pip
+          pip install --upgrade --user pip
       - run: |
-          pip install -e .
+          pip install --user -e .
       - run: |
           python -We -c "import PySDM_examples"
       - run: |
-          pip install -r test-time-requirements.txt
+          pip install --user -r test-time-requirements.txt
 
       # https://github.com/numba/numba/issues/6350#issuecomment-728174860
       - if: matrix.platform == 'ubuntu-latest'
