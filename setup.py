@@ -1,3 +1,4 @@
+import os
 from setuptools import setup, find_packages
 
 
@@ -12,12 +13,13 @@ setup(
     description='PySDM usage examples reproducing results from literature and depicting how to use PySDM from Python Jupyter notebooks',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
-    install_requires=['PySDM==1.17',
-                      'PyMPDATA==0.9',
-                      'atmos-cloud-sim-uj-utils==0.3',
+    install_requires=['PySDM',
+                      'PyMPDATA',
+                      'atmos-cloud-sim-uj-utils',
                       'pystrict',
                       'matplotlib',
                       'ipywidgets',
+                      'pyvinecopulib' + ('==0.6.1' if 'CI' in os.environ else ''),
                       'ghapi'],  # note: test-time-requirement?
     author='https://github.com/orgs/atmos-cloud-sim-uj/people',
     author_email='sylwester.arabas@uj.edu.pl',
