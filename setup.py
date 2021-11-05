@@ -1,4 +1,3 @@
-import os
 from setuptools import setup, find_packages
 
 
@@ -19,7 +18,7 @@ setup(
                       'pystrict',
                       'matplotlib',
                       'ipywidgets',
-                      'pyvinecopulib' + ('==0.6.1' if 'CI' in os.environ else ''),
+                      'pyvinecopulib',
                       'ghapi'],  # note: test-time-requirement?
     author='https://github.com/orgs/atmos-cloud-sim-uj/people',
     author_email='sylwester.arabas@uj.edu.pl',
