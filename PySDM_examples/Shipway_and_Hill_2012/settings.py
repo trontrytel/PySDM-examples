@@ -56,8 +56,8 @@ class Settings:
         self.rhod = interp1d(z_points, rhod_solution.y[0])
 
         self.mpdata_settings = {'n_iters': 3, 'iga': False, 'fct': False, 'tot': False}
-        self.condensation_rtol_x = condensation.default_rtol_x
-        self.condensation_rtol_thd = condensation.default_rtol_thd
+        self.condensation_rtol_x = condensation.DEFAULTS.rtol_x
+        self.condensation_rtol_thd = condensation.DEFAULTS.rtol_thd
         self.condensation_adaptive = True
         self.coalescence_adaptive = True
 

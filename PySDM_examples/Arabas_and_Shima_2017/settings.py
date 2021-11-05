@@ -26,10 +26,10 @@ class Settings:
         self.mass_of_dry_air = mass_of_dry_air
         self.n_output = 500
 
-        self.rtol_x = condensation.default_rtol_x
-        self.rtol_thd = condensation.default_rtol_thd
+        self.rtol_x = condensation.DEFAULTS.rtol_x
+        self.rtol_thd = condensation.DEFAULTS.rtol_thd
         self.coord = 'volume logarithm'
-        self.dt_cond_range = condensation.default_cond_range
+        self.dt_cond_range = condensation.DEFAULTS.cond_range
 
     @property
     def dt_max(self):
