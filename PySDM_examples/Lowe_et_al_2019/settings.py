@@ -16,7 +16,7 @@ class Settings:
         self.model = model
         self.n_sd_per_mode = n_sd_per_mode
         self.formulae = Formulae(
-            surface_tension='CompressedFilm_Ovadnevaite' if model == 'film' else 'Constant'
+            surface_tension='CompressedFilmOvadnevaite' if model == 'film' else 'Constant'
         )
         self.aerosol = aerosol
         self.spectral_sampling = spectral_sampling
