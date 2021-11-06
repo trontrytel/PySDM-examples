@@ -52,12 +52,12 @@ class Settings:
         ).sample(n_sd)
 
         self.ENVIRONMENT_MOLE_FRACTIONS = {
-            "SO2": 0.2 * const.ppb,
-            "O3": 50 * const.ppb,
-            "H2O2": 0.5 * const.ppb,
-            "CO2": 360 * const.ppm,
-            "HNO3": 0.1 * const.ppb,
-            "NH3": 0.1 * const.ppb,
+            "SO2": 0.2 * const.PPB,
+            "O3": 50 * const.PPB,
+            "H2O2": 0.5 * const.PPB,
+            "CO2": 360 * const.PPM,
+            "HNO3": 0.1 * const.PPB,
+            "NH3": 0.1 * const.PPB,
         }
 
         self.starting_amounts = {
