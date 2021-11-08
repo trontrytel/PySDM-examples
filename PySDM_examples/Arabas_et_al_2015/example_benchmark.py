@@ -7,10 +7,14 @@ import importlib
 
 
 def reload_cpu_backend():
-    importlib.reload(PySDM.backends.numba.impl.algorithmic_methods)
+    importlib.reload(PySDM.backends.numba.impl.collisions_methods)
+    importlib.reload(PySDM.backends.numba.impl.displacement_methods)
+    importlib.reload(PySDM.backends.numba.impl.moments_methods)
     importlib.reload(PySDM.backends.numba.impl.index_methods)
+    importlib.reload(PySDM.backends.numba.impl.atomic_operations)
     importlib.reload(PySDM.backends.numba.impl.pair_methods)
     importlib.reload(PySDM.backends.numba.impl.physics_methods)
+    importlib.reload(PySDM.backends.numba.impl.chemistry_methods)
     importlib.reload(PySDM.backends.numba.impl.storage_impl)
     importlib.reload(PySDM.backends)
     from PySDM.backends import CPU
