@@ -43,7 +43,7 @@ def main():
         backends.append((GPU, "async"))
     for backend, mode in backends:
         if backend is CPU:
-            PySDM.backends.numba.conf.NUMBA_PARALLEL = mode
+            PySDM.backends.impl_numba.conf.NUMBA_PARALLEL = mode
             reload_cpu_backend()
         key = f"{backend} (mode={mode})"
         times[key] = []

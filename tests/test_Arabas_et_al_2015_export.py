@@ -23,7 +23,7 @@ def test_Arabas_et_al_2015_export():
     assert len(settings.output_steps) == 2 and settings.output_steps[-1] == 1
 
     storage = Storage()
-    simulator = Simulation(settings=settings, storage=storage, SpinUp=SpinUp, backend=CPU)
+    simulator = Simulation(settings=settings, storage=storage, SpinUp=SpinUp, backend_class=CPU)
     file = TemporaryFile()
     ncdf_exporter = NetCDFExporter(storage=storage, settings=settings, simulator=simulator, filename=file.absolute_path)
     tempdir = TemporaryDirectory()
