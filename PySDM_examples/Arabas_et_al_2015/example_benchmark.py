@@ -7,7 +7,7 @@ import importlib
 
 
 def reload_cpu_backend():
-    importlib.reload(PySDM.backends.impl_numba.method.collisions_methods)
+    importlib.reload(PySDM.backends.impl_numba.methods.collisions_methods)
     importlib.reload(PySDM.backends.impl_numba.methods.displacement_methods)
     importlib.reload(PySDM.backends.impl_numba.methods.moments_methods)
     importlib.reload(PySDM.backends.impl_numba.methods.index_methods)
