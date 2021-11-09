@@ -1,21 +1,21 @@
 from PySDM_examples.Arabas_et_al_2015 import Settings
 from PySDM_examples.Szumowski_et_al_1998 import Simulation, Storage
 from PySDM.products.stats.timers import WallTime
-import PySDM.backends.numba.conf
+import PySDM.backends.impl_numba.conf
 from PySDM.backends import CPU, GPU
 import importlib
 
 
 def reload_cpu_backend():
-    importlib.reload(PySDM.backends.numba.impl.collisions_methods)
-    importlib.reload(PySDM.backends.numba.impl.displacement_methods)
-    importlib.reload(PySDM.backends.numba.impl.moments_methods)
-    importlib.reload(PySDM.backends.numba.impl.index_methods)
-    importlib.reload(PySDM.backends.numba.impl.atomic_operations)
-    importlib.reload(PySDM.backends.numba.impl.pair_methods)
-    importlib.reload(PySDM.backends.numba.impl.physics_methods)
-    importlib.reload(PySDM.backends.numba.impl.chemistry_methods)
-    importlib.reload(PySDM.backends.numba.impl.storage_impl)
+    importlib.reload(PySDM.backends.impl_numba.methods.collisions_methods)
+    importlib.reload(PySDM.backends.impl_numba.methods.displacement_methods)
+    importlib.reload(PySDM.backends.impl_numba.methods.moments_methods)
+    importlib.reload(PySDM.backends.impl_numba.methods.index_methods)
+    importlib.reload(PySDM.backends.impl_numba.methods.pair_methods)
+    importlib.reload(PySDM.backends.impl_numba.methods.physics_methods)
+    importlib.reload(PySDM.backends.impl_numba.methods.chemistry_methods)
+    importlib.reload(PySDM.backends.impl_numba.storage_impl)
+    importlib.reload(PySDM.backends.impl_numba.atomic_operations)
     importlib.reload(PySDM.backends)
     from PySDM.backends import CPU
 
@@ -43,7 +43,7 @@ def main():
         backends.append((GPU, "async"))
     for backend, mode in backends:
         if backend is CPU:
-            PySDM.backends.numba.conf.NUMBA_PARALLEL = mode
+            PySDM.backends.impl_numba.conf.NUMBA_PARALLEL = mode
             reload_cpu_backend()
         key = f"{backend} (mode={mode})"
         times[key] = []
