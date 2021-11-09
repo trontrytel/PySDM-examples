@@ -11,11 +11,11 @@ import numpy as np
 
 class Simulation:
 
-    def __init__(self, settings, storage, SpinUp, backend=CPU):
+    def __init__(self, settings, storage, SpinUp, backend_class=CPU):
         self.settings = settings
         self.storage = storage
         self.particulator = None
-        self.backend = backend
+        self.backend_class = backend_class
         self.SpinUp = SpinUp
 
     @property
@@ -23,7 +23,7 @@ class Simulation:
         return self.particulator.products
 
     def reinit(self, products=None):
-        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend(formulae=self.settings.formulae))
+        builder = Builder(n_sd=self.settings.n_sd, backend=self.backend_class(formulae=self.settings.formulae))
         environment = Kinematic2D(dt=self.settings.dt,
                                   grid=self.settings.grid,
                                   size=self.settings.size,
