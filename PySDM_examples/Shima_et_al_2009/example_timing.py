@@ -6,7 +6,7 @@ from PySDM.initialisation.spectral_sampling import ConstantMultiplicity
 from PySDM_examples.Shima_et_al_2009.settings import Settings
 from PySDM.products.stats.timers import WallTime
 from PySDM.backends.numba.numba import Numba
-from PySDM.backends.thrust_rtc.thrust_rtc import ThrustRTC
+from PySDM.backends import ThrustRTC
 
 
 def run(settings, backend):
