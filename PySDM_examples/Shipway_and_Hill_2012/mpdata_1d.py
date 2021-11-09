@@ -1,6 +1,6 @@
 from PyMPDATA import Solver, Stepper, Options, ScalarField, VectorField
 from PyMPDATA.boundary_conditions import Extrapolated
-from PySDM.state import arakawa_c
+from PySDM.impl import arakawa_c
 import numpy as np
 
 

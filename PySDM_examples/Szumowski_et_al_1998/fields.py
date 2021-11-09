@@ -1,5 +1,5 @@
 import numpy as np
-from PySDM.state.arakawa_c import z_scalar_coord
+from PySDM.impl.arakawa_c import z_scalar_coord
 
 
 def z_vec_coord(grid):
