@@ -1,4 +1,4 @@
-from PySDM.products.stats.timers import CPUTime, WallTime
+from PySDM.products import CPUTime, WallTime
 from contextlib import AbstractContextManager
 
 
