@@ -52,7 +52,7 @@ class Simulation:
                 abifm.m = case['ABIFM_m']
             if 'cooling_rate' not in case:
                 case['cooling_rate'] = 0
-                constant.J_het = case['J_het']
+                constant.J_HET = case['J_het']
 
             self.output[key] = []
             for i in range(self.n_runs_per_case):
@@ -115,7 +115,7 @@ class Simulation:
         yunit = 1 / si.cm**2 / si.s
 
         plot_x = np.linspace(*self.temperature_range) * si.K
-        plot_y = formulae.heterogeneous_ice_nucleation_rate.J_het(
+        plot_y = formulae.heterogeneous_ice_nucleation_rate.j_het(
             formulae.saturation_vapour_pressure.a_w_ice.py_func(plot_x)
         )
         pylab.grid()
