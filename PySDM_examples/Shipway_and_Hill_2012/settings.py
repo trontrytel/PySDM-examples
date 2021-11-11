@@ -1,11 +1,11 @@
 import numpy as np
-from PySDM.physics import si
-import PySDM.physics.constants as const
+from pystrict import strict
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 from PySDM.dynamics import condensation
 from PySDM.physics import Formulae, spectra
-from pystrict import strict
+from PySDM.physics import si
+import PySDM.physics.constants as const
 
 
 @strict

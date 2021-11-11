@@ -13,11 +13,13 @@ class Settings(StratoCumulus):
                'initial_vapour_mixing_ratio_profile'
 
     def __init__(self, fastmath: bool = JIT_FLAGS['fastmath']):
-        super().__init__(fastmath)
+        super().__init__(
+            fastmath,
+            rho_w_max=.6 * si.metres / si.seconds * (si.kilogram / si.metre ** 3)
+        )
 
         self.grid = (25, 25)
         self.size = (1500 * si.metres, 1500 * si.metres)
-        self.rho_w_max = .6 * si.metres / si.seconds * (si.kilogram / si.metre ** 3)
 
         # output steps
         self.simulation_time = 90 * si.minute

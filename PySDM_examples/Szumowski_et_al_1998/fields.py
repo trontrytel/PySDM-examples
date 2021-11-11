@@ -44,4 +44,3 @@ def nondivergent_vector_field_2d(grid: tuple, size: tuple, dt: float, stream_fun
 
     rho_times_courant = [rho_velocity_x * dt / dx, rho_velocity_z * dt / dz]
     return rho_times_courant
-

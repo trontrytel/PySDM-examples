@@ -41,7 +41,7 @@ def test_Arabas_et_al_2015_export():
     vtk_exporter.write_pvd()
 
     # Assert
-    versions = netcdf.netcdf_file(file.absolute_path).versions
+    versions = netcdf.netcdf_file(file.absolute_path).versions  # pylint: disable=no-member
     assert 'PyMPDATA' in str(versions)
 
     filenames_list = os.listdir(os.path.join(tempdir.name, 'output'))

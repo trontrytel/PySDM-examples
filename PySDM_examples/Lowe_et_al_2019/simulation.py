@@ -47,10 +47,10 @@ class Simulation:
         dv = settings.mass_of_dry_air / settings.rho0
         np.testing.assert_approx_equal(
             np.sum(attributes['n']) / dv,
-            Sum(
-                tuple([settings.aerosol.aerosol_modes_per_cc[i]['spectrum']
-                       for i in range(len(settings.aerosol.aerosol_modes_per_cc))])
-            ).norm_factor,
+            Sum(tuple(
+                settings.aerosol.aerosol_modes_per_cc[i]['spectrum']
+                for i in range(len(settings.aerosol.aerosol_modes_per_cc))
+            )).norm_factor,
             significant=5
         )
         r_wet = r_wet_init(
@@ -94,7 +94,7 @@ class Simulation:
         output['spectrum'] = value
 
     def run(self):
-        output = {k: [] for k in self.particulator.products.keys()}
+        output = {k: [] for k in self.particulator.products}
         for step in self.settings.output_steps:
             self.particulator.run(step - self.particulator.n_steps)
             self._save_scalars(output)

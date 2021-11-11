@@ -16,7 +16,10 @@ class Settings:
         mass_of_dry_air: float,
         coord: str = 'VolumeLogarithm'
     ):
-        self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus', condensation_coordinate=coord)
+        self.formulae = Formulae(
+            saturation_vapour_pressure='AugustRocheMagnus',
+            condensation_coordinate=coord
+        )
 
         self.p0 = 1000 * si.hectopascals
         self.RH0 = .98
