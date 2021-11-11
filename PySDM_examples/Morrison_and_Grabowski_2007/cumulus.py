@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.integrate import solve_ivp
+from scipy.interpolate import interp1d
 from PySDM.physics import si
 from PySDM.backends.impl_numba.conf import JIT_FLAGS
-from scipy.interpolate import interp1d
 from PySDM.physics import constants as const
 from PySDM_examples.Morrison_and_Grabowski_2007.common import Common
 from PySDM_examples.Szumowski_et_al_1998 import sounding
@@ -70,7 +70,8 @@ class Cumulus(Common):
         assert rhod_solution.success
         return rhod_solution.y[0]
 
-    def __z_of_p(self):
+    @staticmethod
+    def __z_of_p():
         T_virt_of_p = interp1d(
             sounding.pressure,
             sounding.temperature * (
@@ -111,19 +112,17 @@ class Cumulus(Common):
     def A1(t):
         if t <= 900 * si.s:
             return 5.73e2
-        elif t <= 1500 * si.s:
+        if t <= 1500 * si.s:
             return 5.73e2 + 2.02e3 * (1 + np.cos(np.pi*((t - 900)/600 + 1)))
-        else:
-            return 1.15e3 + 1.72e3 * (1 + np.cos(np.pi*((min(t, 2400)-1500)/900 + 1)))
+        return 1.15e3 + 1.72e3 * (1 + np.cos(np.pi*((min(t, 2400)-1500)/900 + 1)))
 
     @staticmethod
     def A2(t):
         if t <= 300 * si.s:
             return 0
-        elif t <= 1500 * si.s:
+        if t <= 1500 * si.s:
             return 6e2 * (1 + np.cos(np.pi * ((t - 300)/600 - 1)))
-        else:
-            return 5e2 * (1 + np.cos(np.pi * ((min(2400, t) - 1500)/900 - 1)))
+        return 5e2 * (1 + np.cos(np.pi * ((min(2400, t) - 1500)/900 - 1)))
 
     # see Appendix (page 2859)
     def stream_function(self, xX, zZ, t):
@@ -135,9 +134,3 @@ class Cumulus(Common):
                 * np.sin(self.beta(x) * np.pi * (z-self.z0(z))/self.hz(z))
                 + self.A2(t)/2*zZ**2
         )
-
-    def rhod(self, zZ):
-        p = self.formulae.hydrostatics.p_of_z_assuming_const_th_and_qv(
-            self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
-        rhod = self.formulae.state_variable_triplet.rho_d(p, self.qv0, self.th_std0)
-        return rhod

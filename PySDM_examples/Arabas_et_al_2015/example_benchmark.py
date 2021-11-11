@@ -1,4 +1,5 @@
 import importlib
+from matplotlib import pyplot as plt
 from PySDM.products import WallTime
 import PySDM.backends.impl_numba.conf
 from PySDM.backends import CPU, GPU
@@ -17,7 +18,6 @@ def reload_cpu_backend():
     importlib.reload(PySDM.backends.impl_numba.storage_impl)
     importlib.reload(PySDM.backends.impl_numba.atomic_operations)
     importlib.reload(PySDM.backends)
-    from PySDM.backends import CPU
 
 
 def main():
@@ -55,7 +55,6 @@ def main():
             simulation.run()
             times[key].append(storage.load('wall_time')[-1])
 
-    from matplotlib import pyplot as plt
     for parallelization, t in times.items():
         plt.plot(n_sd, t, label=parallelization)
     plt.legend()

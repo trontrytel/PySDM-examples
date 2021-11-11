@@ -1,18 +1,20 @@
 import os
+from matplotlib import pyplot as plt
 from PySDM.builder import Builder
 from PySDM.dynamics import Coalescence
 from PySDM.environments import Box
 from PySDM.initialisation.spectral_sampling import ConstantMultiplicity
-from PySDM_examples.Shima_et_al_2009.settings import Settings
 from PySDM.products import WallTime
 from PySDM.backends import Numba, ThrustRTC
+from PySDM_examples.Shima_et_al_2009.settings import Settings
 
 
 def run(settings, backend):
     builder = Builder(n_sd=settings.n_sd, backend=backend)
     builder.set_environment(Box(dv=settings.dv, dt=settings.dt))
     attributes = {}
-    attributes['volume'], attributes['n'] = ConstantMultiplicity(settings.spectrum).sample(settings.n_sd)
+    sampling = ConstantMultiplicity(settings.spectrum)
+    attributes['volume'], attributes['n'] = sampling.sample(settings.n_sd)
     builder.add_dynamic(Coalescence(settings.kernel))
     particles = builder.build(attributes, products=[WallTime()])
 
@@ -39,7 +41,6 @@ def main(plot: bool):
             _, wall_time = run(settings, backend())
             times[key].append(wall_time)
 
-    from matplotlib import pyplot as plt
     for backend, t in times.items():
         plt.plot(nsds, t, label=backend, linestyle='--', marker='o')
     plt.ylabel("wall time [s]")

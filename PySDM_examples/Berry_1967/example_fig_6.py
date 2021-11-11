@@ -15,17 +15,15 @@ def full_params(params):
 def print_collection_efficiency_portrait(params):
     size = 2 * 5.236
     plt.figure(num=1, figsize=(size / 2, size))
-    radii = (r * const.si.um for r in (8, 10, 14, 16, 20, 30, 40, 60, 80, 136))
     points = 200
     Y_c = np.zeros(points)
-    p = np.linspace(0, 1, points)
     pair = np.array([0., 0.])
     is_first_in_pair = np.array([True, False])
     idx = np.arange(len(is_first_in_pair))
-    for r in radii:
+    for r in (radius * const.si.um for radius in (8, 10, 14, 16, 20, 30, 40, 60, 80, 136)):
         pair[0] = r
-        for i, _ in enumerate(p):
-            pair[1] = p[i] * r
+        for i, point in enumerate(np.linspace(0, 1, points)):
+            pair[1] = point * r
             backend.linear_collection_efficiency_body(
                 params=full_params(params),
                 output=Y_c[i:i + 1], radii=pair,

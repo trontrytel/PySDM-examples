@@ -6,7 +6,7 @@ from PySDM.dynamics import (
     AmbientThermodynamics, Freezing
 )
 from PySDM.environments import Kinematic2D
-from PySDM.initialisation import spectral_sampling, spatial_sampling, spectro_glacial
+from PySDM.initialisation import spectral_sampling, spatial_sampling
 from PySDM import products as PySDM_products
 from PySDM_examples.Szumowski_et_al_1998.mpdata_2d import MPDATA_2D
 from PySDM_examples.utils import DummyController
@@ -147,14 +147,15 @@ class Simulation:
 
         kw = {}
         if self.settings.processes["freezing"]:
-            kw['spectro_glacial_discretisation'] = spectro_glacial.Independent(
-                size_spectrum=self.settings.spectrum_per_mass_of_dry_air,
-                freezing_temperature_spectrum=self.settings.formulae.freezing_temperature_spectrum
-            )
-        else:
-            kw['spectral_discretisation'] = spectral_sampling.UniformRandom(
-                spectrum=self.settings.spectrum_per_mass_of_dry_air
-            )
+            raise NotImplementedError()
+            # kw['spectro_glacial_discretisation'] = spectro_glacial.Independent(
+            #     size_spectrum=self.settings.spectrum_per_mass_of_dry_air,
+            #     freezing_temperature_spectrum=self.settings.formulae.freezing_temperature_spectrum
+            # )
+        # else:
+        kw['spectral_discretisation'] = spectral_sampling.UniformRandom(
+            spectrum=self.settings.spectrum_per_mass_of_dry_air
+        )
 
         attributes = environment.init_attributes(
             spatial_discretisation=spatial_sampling.Pseudorandom(),

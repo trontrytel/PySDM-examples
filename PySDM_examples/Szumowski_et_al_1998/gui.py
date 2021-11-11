@@ -21,6 +21,13 @@ def launch(settings, simulation, storage):
     tabs.observe(controller.reinit, 'selected_index')
 
     # https://github.com/googlecolab/colabtools/issues/1302
+    hack = (
+        '<link'
+        ' rel="stylesheet"'
+        ' href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"'
+        '> '
+    )
     if 'google.colab' in sys.modules:
-        display(HTML('''<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> '''))
+        display(HTML(hack))
+
     display(tabs)

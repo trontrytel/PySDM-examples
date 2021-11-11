@@ -40,20 +40,22 @@ ionic_dissociation_phi = {
     'NaCl': 2
 }
 
+
 def volume_fractions(mass_fractions: dict):
-    volume_fractions = {
+    return {
         k: (mass_fractions[k] / densities[k]) / sum(
             mass_fractions[i] / densities[i] for i in compounds
         ) for k in compounds
     }
-    return volume_fractions
+
 
 def f_org_volume(mass_fractions: dict):
     volfrac = volume_fractions(mass_fractions)
     return sum(is_organic[k] * volfrac[k] for k in compounds)
 
+
 def kappa(mass_fractions: dict):
-    kappa = {}
+    result = {}
     for model in ('bulk', 'film'):
         volfrac = volume_fractions(mass_fractions)
         molar_volumes = {i: molar_masses[i] / densities[i] for i in compounds}
@@ -73,9 +75,9 @@ def kappa(mass_fractions: dict):
                              for i in compounds)
         else:
             raise AssertionError()
-        kappa[model] = ns_per_vol * const.Mv / const.rho_w
+        result[model] = ns_per_vol * const.Mv / const.rho_w
 
-    return kappa
+    return result
 
 
 class _Aerosol:

@@ -33,4 +33,3 @@ class Settings:
     @property
     def output_steps(self):
         return [int(step / self.dt) for step in self._steps]
-
