@@ -1,11 +1,15 @@
 import numpy as np
-from PySDM_examples.UIUC_2021.frozen_fraction import FrozenFraction
 from PySDM.physics import constants as const
+from PySDM_examples.UIUC_2021.frozen_fraction import FrozenFraction
 
 TOTAL_PARTICLE_NUMBER =1
 DROPLET_VOLUME = 1
 VOLUME = 1
-FF = FrozenFraction(volume=VOLUME, total_particle_number=TOTAL_PARTICLE_NUMBER, droplet_volume=DROPLET_VOLUME)
+FF = FrozenFraction(
+    volume=VOLUME,
+    total_particle_number=TOTAL_PARTICLE_NUMBER,
+    droplet_volume=DROPLET_VOLUME
+)
 
 
 class TestFrozenFraction():

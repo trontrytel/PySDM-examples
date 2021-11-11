@@ -38,8 +38,13 @@ class Settings:
         )
 
         self.mass_of_dry_air = 44
-        
-        self.wet_radius_bins_edges = np.logspace(np.log10(4 * si.um), np.log10(12 * si.um), 128+1, endpoint=True)
+
+        self.wet_radius_bins_edges = np.logspace(
+            np.log10(4 * si.um),
+            np.log10(12 * si.um),
+            128+1,
+            endpoint=True
+        )
 
     @property
     def rho0(self):
@@ -59,4 +64,3 @@ class Settings:
     @property
     def output_steps(self) -> np.ndarray:
         return np.arange(0, self.nt + 1, self.steps_per_output_interval)
-

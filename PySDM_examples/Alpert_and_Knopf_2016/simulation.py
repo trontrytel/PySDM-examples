@@ -60,7 +60,7 @@ class Simulation:
                 n_sd = number_of_real_droplets / self.multiplicity
                 np.testing.assert_approx_equal(n_sd, int(n_sd))
                 n_sd = int(n_sd)
-
+                initial_temp = self.temperature_range[1] if self.temperature_range else np.nan
                 f_ufz, a_tot = simulation(
                     seed=i, n_sd=n_sd, time_step=self.time_step, volume=self.volume,
                     spectrum=case['ISA'],
@@ -68,7 +68,7 @@ class Simulation:
                     total_time=total_time, number_of_real_droplets=number_of_real_droplets,
                     cooling_rate=self.cases[key]['cooling_rate'],
                     heterogeneous_ice_nucleation_rate=self.heterogeneous_ice_nucleation_rate,
-                    initial_temperature=self.temperature_range[1] if self.temperature_range else np.nan
+                    initial_temperature=initial_temp
                 )
                 self.output[key].append({'f_ufz': f_ufz, 'A_tot': a_tot})
 

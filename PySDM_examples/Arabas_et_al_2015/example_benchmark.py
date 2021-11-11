@@ -1,9 +1,9 @@
-from PySDM_examples.Arabas_et_al_2015 import Settings
-from PySDM_examples.Szumowski_et_al_1998 import Simulation, Storage
+import importlib
 from PySDM.products import WallTime
 import PySDM.backends.impl_numba.conf
 from PySDM.backends import CPU, GPU
-import importlib
+from PySDM_examples.Arabas_et_al_2015 import Settings
+from PySDM_examples.Szumowski_et_al_1998 import Simulation, Storage
 
 
 def reload_cpu_backend():

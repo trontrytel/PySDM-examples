@@ -1,14 +1,21 @@
+import numpy as np
+from pystrict import strict
 from PySDM.physics.constants import si
 from PySDM.physics import constants as const
 from PySDM.dynamics import condensation
 from PySDM.physics.formulae import Formulae
-import numpy as np
-from pystrict import strict
 
 
 @strict
 class Settings:
-    def __init__(self, w_avg: float, N_STP: float, r_dry: float, mass_of_dry_air: float, coord: str = 'VolumeLogarithm'):
+    def __init__(
+        self,
+        w_avg: float,
+        N_STP: float,
+        r_dry: float,
+        mass_of_dry_air: float,
+        coord: str = 'VolumeLogarithm'
+    ):
         self.formulae = Formulae(saturation_vapour_pressure='AugustRocheMagnus', condensation_coordinate=coord)
 
         self.p0 = 1000 * si.hectopascals
@@ -60,9 +67,9 @@ r_drys = (
 )
 
 setups = []
-for w_i in range(len(w_avgs)):
-    for N_i in range(len(N_STPs)):
-        for rd_i in range(len(r_drys)):
+for w_i, _ in enumerate(w_avgs):
+    for N_i, __ in enumerate(N_STPs):
+        for rd_i, ___ in enumerate(r_drys):
             if not rd_i == N_i == 1:
                 setups.append(Settings(
                     w_avg=w_avgs[w_i],

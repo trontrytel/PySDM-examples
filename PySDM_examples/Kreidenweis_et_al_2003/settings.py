@@ -65,10 +65,15 @@ class Settings:
                 self.formulae.trivia.volume(self.r_dry) * self.DRY_RHO / self.dry_molar_mass
                 if k in ("N_mIII", "S_VI")
                 else np.zeros(self.n_sd)
-            for k in AQUEOUS_COMPOUNDS.keys()
+            for k in AQUEOUS_COMPOUNDS
         }
-        
-        self.dry_radius_bins_edges = np.logspace(np.log10(.01 * si.um), np.log10(1 * si.um), 51, endpoint=True) / 2
+
+        self.dry_radius_bins_edges = np.logspace(
+            np.log10(.01 * si.um),
+            np.log10(1 * si.um),
+            51,
+            endpoint=True
+        ) / 2
 
     @property
     def nt(self):
