@@ -1,11 +1,14 @@
 import numpy as np
+from typing import Optional
 from pystrict import strict
 from PySDM.physics import si, Formulae, coalescence_kernels, spectra
 
 
 @strict
 class Settings:
-    def __init__(self):
+    def __init__(self, steps: Optional[list] = None):
+        steps = steps or [200 * i for i in range(10)]
+
         self.formulae = Formulae()
         self.init_x_min = self.formulae.trivia.volume(radius=3.94 * si.micrometre)
         self.init_x_max = self.formulae.trivia.volume(radius=25 * si.micrometres)
@@ -19,7 +22,7 @@ class Settings:
         self.dt = 1 * si.seconds
         self.adaptive = False
         self.seed = 44
-        self._steps = [200 * i for i in range(10)]
+        self._steps = steps
         self.kernel = coalescence_kernels.Geometric(collection_efficiency=1)
         self.spectrum = spectra.Exponential(norm_factor=self.norm_factor, scale=self.X0)
 
