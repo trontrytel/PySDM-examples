@@ -76,8 +76,8 @@ class Simulation(BasicSimulation):
             ),
             PySDM_products.AqueousMassSpectrum("S_VI",
                                                settings.dry_radius_bins_edges,
-                                               name=f'dm_S_VI/dlog_10(dry diameter)',
-                                               unit=f'ug / m^3"',
+                                               name='dm_S_VI/dlog_10(dry diameter)',
+                                               unit='ug / m^3"',
                                                )
         )
 

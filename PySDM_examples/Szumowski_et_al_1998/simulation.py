@@ -139,7 +139,7 @@ class Simulation:
             builder.add_dynamic(EulerianAdvection(solver))
         if self.settings.processes["particle advection"]:
             builder.add_dynamic(displacement)
-            products.append(PySDM_products.SurfacePrecipitation(unit='mm/day'))
+            products.append(PySDM_products.SurfacePrecipitation(name='surf_precip', unit='mm/day'))
         if self.settings.processes["coalescence"]:
             builder.add_dynamic(Coalescence(
                 kernel=self.settings.kernel,
@@ -157,7 +157,7 @@ class Simulation:
             products.append(PySDM_products.IceWaterContent())
             products.append(PySDM_products.FreezableSpecificConcentration(
                 self.settings.T_bins_edges))
-            products.append(PySDM_products.ParticlesConcentration(specific=True))
+            products.append(PySDM_products.ParticleSpecificConcentration())
 
         kw = {}
         if self.settings.processes["freezing"]:

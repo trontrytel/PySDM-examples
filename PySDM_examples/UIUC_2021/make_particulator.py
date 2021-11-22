@@ -52,8 +52,8 @@ def make_particulator(*, n_sd, dt, initial_temperature, singular, seed,
     return builder.build(
         attributes=attributes,
         products=[
-            PySDM_products.Time(),
-            PySDM_products.Temperature(),
-            PySDM_products.IceWaterContent(specific=False)
+            PySDM_products.Time(name='t'),
+            PySDM_products.AmbientTemperature(name='T_env'),
+            PySDM_products.SpecificIceWaterContent(name='qi')
         ]
     )
