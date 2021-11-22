@@ -75,7 +75,7 @@ class Simulation:
                 radius_range=(0, self.settings.aerosol_radius_threshold),
                 unit='mg^-1'
             ),
-            PySDM_products.MeanRadius(),
+            PySDM_products.MeanRadius(unit='um'),
             PySDM_products.SuperDropletCountPerGridbox(),
             PySDM_products.AmbientRelativeHumidity(name='RH_env', var='RH'),
             PySDM_products.AmbientPressure(name='p_env', var='p'),
@@ -85,7 +85,7 @@ class Simulation:
             PySDM_products.AmbientDryAirPotentialTemperature(name='thd_env', var='thd'),
             PySDM_products.CPUTime(),
             PySDM_products.WallTime(),
-            PySDM_products.EffectiveRadius(radius_range=cloud_range)
+            PySDM_products.EffectiveRadius(unit='um', radius_range=cloud_range)
         ]
 
         if self.settings.processes['fluid advection']:

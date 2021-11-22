@@ -241,7 +241,10 @@ class GUIViewer:
         except self.storage.Exception:
             data = None
 
-        self.plots[selected].update(data, step)
+        self.plots[selected].update(
+            data, step,
+            self.storage.data_range(selected) if data is not None else None
+        )
 
     def replot_image(self, *_):
         selected = self.product_select.value
