@@ -148,8 +148,8 @@ class Simulation:
                 substeps=self.settings.coalescence_substeps,
                 optimized_random=self.settings.coalescence_optimized_random
             ))
-            products.append(PySDM_products.CoalescenceTimestepMean('dt_coal_avg'))
-            products.append(PySDM_products.CoalescenceTimestepMin('dt_coal_min'))
+            products.append(PySDM_products.CoalescenceTimestepMean(name='dt_coal_avg'))
+            products.append(PySDM_products.CoalescenceTimestepMin(name='dt_coal_min'))
             products.append(PySDM_products.CollisionRatePerGridbox())
             products.append(PySDM_products.CollisionRateDeficitPerGridbox())
         if self.settings.processes["freezing"]:
