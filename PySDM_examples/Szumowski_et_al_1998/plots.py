@@ -43,7 +43,7 @@ class _ImagePlot(_Plot):
             products.AerosolConcentration: ((1e0, 1e2), 'linear'),
             products.CloudDropletConcentration: ((1e0, 1e2), 'linear'),
             products.DrizzleConcentration: ((1e-3, 1e1), 'log'),
-            products.ParticleMeanRadius: ((1, 25), 'linear'),
+            products.MeanRadius: ((1, 25), 'linear'),
             products.CloudDropletEffectiveRadius: ((0, 25), 'linear'),
             products.AerosolSpecificConcentration: ((0, 3e2), 'linear'),
             products.WaterVapourMixingRatio: ((5, 7.5), 'linear'),
