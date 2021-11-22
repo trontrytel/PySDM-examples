@@ -100,9 +100,9 @@ class Simulation:
                 schedule=self.settings.condensation_schedule
             )
             builder.add_dynamic(condensation)
-            products.append(PySDM_products.CondensationTimestepMin())
-            products.append(PySDM_products.CondensationTimestepMax())
-            products.append(PySDM_products.PeakSupersaturation(unit='%'))
+            products.append(PySDM_products.CondensationTimestepMin(name='dt_cond_min'))
+            products.append(PySDM_products.CondensationTimestepMax(name='dt_cond_max'))
+            products.append(PySDM_products.PeakSupersaturation(unit='%', name='S_max'))
             products.append(PySDM_products.ActivatingRate())
             products.append(PySDM_products.DeactivatingRate())
             products.append(PySDM_products.RipeningRate())
@@ -148,8 +148,8 @@ class Simulation:
                 substeps=self.settings.coalescence_substeps,
                 optimized_random=self.settings.coalescence_optimized_random
             ))
-            products.append(PySDM_products.CoalescenceTimestepMean())
-            products.append(PySDM_products.CoalescenceTimestepMin())
+            products.append(PySDM_products.CoalescenceTimestepMean('dt_coal_avg'))
+            products.append(PySDM_products.CoalescenceTimestepMin('dt_coal_min'))
             products.append(PySDM_products.CollisionRatePerGridbox())
             products.append(PySDM_products.CollisionRateDeficitPerGridbox())
         if self.settings.processes["freezing"]:
