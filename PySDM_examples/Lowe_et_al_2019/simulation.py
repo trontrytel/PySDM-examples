@@ -68,12 +68,12 @@ class Simulation:
         builder.add_dynamic(Condensation())
 
         products = products or (
-            PySDM_products.ParcelDisplacement(),
-            PySDM_products.Time(),
-            PySDM_products.PeakSupersaturation(),
-            PySDM_products.CloudDropletConcentration(
+            PySDM_products.ParcelDisplacement(name='z'),
+            PySDM_products.Time(name='t'),
+            PySDM_products.PeakSupersaturation(unit='%', name='S_max'),
+            PySDM_products.ParticleConcentration(name='n_c_cm3', unit='cm^-3',
                 radius_range=settings.cloud_radius_range),
-            PySDM_products.ParticlesWetSizeSpectrum(
+            PySDM_products.ParticleSizeSpectrumPerVolume(
                 radius_bins_edges=settings.wet_radius_bins_edges),
         )
 
@@ -90,7 +90,7 @@ class Simulation:
             output[k].append(value)
 
     def _save_spectrum(self, output):
-        value = self.particulator.products['Particles Wet Size Spectrum'].get()
+        value = self.particulator.products['particle size spectrum per volume'].get()
         output['spectrum'] = value
 
     def run(self):

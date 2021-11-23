@@ -44,15 +44,15 @@ class Simulation:
                            kappa_times_dry_volume=attributes['kappa times dry volume'])
         attributes['volume'] = settings.formulae.trivia.volume(radius=r_wet)
         products = [
-            PySDM_products.ParticleMeanRadius(),
-            PySDM_products.CondensationTimestepMin(),
-            PySDM_products.ParcelDisplacement(),
-            PySDM_products.RelativeHumidity(),
-            PySDM_products.Time(),
-            PySDM_products.ActivatingRate(),
-            PySDM_products.DeactivatingRate(),
-            PySDM_products.RipeningRate(),
-            PySDM_products.PeakSupersaturation()
+            PySDM_products.MeanRadius(name='radius_m1', unit='um'),
+            PySDM_products.CondensationTimestepMin(name='dt_cond_min'),
+            PySDM_products.ParcelDisplacement(name='z'),
+            PySDM_products.AmbientRelativeHumidity(name="RH", unit="%"),
+            PySDM_products.Time(name='t'),
+            PySDM_products.ActivatingRate(unit='s^-1 mg^-1', name='activating_rate'),
+            PySDM_products.DeactivatingRate(unit='s^-1 mg^-1', name='deactivating_rate'),
+            PySDM_products.RipeningRate(unit='s^-1 mg^-1', name='ripening_rate'),
+            PySDM_products.PeakSupersaturation(unit='%', name='S_max')
         ]
 
         self.particulator = builder.build(attributes, products)
@@ -64,7 +64,7 @@ class Simulation:
         output["r"].append(self.particulator.products['radius_m1'].get(unit=const.si.m)[cell_id])
         output["dt_cond_min"].append(self.particulator.products['dt_cond_min'].get()[cell_id])
         output["z"].append(self.particulator.products["z"].get()[cell_id])
-        output["S"].append(self.particulator.products["RH_env"].get()[cell_id]/100 - 1)
+        output["S"].append(self.particulator.products["RH"].get()[cell_id]/100 - 1)
         output["t"].append(self.particulator.products["t"].get())
 
         for event in ('activating', 'deactivating', 'ripening'):
