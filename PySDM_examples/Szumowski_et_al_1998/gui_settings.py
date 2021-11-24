@@ -1,6 +1,7 @@
 import inspect
 import numpy as np
 from PySDM import Formulae, physics
+from PySDM import formulae
 from PySDM_examples.utils.widgets import IntSlider, FloatSlider, VBox, Checkbox, Accordion, Dropdown
 
 
@@ -59,7 +60,7 @@ class GUISettings:
         self.ui_formulae_options = [
             Dropdown(
                 description=k,
-                options=physics.formulae._choices(getattr(physics, k)).keys(),
+                options=formulae._choices(getattr(physics, k)).keys(),
                 value=v.default
             )
             for k, v in inspect.signature(Formulae.__init__).parameters.items()
