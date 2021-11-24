@@ -3,10 +3,10 @@ from packaging import version
 from matplotlib import pylab
 import matplotlib
 import numpy as np
-from PySDM import Builder
+from PySDM import Builder, Formulae
 from PySDM.dynamics import Freezing
 from PySDM.environments import Box
-from PySDM.physics import constants as const, Formulae
+from PySDM.physics import constants as const
 from PySDM.physics.heterogeneous_ice_nucleation_rate import constant, abifm
 from PySDM.initialisation import spectral_sampling
 from PySDM.initialisation.multiplicities import discretise_n

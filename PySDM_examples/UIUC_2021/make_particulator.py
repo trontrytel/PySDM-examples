@@ -1,7 +1,6 @@
 import numpy as np
-from PySDM.builder import Builder
+from PySDM import Builder, Formulae
 from PySDM.backends import CPU
-from PySDM.physics import Formulae
 from PySDM.dynamics import Freezing
 from PySDM.environments import Box
 from PySDM.initialisation.spectral_sampling import ConstantMultiplicity
