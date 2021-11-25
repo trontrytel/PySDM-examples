@@ -3,7 +3,8 @@ import numpy as np
 from pystrict import strict
 from PySDM import Formulae
 from PySDM.physics.coalescence_kernels import Golovin
-from PySDM.physics import si, spectra
+from PySDM.initialisation import spectra
+from PySDM.physics import si
 
 
 @strict

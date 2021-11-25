@@ -3,8 +3,8 @@ from PySDM import Builder, Formulae
 from PySDM.backends import CPU
 from PySDM.dynamics import Freezing
 from PySDM.environments import Box
-from PySDM.initialisation.spectral_sampling import ConstantMultiplicity
-from PySDM.initialisation.spectro_glacial import SpectroGlacialSampling
+from PySDM.initialisation.sampling.spectral_sampling import ConstantMultiplicity
+from PySDM.initialisation.sampling.spectro_glacial_sampling import SpectroGlacialSampling
 from PySDM import products as PySDM_products
 
 
