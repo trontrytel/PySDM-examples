@@ -4,7 +4,7 @@ from PySDM.builder import Builder
 from PySDM.dynamics import AmbientThermodynamics
 from PySDM.dynamics import Condensation
 from PySDM.environments import Parcel
-from PySDM.initialisation.r_wet_init import r_wet_init
+from PySDM.initialisation import equilibrate_wet_radii
 from PySDM.physics import constants as const
 import PySDM.products as PySDM_products
 
@@ -40,8 +40,9 @@ class Simulation:
         attributes['kappa times dry volume'] = attributes['dry volume'] * settings.kappa
         attributes['n'] = np.array([settings.n_in_dv], dtype=np.int64)
         environment = builder.particulator.environment
-        r_wet = r_wet_init(r_dry, environment,
-                           kappa_times_dry_volume=attributes['kappa times dry volume'])
+        r_wet = equilibrate_wet_radii(
+            r_dry, environment,
+            kappa_times_dry_volume=attributes['kappa times dry volume'])
         attributes['volume'] = settings.formulae.trivia.volume(radius=r_wet)
         products = [
             PySDM_products.MeanRadius(name='radius_m1', unit='um'),

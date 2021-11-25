@@ -1,9 +1,8 @@
+from PySDM import Builder, Formulae
 from PySDM.backends import CPU
-from PySDM.builder import Builder
 from PySDM.dynamics import AmbientThermodynamics
 from PySDM.dynamics import Condensation
 from PySDM.environments import Parcel
-from PySDM.physics.formulae import Formulae
 import PySDM.products as PySDM_products
 
 
