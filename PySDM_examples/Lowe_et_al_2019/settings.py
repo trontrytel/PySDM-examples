@@ -1,7 +1,7 @@
 import numpy as np
 from pystrict import strict
 from PySDM import Formulae
-from PySDM.initialisation import spectral_sampling as spec_sampling
+from PySDM.initialisation.sampling import spectral_sampling as spec_sampling
 from PySDM.physics import si, constants as const
 from PySDM_examples.Lowe_et_al_2019.aerosol import _Aerosol
 

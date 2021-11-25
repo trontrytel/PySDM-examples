@@ -8,7 +8,7 @@ from PySDM import Formulae
 from PySDM.physics import si, constants as const
 from PySDM.dynamics import condensation, coalescence
 from PySDM.physics.coalescence_kernels import Geometric
-from PySDM.physics import spectra
+from PySDM.initialisation import spectra
 
 
 class Common:

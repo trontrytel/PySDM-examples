@@ -4,7 +4,7 @@ from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 from PySDM.dynamics import condensation
 from PySDM import Formulae
-from PySDM.physics import spectra
+from PySDM.initialisation import spectra
 from PySDM.physics import si
 import PySDM.physics.constants as const
 

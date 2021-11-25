@@ -3,9 +3,8 @@ from PySDM.environments import Parcel
 from PySDM import Builder
 from PySDM.backends import CPU
 from PySDM.dynamics import AmbientThermodynamics, Condensation
-from PySDM.initialisation.multiplicities import discretise_n
-from PySDM.initialisation.r_wet_init import r_wet_init
-from PySDM.physics.spectra import Sum
+from PySDM.initialisation import discretise_multiplicities, equilibrate_wet_radii
+from PySDM.initialisation.spectra import Sum
 import PySDM.products as PySDM_products
 
 
@@ -42,7 +41,7 @@ class Simulation:
         for attribute in attributes.values():
             assert attribute.shape[0] == n_sd
 
-        attributes['n'] = discretise_n(attributes['n'])
+        attributes['n'] = discretise_multiplicities(attributes['n'])
 
         dv = settings.mass_of_dry_air / settings.rho0
         np.testing.assert_approx_equal(
@@ -53,7 +52,7 @@ class Simulation:
             )).norm_factor,
             significant=5
         )
-        r_wet = r_wet_init(
+        r_wet = equilibrate_wet_radii(
             r_dry=settings.formulae.trivia.radius(volume=attributes['dry volume']),
             environment=env,
             kappa_times_dry_volume=attributes['kappa times dry volume'],
