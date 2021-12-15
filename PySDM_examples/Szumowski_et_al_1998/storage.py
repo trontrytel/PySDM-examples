@@ -48,8 +48,14 @@ class Storage:
             self._data_range[name] = (np.inf, -np.inf)
         justnans = np.isnan(data).all()
         self._data_range[name] = (
-            min(self._data_range[name][0] if justnans else np.nanmin(data), self._data_range[name][0]),
-            max(self._data_range[name][1] if justnans else np.nanmax(data), self._data_range[name][1])
+            min(
+                self._data_range[name][0] if justnans else np.nanmin(data),
+                self._data_range[name][0]
+            ),
+            max(
+                self._data_range[name][1] if justnans else np.nanmax(data),
+                self._data_range[name][1]
+            )
         )
 
     def data_range(self, name):
