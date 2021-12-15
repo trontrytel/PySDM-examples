@@ -47,8 +47,8 @@ class Storage:
         if name not in self._data_range:
             self._data_range[name] = (np.inf, -np.inf)
         self._data_range[name] = (
-            min(np.amin(data), self._data_range[name][0]),
-            max(np.amax(data), self._data_range[name][1])
+            min(np.nanmin(data), self._data_range[name][0]),
+            max(np.nanmax(data), self._data_range[name][1])
         )
 
     def data_range(self, name):
