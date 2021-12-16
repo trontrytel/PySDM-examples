@@ -261,8 +261,10 @@ class GUIViewer:
             data = self.storage.load('surf_precip')
         except self.storage.Exception:
             data = None
-        self.timeseriesPlot.update(data, self.storage.data_range('surf_precip') if data is not None else None
-)
+        self.timeseriesPlot.update(
+            data,
+            self.storage.data_range('surf_precip') if data is not None else None
+        )
 
     def replot_timeseries(self):
         self.update_timeseries()
