@@ -108,16 +108,17 @@ class _TimeseriesPlot(_Plot):
         self.ax.set_xlim(0, times[-1])
         self.ax.set_xlabel("time [s]")
         self.ax.set_ylabel("rainfall [mm/day]")
-        self.ax.set_ylim(0, 1e-1)
         self.ax.grid(True)
         self.ydata = np.full_like(times, np.nan, dtype=float)
         self.timeseries = self.ax.step(times, self.ydata, where='pre')[0]
         if show:
             plt.show()
 
-    def update(self, data):
+    def update(self, data, data_range):
         if data is not None:
             self.ydata[0:len(data)] = data[:]
+            if data_range[0] != data_range[1]:
+                self.ax.set_ylim(data_range[0], 1.1 * data_range[1])
         else:
             self.ydata[:] = np.nan
         self.timeseries.set_ydata(self.ydata)
