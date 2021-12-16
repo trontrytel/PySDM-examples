@@ -58,8 +58,7 @@ class Common:
             "coalescence": True,
             "condensation": True,
             "sedimentation": True,
-            "freezing": False,
-            "PartMC piggy-backer": False
+            "freezing": False
         }
 
         self.mpdata_iters = 2
