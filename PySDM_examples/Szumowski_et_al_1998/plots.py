@@ -60,8 +60,13 @@ class _ImagePlot(_Plot):
             self.im.set_data(data)
             if data_range is not None:
                 self.im.set_clim(vmin=data_range[0], vmax=data_range[1])
+            nanmin = np.nan
+            nanmax = np.nan
+            if np.isfinite(data).any():
+                nanmin = np.nanmin(data)
+                nanmax = np.nanmax(data)
             self.ax.set_title(
-                f"min:{np.nanmin(data): .3g}    max:{np.nanmax(data): .3g}    t/dt_out:{step: >6}"
+                f"min:{nanmin: .3g}    max:{nanmax: .3g}    t/dt_out:{step: >6}"
             )
 
     def update_lines(self, focus_x, focus_z):
