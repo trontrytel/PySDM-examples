@@ -8,7 +8,7 @@ class Settings(StratoCumulus):
     def __dir__(self) -> Iterable[str]:
         return 'dt', 'grid', 'size', 'n_spin_up', 'versions', 'steps_per_output_interval',\
                'formulae', 'initial_dry_potential_temperature_profile',\
-               'initial_vapour_mixing_ratio_profile', 'rho_w_max'
+               'initial_vapour_mixing_ratio_profile', 'rhod_w_max'
 
     def __init__(
         self,
