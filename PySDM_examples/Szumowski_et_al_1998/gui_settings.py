@@ -142,6 +142,10 @@ class GUISettings:
         return np.arange(0, self.n_steps + 1, self.steps_per_output_interval)
 
     @property
+    def rhod_w_max(self):
+        return self.ui_rhod_w_max.value
+
+    @property
     def kappa(self):
         return self.ui_kappa.value
 
