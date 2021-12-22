@@ -15,6 +15,9 @@ class GUISettings:
             description="$\\Delta\\theta_0$ [K]", value=0, min=-15, max=15)
         self.ui_dqv0 = FloatSlider(
             description="$\\Delta q_{v0}$ [g/kg]", value=0, min=-6, max=6)
+        self.ui_rhod_w_max = FloatSlider(
+            description="$\\rho_d w_{max}$", value=settings.rhod_w_max, min=.1, max=2, step=.1
+        )
         self.ui_kappa = FloatSlider(
             description="$\\kappa$ [1]", value=settings.kappa, min=0, max=1.5)
         self.ui_nx = IntSlider(value=settings.grid[0], min=10, max=100, description="nx")
@@ -140,6 +143,10 @@ class GUISettings:
     @property
     def output_steps(self) -> np.ndarray:
         return np.arange(0, self.n_steps + 1, self.steps_per_output_interval)
+
+    @property
+    def rhod_w_max(self):
+        return self.ui_rhod_w_max.value
 
     @property
     def kappa(self):
