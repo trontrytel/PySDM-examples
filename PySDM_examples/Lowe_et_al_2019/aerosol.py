@@ -81,12 +81,12 @@ def kappa(mass_fractions: dict):
     return result
 
 
-class _Aerosol:
+class Aerosol:
     pass
 
 
 @strict
-class AerosolMarine(_Aerosol):
+class AerosolMarine(Aerosol):
     Aitken = {'palmitic': .2, 'SOA1': 0, 'SOA2': 0, '(NH4)2SO4': .8, 'NH4NO3': 0, 'NaCl': 0}
     Accumulation = {'palmitic': .2, 'SOA1': 0, 'SOA2': 0, '(NH4)2SO4': 0, 'NH4NO3': .8, 'NaCl': 0}
 
@@ -115,7 +115,7 @@ class AerosolMarine(_Aerosol):
 
 
 @strict
-class AerosolBoreal(_Aerosol):
+class AerosolBoreal(Aerosol):
     # note: SOA1 or SOA2 unclear from the paper
     Aitken = {
         'palmitic': 0,
@@ -159,7 +159,7 @@ class AerosolBoreal(_Aerosol):
 
 
 @strict
-class AerosolNascent(_Aerosol):
+class AerosolNascent(Aerosol):
     Ultrafine = {'palmitic': 0, 'SOA1': .52, 'SOA2': 0, '(NH4)2SO4': .48, 'NH4NO3': 0, 'NaCl': 0}
     Accumulation = {'palmitic': 0, 'SOA1': 0, 'SOA2': .3, '(NH4)2SO4': .7, 'NH4NO3': 0, 'NaCl': 0}
 
