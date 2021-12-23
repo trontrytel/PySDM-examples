@@ -1,4 +1,5 @@
 import sys
+import os
 from atmos_cloud_sim_uj_utils import TemporaryFile
 from PySDM.exporters import NetCDFExporter
 from PySDM_examples.utils.widgets import display, Tab, VBox, HTML
@@ -33,6 +34,6 @@ def launch(settings, simulation, storage):
         display(HTML(hack))
 
     display(tabs)
-    import os
+
     if 'CI' in os.environ:
         controller_box.children[1].click()
