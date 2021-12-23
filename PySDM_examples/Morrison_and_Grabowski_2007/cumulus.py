@@ -2,15 +2,14 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.interpolate import interp1d
 from PySDM.physics import si
-from PySDM.backends.impl_numba.conf import JIT_FLAGS
 from PySDM.physics import constants as const
 from PySDM_examples.Morrison_and_Grabowski_2007.common import Common
 from PySDM_examples.Szumowski_et_al_1998 import sounding
 
 
 class Cumulus(Common):
-    def __init__(self, fastmath: bool = JIT_FLAGS['fastmath']):
-        super().__init__(fastmath)
+    def __init__(self, formulae):
+        super().__init__(formulae)
         self.size = (9 * si.km, 2.7 * si.km)
         self.hx = 1.8 * si.km
         self.x0 = 3.6 * si.km

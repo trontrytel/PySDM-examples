@@ -12,8 +12,8 @@ from PySDM.initialisation import spectra
 
 
 class Common:
-    def __init__(self, fastmath):
-        self.formulae = Formulae(condensation_coordinate='VolumeLogarithm', fastmath=fastmath)
+    def __init__(self, formulae: Formulae):
+        self.formulae = formulae
         self.g = const.g_std
 
         self.condensation_rtol_x = condensation.DEFAULTS.rtol_x

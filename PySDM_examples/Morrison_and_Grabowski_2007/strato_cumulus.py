@@ -4,8 +4,8 @@ from PySDM_examples.Morrison_and_Grabowski_2007.common import Common
 
 
 class StratoCumulus(Common):
-    def __init__(self, fastmath, rhod_w_max: float):
-        super().__init__(fastmath)
+    def __init__(self, formulae, rhod_w_max: float):
+        super().__init__(formulae)
         self.th_std0 = 289 * si.kelvins
         self.qv0 = 7.5 * si.grams / si.kilogram
         self.p0 = 1015 * si.hectopascals
