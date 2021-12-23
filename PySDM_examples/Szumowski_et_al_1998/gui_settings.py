@@ -272,7 +272,13 @@ class GUISettings:
 
     def box(self):
         layout = Accordion(children=[
-            VBox([self.ui_dth0, self.ui_dqv0, self.ui_kappa, self.ui_rhod_w_max, *self.ui_freezing.values()]),
+            VBox([
+                self.ui_dth0,
+                self.ui_dqv0,
+                self.ui_kappa,
+                self.ui_rhod_w_max,
+                *self.ui_freezing.values()
+            ]),
             VBox([*self.ui_processes]),
             VBox([self.ui_nx, self.ui_nz, self.ui_sdpg, self.ui_dt, self.ui_simulation_time,
                   self.ui_condensation_rtol_x, self.ui_condensation_rtol_thd,
