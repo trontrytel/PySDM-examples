@@ -29,6 +29,9 @@ class Common:
         self.coalescence_substeps = 1
         self.kernel = Geometric(collection_efficiency=1)
 
+        self.freezing_singular = True
+        self.freezing_inp_spec = None
+
         self.n_sd_per_gridbox = 20
         self.aerosol_radius_threshold = .5 * si.micrometre
         self.drizzle_radius_threshold = 25 * si.micrometre
