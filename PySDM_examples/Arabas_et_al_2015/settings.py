@@ -1,5 +1,6 @@
 from typing import Iterable
 from PySDM.physics import si
+from PySDM import Formulae
 from PySDM_examples.Morrison_and_Grabowski_2007.strato_cumulus import StratoCumulus
 
 
@@ -11,11 +12,11 @@ class Settings(StratoCumulus):
 
     def __init__(
         self,
-        formulae,
+        formulae=None,
         rhod_w_max: float = .6 * si.metres / si.seconds * (si.kilogram / si.metre ** 3)
     ):
         super().__init__(
-            formulae,
+            formulae or Formulae(),
             rhod_w_max=rhod_w_max
         )
 
