@@ -120,6 +120,8 @@ class GUISettings:
 
         self.r_bins_edges = settings.r_bins_edges
         self.T_bins_edges = settings.T_bins_edges
+        self.terminal_velocity_radius_bin_edges = settings.terminal_velocity_radius_bin_edges
+
         self.size = settings.size
         self.condensation_substeps = settings.condensation_substeps
         self.condensation_dt_cond_range = settings.condensation_dt_cond_range

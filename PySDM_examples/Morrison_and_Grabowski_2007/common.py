@@ -33,12 +33,24 @@ class Common:
         self.freezing_inp_spec = None
 
         self.n_sd_per_gridbox = 20
+
         self.aerosol_radius_threshold = .5 * si.micrometre
         self.drizzle_radius_threshold = 25 * si.micrometre
+
         self.r_bins_edges = np.logspace(np.log10(0.001 * si.micrometre),
                                         np.log10(100 * si.micrometre),
                                         64, endpoint=True)
         self.T_bins_edges = np.linspace(const.T0-40, const.T0-20, 64, endpoint=True)
+
+        # TODO #599
+        n_bins_per_phase = 25
+        solid_phase_radii = np.linspace(-n_bins_per_phase, -1, n_bins_per_phase+1) * si.um
+        liquid_phase_radii = np.linspace(0, n_bins_per_phase, n_bins_per_phase+1) * si.um
+        self.terminal_velocity_radius_bin_edges = np.concatenate([
+            solid_phase_radii,
+            liquid_phase_radii
+        ])
+
         self.output_interval = 1 * si.minute
         self.spin_up_time = 0
 

@@ -87,7 +87,10 @@ class Simulation:
             PySDM_products.AmbientDryAirPotentialTemperature(name='thd_env', var='thd'),
             PySDM_products.CPUTime(),
             PySDM_products.WallTime(),
-            PySDM_products.EffectiveRadius(unit='um', radius_range=cloud_range)
+            PySDM_products.EffectiveRadius(unit='um', radius_range=cloud_range),
+            PySDM_products.RadiusBinnedNumberAveragedTerminalVelocity(
+                radius_bin_edges=self.settings.terminal_velocity_radius_bin_edges
+            )
         ]
 
         if self.settings.processes['fluid advection']:
