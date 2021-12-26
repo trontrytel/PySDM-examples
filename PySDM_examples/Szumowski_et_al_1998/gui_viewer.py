@@ -222,8 +222,11 @@ class GUIViewer:
                 dT = abs(self.settings.T_bins_edges[1] - self.settings.T_bins_edges[0])
                 np.testing.assert_allclose(np.diff(self.settings.T_bins_edges), dT)
 
-                conc = self.storage.load('particle specific concentration', self.settings.output_steps[step])
-                # TODO: assert unit == mg^-1
+                conc = self.storage.load(
+                    'particle specific concentration',
+                    self.settings.output_steps[step]
+                )
+                # TODO #705: assert unit == mg^-1
                 conc = conc[xrange, yrange]
 
                 data = self.storage.load(
