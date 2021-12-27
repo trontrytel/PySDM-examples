@@ -1,6 +1,6 @@
 from typing import Iterable
 from PySDM.physics import si
-from PySDM.backends.impl_numba.conf import JIT_FLAGS
+from PySDM import Formulae
 from PySDM_examples.Morrison_and_Grabowski_2007.strato_cumulus import StratoCumulus
 
 
@@ -12,11 +12,11 @@ class Settings(StratoCumulus):
 
     def __init__(
         self,
-        fastmath: bool = JIT_FLAGS['fastmath'],
+        formulae=None,
         rhod_w_max: float = .6 * si.metres / si.seconds * (si.kilogram / si.metre ** 3)
     ):
         super().__init__(
-            fastmath,
+            formulae or Formulae(),
             rhod_w_max=rhod_w_max
         )
 

@@ -149,3 +149,46 @@ class _TemperaturePlot(_Plot):
     def update(self, data, step):
         self.ax.set_title(f"t/dt_out:{step}")
         self.spec.set_ydata(data)
+
+
+class _TerminalVelocityPlot(_Plot):
+    def __init__(self, radius_bins, formulae, show=True):
+        self.formulae = formulae
+        super().__init__(*plt.subplots(1, 1))
+
+        self.ax.set_xlim(
+            np.amin(radius_bins) / const.si.um,
+            np.amax(radius_bins) / const.si.um
+        )
+        self.ax.set_xlabel("radius [μm]")
+        self.ax.set_ylabel("mean terminal velocity [m/s]")
+        self.ax.set_ylim(0, .1)
+        self.ax.grid(True)
+
+        self.radius_bins = radius_bins
+        # self.ax.plot(T_bins, self.formulae.freezing_temperature_spectrum.cdf(T_bins),
+        #              label=str(self.formulae.freezing_temperature_spectrum) + " (sampled at t=0)")
+        # nans = np.full_like(radius_bins[:-1], np.nan)
+        # self.spec = self.ax.fill_between(
+        #     (radius_bins[:-1] + np.diff(radius_bins)/2) / const.si.um,
+        #     nans,
+        #     nans,
+        #     marker='o'
+        # )[0]
+                                 # label='binned super-particle attributes',
+                                 # where='mid'
+                                 # )[0]
+        # self.ax.legend()
+
+        if show:
+            plt.show()
+
+    def update(self, data_min, data_max, step):
+        self.ax.set_title(f"t/dt_out:{step}")
+        self.ax.collections.clear()
+        self.ax.fill_between(
+             (self.radius_bins[:-1] + np.diff(self.radius_bins)/2) / const.si.um,
+            data_min, data_max,
+            color='gray'
+        )
+        # self.spec.set_ydata(data)
