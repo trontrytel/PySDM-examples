@@ -57,7 +57,7 @@ class GUIViewer:
         if 'freezable specific concentration' in products:
             opts.append(("freezing temperature spectra", 'temperature'))
         if 'immersed surface area' in products:
-            pass  # TODO # 599
+            pass  # TODO #599
         self.spectrum_select.options = tuple(opts)
 
         r_bins = self.settings.r_bins_edges.copy()
