@@ -45,13 +45,16 @@ class Simulation:
             else:
                 total_time = np.diff(np.asarray(self.temperature_range)) / case['cooling_rate']
 
+            constants = None
             if 'J_het' not in case:
                 case['J_het'] = None
-                abifm.c = case['ABIFM_c']
-                abifm.m = case['ABIFM_m']
+                constants = {
+                    'ABIFM_C': case['ABIFM_c'],
+                    'ABIFM_M': case['ABIFM_m']
+                }
             if 'cooling_rate' not in case:
                 case['cooling_rate'] = 0
-                constant.J_HET = case['J_het']
+                constants = {'J_HET': case['J_het']}
 
             self.output[key] = []
             for i in range(self.n_runs_per_case):
@@ -61,6 +64,7 @@ class Simulation:
                 n_sd = int(n_sd)
                 initial_temp = self.temperature_range[1] if self.temperature_range else np.nan
                 f_ufz, a_tot = simulation(
+                    constants=constants,
                     seed=i, n_sd=n_sd, time_step=self.time_step, volume=self.volume,
                     spectrum=case['ISA'],
                     droplet_volume=self.droplet_volume, multiplicity=self.multiplicity,
@@ -159,12 +163,12 @@ class Simulation:
             pyplot.gca().set_box_aspect(1)
 
 
-def simulation(*, J_HET, seed, n_sd, time_step, volume, spectrum, droplet_volume, multiplicity, total_time,
-               number_of_real_droplets, cooling_rate=0,
+def simulation(*, constants, seed, n_sd, time_step, volume, spectrum, droplet_volume, multiplicity,
+               total_time, number_of_real_droplets, cooling_rate=0,
                heterogeneous_ice_nucleation_rate='Constant', initial_temperature=np.nan):
     formulae = Formulae(seed=seed,
                         heterogeneous_ice_nucleation_rate=heterogeneous_ice_nucleation_rate,
-                        constants={'J_HET':J_HET}
+                        constants=constants
                         )
     builder = Builder(n_sd=n_sd, backend=CPU(formulae=formulae))
     env = Box(dt=time_step, dv=volume)
