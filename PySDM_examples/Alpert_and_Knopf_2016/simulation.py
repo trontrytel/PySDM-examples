@@ -110,10 +110,16 @@ class Simulation:
             pyplot.ylabel("$f_{ufz}$")
             pyplot.yscale('log')
 
-    def plot_j_het(self, variant: str, ylim=None):
+    def plot_j_het(self, variant: str, abifm_params_case: str, ylim=None):
         assert variant in ('apparent', 'actual')
 
-        formulae = Formulae(heterogeneous_ice_nucleation_rate='ABIFM')
+        formulae = Formulae(
+            heterogeneous_ice_nucleation_rate='ABIFM',
+            constants={
+                'ABIFM_M': self.cases[abifm_params_case]['ABIFM_m'],
+                'ABIFM_C': self.cases[abifm_params_case]['ABIFM_c']
+            }
+        )
 
         yunit = 1 / si.cm**2 / si.s
 
