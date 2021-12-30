@@ -122,10 +122,10 @@ class Simulation:
         )
 
         yunit = 1 / si.cm**2 / si.s
-
+        svp = formulae.saturation_vapour_pressure
         plot_x = np.linspace(*self.temperature_range) * si.K
         plot_y = formulae.heterogeneous_ice_nucleation_rate.j_het(
-            formulae.saturation_vapour_pressure.a_w_ice.py_func(plot_x)
+            svp.ice_Celsius(plot_x - const.T0) / svp.pvs_Celsius(plot_x - const.T0)
         )
         pyplot.grid()
         pyplot.plot(plot_x, plot_y / yunit, color='red', label='ABIFM $J_{het}$')
