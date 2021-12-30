@@ -201,7 +201,11 @@ def simulation(*, constants, seed, n_sd, time_step, volume, spectrum, droplet_vo
     for i in range(int(total_time / time_step) + 1):
         if cooling_rate != 0:
             temperature -= cooling_rate * time_step / 2
-            env['a_w_ice'] = svp.a_w_ice.py_func(temperature)
+            env['a_w_ice'] = (
+                    svp.ice_Celsius(temperature - const.T0)
+                    /
+                    svp.pvs_Celsius(temperature - const.T0)
+            )
         particulator.run(0 if i == 0 else 1)
         if cooling_rate != 0:
             temperature -= cooling_rate * time_step / 2
