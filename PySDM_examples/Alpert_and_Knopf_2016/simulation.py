@@ -218,7 +218,7 @@ def simulation(*, constants, seed, n_sd, time_step, volume, spectrum, droplet_vo
 
         ice_mass_per_volume = particulator.products['qi'].get()[cell_id]
         ice_mass = ice_mass_per_volume * volume
-        ice_number = ice_mass / (const.rho_w * droplet_volume)
+        ice_number = ice_mass / (formulae.constants.rho_w * droplet_volume)
         unfrozen_fraction = 1 - ice_number / number_of_real_droplets
         f_ufz.append(unfrozen_fraction)
         a_tot.append(particulator.products['A_tot'].get()[cell_id])
