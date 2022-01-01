@@ -54,6 +54,7 @@ class Settings:
 
     @property
     def rho0(self):
+        const = self.formulae.constants
         rhod0 = self.formulae.trivia.p_d(self.p0, self.q0) / self.T0 / const.Rd
         return rhod0 * (1 + self.q0)
 
