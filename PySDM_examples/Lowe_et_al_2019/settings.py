@@ -2,7 +2,7 @@ import numpy as np
 from pystrict import strict
 from PySDM import Formulae
 from PySDM.initialisation.sampling import spectral_sampling as spec_sampling
-from PySDM.physics import si, constants as const
+from PySDM.physics import si
 from PySDM_examples.Lowe_et_al_2019.aerosol import Aerosol
 
 
@@ -23,6 +23,7 @@ class Settings:
                 'delta_min': 0.1 * si.nm
             }
         )
+        const = self.formulae.constants
         self.aerosol = aerosol
         self.spectral_sampling = spectral_sampling
         self.t_max = (400 + 196) * si.s
