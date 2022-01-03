@@ -2,7 +2,7 @@ import numpy as np
 from pystrict import strict
 from PySDM import Formulae
 from PySDM.initialisation.sampling import spectral_sampling as spec_sampling
-from PySDM.physics import si, constants as const
+from PySDM.physics import si
 from PySDM_examples.Lowe_et_al_2019.aerosol import Aerosol
 
 
@@ -17,8 +17,13 @@ class Settings:
         self.model = model
         self.n_sd_per_mode = n_sd_per_mode
         self.formulae = Formulae(
-            surface_tension='CompressedFilmOvadnevaite' if model == 'film' else 'Constant'
+            surface_tension='CompressedFilmOvadnevaite' if model == 'film' else 'Constant',
+            constants={
+                'sgm_org': 40 * si.mN / si.m,
+                'delta_min': 0.1 * si.nm
+            }
         )
+        const = self.formulae.constants
         self.aerosol = aerosol
         self.spectral_sampling = spectral_sampling
         self.t_max = (400 + 196) * si.s
@@ -49,6 +54,7 @@ class Settings:
 
     @property
     def rho0(self):
+        const = self.formulae.constants
         rhod0 = self.formulae.trivia.p_d(self.p0, self.q0) / self.T0 / const.Rd
         return rhod0 * (1 + self.q0)
 

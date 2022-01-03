@@ -17,6 +17,7 @@ class StratoCumulus(Common):
 
     def rhod_of_zZ(self, zZ):
         p = self.formulae.hydrostatics.p_of_z_assuming_const_th_and_qv(
-            self.g, self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
+            self.formulae.constants.g_std,
+            self.p0, self.th_std0, self.qv0, z=zZ * self.size[-1])
         rhod = self.formulae.state_variable_triplet.rho_d(p, self.qv0, self.th_std0)
         return rhod

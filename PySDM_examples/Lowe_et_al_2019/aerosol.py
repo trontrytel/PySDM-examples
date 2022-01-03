@@ -1,7 +1,8 @@
 from pystrict import strict
 from chempy import Substance
 from PySDM.initialisation import spectra
-from PySDM.physics import si, constants as const
+from PySDM.physics import si
+from PySDM.physics.constants_defaults import rho_w, Mv
 
 compounds = ('palmitic', 'SOA1', 'SOA2', '(NH4)2SO4', 'NH4NO3', 'NaCl')
 
@@ -76,7 +77,7 @@ def kappa(mass_fractions: dict):
                              for i in compounds)
         else:
             raise AssertionError()
-        result[model] = ns_per_vol * const.Mv / const.rho_w
+        result[model] = ns_per_vol * Mv / rho_w
 
     return result
 

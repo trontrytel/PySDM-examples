@@ -97,7 +97,7 @@ class GUISettings:
                 value=v.default
             )
             for k, v in inspect.signature(Formulae.__init__).parameters.items()
-            if k not in ('self', 'fastmath', 'seed')
+            if k not in ('self', 'fastmath', 'seed', 'constants')
         ]
         self.ui_formulae_options.append(
             Checkbox(

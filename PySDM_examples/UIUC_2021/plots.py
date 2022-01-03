@@ -73,7 +73,8 @@ def make_freezing_spec_plot(
     ff = FrozenFraction(
         volume=volume,
         droplet_volume=droplet_volume,
-        total_particle_number=total_particle_number
+        total_particle_number=total_particle_number,
+        rho_w=formulae.constants.rho_w
     )
     twin = prim.secondary_yaxis('right', functions=(
         lambda x: ff.qi2ff(x * qi_unit),
