@@ -187,6 +187,8 @@ class GUIViewer:
 
         if selected == 'size':
             for key in ('Particles Wet Size Spectrum', 'Particles Dry Size Spectrum'):
+                if xrange.start == xrange.stop or yrange.start == yrange.stop:
+                    continue
                 try:
                     data = self.storage.load(key, self.settings.output_steps[step])
                     data = data[xrange, yrange, :]
