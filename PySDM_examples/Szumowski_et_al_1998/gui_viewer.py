@@ -158,14 +158,14 @@ class GUIViewer:
     def replot(self, *_):
         selectedImage = self.product_select.value
         if not (selectedImage is None or selectedImage not in self.plots):
-            self.update_image()
+            self.replot_image()
             self.outputs[selectedImage].clear_output(wait=True)
             with self.outputs[selectedImage]:
                 display(self.plots[selectedImage].fig)
 
         selectedSpectrum = self.spectrum_select.value
         if not (selectedSpectrum is None or selectedSpectrum not in self.spectrumPlots):
-            self.update_spectra()
+            self.replot_spectra()
             self.spectrumOutputs[selectedSpectrum].clear_output(wait=True)
             with self.spectrumOutputs[selectedSpectrum]:
                 display(self.spectrumPlots[selectedSpectrum].fig)
@@ -187,6 +187,8 @@ class GUIViewer:
 
         if selected == 'size':
             for key in ('Particles Wet Size Spectrum', 'Particles Dry Size Spectrum'):
+                if xrange.start == xrange.stop or yrange.start == yrange.stop:
+                    continue
                 try:
                     data = self.storage.load(key, self.settings.output_steps[step])
                     data = data[xrange, yrange, :]

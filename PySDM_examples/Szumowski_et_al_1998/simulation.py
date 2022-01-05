@@ -95,6 +95,7 @@ class Simulation:
 
         if self.settings.processes['fluid advection']:
             builder.add_dynamic(AmbientThermodynamics())
+            products.append(PySDM_products.MaxCourantNumber())
         if self.settings.processes["condensation"]:
             condensation = Condensation(
                 rtol_x=self.settings.condensation_rtol_x,
