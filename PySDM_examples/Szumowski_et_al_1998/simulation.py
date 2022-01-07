@@ -9,7 +9,8 @@ from PySDM.environments import Kinematic2D
 from PySDM.initialisation.sampling import spatial_sampling
 from PySDM_examples.Szumowski_et_al_1998.mpdata_2d import MPDATA_2D
 from PySDM_examples.utils import DummyController
-from .make_default_product_collection import make_default_product_collection
+from PySDM_examples.Szumowski_et_al_1998.make_default_product_collection \
+    import make_default_product_collection
 
 
 class Simulation:
