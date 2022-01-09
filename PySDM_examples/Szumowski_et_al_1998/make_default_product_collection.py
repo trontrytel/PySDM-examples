@@ -61,6 +61,7 @@ def make_default_product_collection(settings):
 
     if settings.processes['fluid advection']:
         products.append(PySDM_products.MaxCourantNumber())
+        products.append(PySDM_products.CoolingRate())
     if settings.processes["condensation"]:
         products.append(PySDM_products.CondensationTimestepMin(name='dt_cond_min'))
         products.append(PySDM_products.CondensationTimestepMax(name='dt_cond_max'))
