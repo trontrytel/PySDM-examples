@@ -87,7 +87,7 @@ def nu_org(mass_fractions: dict):
 
     _masked = {k: (is_organic[k]) * volfrac[k] for k in compounds}
     volume_fractions_of_just_org = {k:_masked[k] / sum(list(_masked.values())) for k in compounds}
-    
+
     _nu = sum(volume_fractions_of_just_org[i] * molar_volumes[i] for i in compounds)
     return _nu
 
