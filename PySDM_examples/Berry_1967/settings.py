@@ -3,7 +3,8 @@ import numpy as np
 from pystrict import strict
 from PySDM import Formulae
 from PySDM.initialisation import spectra
-from PySDM.physics import si, coalescence_kernels
+from PySDM.physics import si
+from PySDM.dynamics import coalescence_kernels
 
 
 @strict

@@ -7,7 +7,7 @@ import PySDM
 from PySDM import Formulae
 from PySDM.physics import si
 from PySDM.dynamics import condensation, coalescence
-from PySDM.physics.coalescence_kernels import Geometric
+from PySDM.dynamics.coalescence_kernels import Geometric
 from PySDM.initialisation import spectra
 
 
